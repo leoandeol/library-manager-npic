@@ -1,0 +1,132 @@
+/* Sticky footer styles
+-------------------------------------------------- */
+body {
+    margin:0px;
+    padding:0px;
+    display:flex;
+    flex-direction:column;
+    width:100vw;
+    min-height:100vh;
+}
+
+header {
+    display:flex;
+    flex-direction:column;
+}
+
+a {
+    color:black;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.header-img {
+    display:flex;
+    flex-direction:row;
+    background-color:lightgray;
+}
+
+.img-logo {
+    align-self:left;
+    margin-left:3vw;
+}
+
+.header-img-filler {
+    display:flex;
+    flex:1;
+    align-items:center;
+}
+
+.header-img-filler>h1{
+    margin:auto;
+    color:darkblue;
+    text-shadow: 3px 2px blue;
+}
+
+.img-books {
+    align-self:end;
+}
+
+.top-menu {
+    display:flex;
+    width:100vw;
+    flex-direction:row;
+    margin:auto;
+    background-color:#3ea6db;
+}
+
+.top-menu-element {
+    display:flex;
+    width:8vw;
+    height:30px;
+    border-right:2px solid #2e96cb;
+}
+
+.top-menu-element>a {
+    display:flex;
+    flex:1;
+}
+.top-menu-element>a>span {
+    margin:auto;
+    color:white;
+}
+
+.top-menu-element:nth-child(2) {
+    border-left:2px solid #2e96cb;
+}
+
+.top-menu-flag {
+    display:flex;
+    height:30px;
+    width:50px;
+}
+
+.top-menu-flag>img {
+    height:20px;
+    width:30px;
+    margin:auto;
+    border: 1px solid blue;
+    border-radius:2px;
+}
+
+
+.top-menu-filler {
+    display:flex;
+    flex:1;
+    background-color:#3ea6db;
+}
+
+.separator-80 {
+    margin: 5px auto;
+    height:0px;
+    width:80vw;
+    border-bottom: 2px solid gray;
+}
+
+.account-button {
+    position:absolute;
+    top:0px;
+    right:0px;
+    background-color: rgba(147, 128, 108, 0.1);
+    color: #666666;
+    font: inherit;
+    font-weight: normal;
+    border: 1px solid rgba(147, 128, 108, 0.25);
+    padding: 0.5em 0.75em;
+}
+
+main {
+    flex:1;
+}
+
+footer {
+    display:flex;
+    height:2em;
+    width:100%;
+    background-color:#f0f0f0;
+    border-top: 1px solid lightgrey;
+}
+
+footer>p {
+    margin:auto;
+}

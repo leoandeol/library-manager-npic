@@ -13,14 +13,28 @@
   <body>
     <header>
       <div class="header-img">
-	<img src="{{asset('img/header.jpeg')}}"/>
+	<img class="img-logo" src="{{asset('img/logo.png')}}"/>
+	<div class="header-img-filler"><h1>The Library</h1></div>
+	<img class="img-books" src="{{asset('img/books.png')}}"/>
+	<button class="account-button">Log in</button>
       </div>
+      <nav class="top-menu">
+	<div class="top-menu-filler"></div>
+	<div class="top-menu-element"><a href="/"><span>Home</span></a></div>
+	<div class="top-menu-element"><a href="/list"><span>Book list</span></a></div>
+	<div class="top-menu-element"><a href="/howto"><span>How to</span></a></div>
+	<div class="top-menu-element"><a href="/about"><span>About</span></a></div>
+	<div class="top-menu-filler"></div>
+	<div class="top-menu-flag"><img src="{{asset('img/uk_flag.png')}}"></img></div>
+	<div class="top-menu-flag"><img src="{{asset('img/kh_flag.png')}}"></img></div>
+      </nav>
+      <div class="separator-80"></div>
     </header>
+    <main>
     {% block body %}{% endblock %}
-    <footer class="footer">
-      <div class="container">
-        <p class="text-muted">NPIC Library Manager - Copyright 2017 ©</p>
-      </div>
+    </main>
+    <footer>
+      <p>NPIC Library Manager - Copyright 2017 ©</p>
     </footer>
     {% block javascripts %}
     {% endblock %}
