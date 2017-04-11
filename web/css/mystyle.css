@@ -146,6 +146,10 @@ footer>p {
     border-top:1px solid lightgrey;
 }
 
+.item-list {
+    flex:1;
+}
+
 /** SOLVED BY FLEXBOX **/
 
 .InputAddOn {
