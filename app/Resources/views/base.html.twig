@@ -18,7 +18,12 @@
 	<img class="img-books" src="{{asset('img/books.png')}}"/>
       </div>
       <nav class="top-menu">
+	{% if app.session.get('connected') == 'true' %}
+	<div class="top-menu-element"><a href="/user/account"><span>Account</span></a></div>
+	<div class="top-menu-element"><a href="/user/logout"><span>Log out</span></a></div>
+	{% else %}
 	<div class="top-menu-element"><a href="/user/login"><span>Log in</span></a></div>
+	{% endif %}
 	<div class="top-menu-filler"></div>
 	<div class="top-menu-element"><a href="/"><span>Home</span></a></div>
 	<div class="top-menu-element"><a href="/book/list"><span>Book list</span></a></div>

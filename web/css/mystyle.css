@@ -150,6 +150,16 @@ footer>p {
     flex:1;
 }
 
+.login-block {
+    display:flex;
+    flex-direction:column;
+    margin:auto;
+}
+
+.submit-login {
+    margin:auto;
+}
+
 /** SOLVED BY FLEXBOX **/
 
 .InputAddOn {
