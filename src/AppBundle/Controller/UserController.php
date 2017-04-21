@@ -16,7 +16,7 @@ class UserController extends Controller
     {
 	//temporary
         $session = $request->getSession();	
-	$session->set('connected','true');
+		$session->set('connected','true');
         // replace this example code with whatever you need
         return $this->render('user/login.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
@@ -39,7 +39,7 @@ class UserController extends Controller
      */
     public function logoffAction(Request $request)
     {
-	$request->getSession()->invalidate();
+		$request->getSession()->invalidate();
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
