@@ -2,7 +2,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="login-block">
+ <form action="/user/loggedin" method="post" class="login-block">
   <div class="InputAddOn">
     <button class="InputAddOn-item">Username</button>
     <input class="InputAddOn-field">
@@ -12,7 +12,7 @@
     <input class="InputAddOn-field">
   </div>
   <div class="InputAddOn submit-login">
-    <button class="InputAddOn-item">Submit</button>
+    <button class="InputAddOn-item" type="submit">Submit</button>
   </div>
-</div>
+</form>
 {% endblock %}
