@@ -173,6 +173,10 @@ h1 {
     padding:0px 0px 0.5em 2em;
 }
 
+.faq-block:last-child {
+    border:0;
+}
+
 .faq-block>*:first-child {
     font-weight:bold;
     font-style:oblique;
