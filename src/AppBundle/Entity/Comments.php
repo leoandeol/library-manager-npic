@@ -16,16 +16,19 @@ class Comments{
 	 * @ORM\GeneratedValue(strategy="AUTO")
      */
 	private $id;
-	
 	/**
-     * @ORM\Column(type="string",length=25)
+     * @var Member
+	 *
 	 * @ORM\OneToOne(targetEntity="Member")
+	 * @ORM\JoinColumn(name="member_code", referencedColumnName="code", onDelete="CASCADE")
      */
 	private $member;
 	
 	/**
-     * @ORM\Column(type="string",length=25)
+     * @var Item
+	 *
 	 * @ORM\OneToOne(targetEntity="Item")
+	 * @ORM\JoinColumn(name="item_code", referencedColumnName="code", onDelete="CASCADE")
      */
 	private $item;
 	
@@ -35,8 +38,10 @@ class Comments{
 	private $comment;
 	
 	/**
-     * @ORM\Column(type="integer",nullable=true)
+     * @var Response
+	 *
 	 * @ORM\OneToOne(targetEntity="Comments")
+	 * @ORM\JoinColumn(name="response_id", referencedColumnName="id", onDelete="CASCADE")
      */
 	private $response;
 

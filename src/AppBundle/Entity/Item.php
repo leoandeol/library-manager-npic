@@ -76,14 +76,18 @@ class Item{
 	private $disable;
 	
 	/**
-     * @ORM\Column(type="integer")
+     * @var Type
+	 *
 	 * @ORM\ManyToOne(targetEntity="Type")
-     */	
+	 * @ORM\JoinColumn(name="type_id", referencedColumnName="id", onDelete="CASCADE")
+     */
 	private $type;
 	
 	/**
-     * @ORM\Column(type="integer")
+     * @var Category
+	 *
 	 * @ORM\ManyToOne(targetEntity="Category")
+	 * @ORM\JoinColumn(name="category_id", referencedColumnName="id", onDelete="CASCADE")
      */
 	private $category;
 	

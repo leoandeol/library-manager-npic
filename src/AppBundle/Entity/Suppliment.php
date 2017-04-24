@@ -28,10 +28,12 @@ class Suppliment{
      */
 	private $disable;
 	/**
-     * @ORM\Column(type="string",length=25)
+     * @var Item
+	 *
 	 * @ORM\OneToOne(targetEntity="Item")
+	 * @ORM\JoinColumn(name="item_code", referencedColumnName="code", onDelete="CASCADE")
      */
-	private $item_code;	
+	private $item;	
 
 	public function __construct()
 	{

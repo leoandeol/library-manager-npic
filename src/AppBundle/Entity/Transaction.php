@@ -16,23 +16,31 @@ class Transaction{
      */
 	private $id;
 	/**
-     * @ORM\Column(type="string",length=25)
+     * @var Member
+	 *
 	 * @ORM\OneToOne(targetEntity="Member")
+	 * @ORM\JoinColumn(name="member_code", referencedColumnName="code", onDelete="CASCADE")
      */
 	private $member;
 	/**
-     * @ORM\Column(type="string",length=25)
+     * @var Item
+	 *
 	 * @ORM\OneToOne(targetEntity="Item")
+	 * @ORM\JoinColumn(name="item_code", referencedColumnName="code", onDelete="CASCADE")
      */
 	private $item;
 	/**
-     * @ORM\Column(type="string",length=25)
+     * @var Librarian
+	 *
 	 * @ORM\OneToOne(targetEntity="Librarian")
+	 * @ORM\JoinColumn(name="librarian_borrow_username", referencedColumnName="username", onDelete="CASCADE")
      */
 	private $lib_borrow;
 	/**
-     * @ORM\Column(type="string",length=25)
+     * @var Librarian
+	 *
 	 * @ORM\OneToOne(targetEntity="Librarian")
+	 * @ORM\JoinColumn(name="librarian_return_username", referencedColumnName="username", onDelete="CASCADE")
      */
 	private $lib_return;
 	/**

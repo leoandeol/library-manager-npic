@@ -77,26 +77,34 @@ class Member{
 	private $password;
 	
 	/**
-     * @ORM\Column(type="integer",nullable=true)
-	 * @ORM\OneToOne(targetEntity="Staff")
+     * @var Staff
+	 *
+	 * @ORM\ManyToOne(targetEntity="Staff")
+	 * @ORM\JoinColumn(name="staff_id", referencedColumnName="id", onDelete="CASCADE")
      */
 	private $staff;
 	
 	/**
-     * @ORM\Column(type="integer",nullable=true)
+     * @var Student
+	 *
 	 * @ORM\OneToOne(targetEntity="Student")
+	 * @ORM\JoinColumn(name="student_id", referencedColumnName="id", onDelete="CASCADE")
      */
 	private $student;
 	
 	/**
-     * @ORM\Column(type="integer")
+     * @var Address
+	 *
 	 * @ORM\ManyToOne(targetEntity="Address")
+	 * @ORM\JoinColumn(name="address_id", referencedColumnName="id", onDelete="CASCADE")
      */
 	private $address;
 	
 	/**
-     * @ORM\Column(type="integer")
+     * @var Faculty
+	 *
 	 * @ORM\ManyToOne(targetEntity="Faculty")
+	 * @ORM\JoinColumn(name="faculty_id", referencedColumnName="id", onDelete="CASCADE")
      */
 	private $faculty;
 	

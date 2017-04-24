@@ -51,8 +51,10 @@ class Librarian{
      */
 	private $disable;
 	/**
-     * @ORM\Column(type="integer")
+     * @var Address
+	 *
 	 * @ORM\ManyToOne(targetEntity="Address")
+	 * @ORM\JoinColumn(name="address_id", referencedColumnName="id", onDelete="CASCADE")
      */
 	private $address;
 

@@ -10,15 +10,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Note{
 	/**
-     * @ORM\Column(type="string",length=25)
-     * @ORM\Id
+     * @var Item
+	 *
+	 * @ORM\Id
 	 * @ORM\OneToOne(targetEntity="Item")
+	 * @ORM\JoinColumn(name="item_code", referencedColumnName="code", onDelete="CASCADE")
      */
 	private $item;
 	/**
-     * @ORM\Column(type="string",length=25)
-     * @ORM\Id
+     * @var Member
+	 *
+	 * @ORM\Id
 	 * @ORM\OneToOne(targetEntity="Member")
+	 * @ORM\JoinColumn(name="member_code", referencedColumnName="code", onDelete="CASCADE")
      */
 	private $member;
 	/**

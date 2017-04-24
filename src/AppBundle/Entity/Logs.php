@@ -16,8 +16,10 @@ class Logs{
      */
 	private $id;
 	/**
-     * @ORM\Column(type="string",length=25)
+     * @var Librarian
+	 *
 	 * @ORM\OneToOne(targetEntity="Librarian")
+	 * @ORM\JoinColumn(name="librarian_username", referencedColumnName="username", onDelete="CASCADE")
      */
 	private $lib;
 	/**
