@@ -25,9 +25,26 @@ class UserController extends Controller
      */
     public function loggedInAction(Request $request)
     {
-    //temporary
-        $session = $request->getSession();
-		$session->set('connected','true');
+		$username = $_POST['Username'];
+		$password = $_POST['Password'];
+		
+		$librarian_repository = $this->getDoctrine()->getRepository("AppBundle:Librarian");
+		$member_repository = $this->getDoctrine()->getRepository("AppBundle:Member");
+		if(($user = $member_repository->find($username)) == NULL){
+			if(($user = $librarian_repository->find($username)) == NULL){
+				//RAISE EXCEPTION
+			}
+			else{
+				//Connect
+				$session = $request->getSession();
+				$session->set('connected','true');
+			}
+		}
+		else{
+			//Connect
+			$session = $request->getSession();
+			$session->set('connected','true');
+		}
         	
         // database check etc
         return $this->render('user/loggedin.html.twig', [

@@ -23,8 +23,8 @@ class BookController extends Controller
 		);
 		$total = $query_count->getResult();
 		
-		$item_per_page = 20;
-		$nb_max_pages = ceil($total / $item_per_page);
+		$item_per_page = 2;
+		$nb_max_pages = ceil($total[0][1] / $item_per_page);
 		
 		$current = ($page * $item_per_page) - $item_per_page;
 		
@@ -38,7 +38,6 @@ class BookController extends Controller
 		$items = $query_items->getResult();
 		
         return $this->render('book/readAll.html.twig',[
-			'current_page' => $page,
 			'page_max' => $nb_max_pages,
 			'items' => $items,
 			'page' => $page,
