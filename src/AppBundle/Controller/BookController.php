@@ -42,6 +42,7 @@ class BookController extends Controller
 		
         return $this->render('book/readAll.html.twig',[
 			'items' => $items,
+			'page' => $page,
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
     }
