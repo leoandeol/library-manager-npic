@@ -12,7 +12,7 @@ class BookController extends Controller
     /**
      * @Route("/book/list/{page}", name="booklist", requirements={"page": "\d+"})
      */
-    public function readAll(Request $request)
+    public function readAll(Request $request, $page = 1)
     {
 		$manager = $this->getDoctrine()->getManager();
 		$item_repository = $this->getDoctrine()->getRepository('AppBundle:Item');
