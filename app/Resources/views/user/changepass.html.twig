@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article class="article-text-block">
+  <h1>Password update</h1>
+  <form action="/user/changedpass" method="post" class="login-block">
+    <div class="InputAddOn">
+      <button class="InputAddOn-item">Current password</button>
+      <input class="InputAddOn-field">
+    </div>
+    <div class="InputAddOn">
+      <button class="InputAddOn-item">New password</button>
+      <input class="InputAddOn-field">
+    </div>
+    <div class="InputAddOn">
+      <button class="InputAddOn-item">New password again</button>
+      <input class="InputAddOn-field">
+    </div>
+    <div class="InputAddOn submit-login">
+      <button class="InputAddOn-item" type="submit">Submit</button>
+    </div>
+  </form>
+</article>
+{% endblock %}

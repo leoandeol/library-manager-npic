@@ -162,9 +162,18 @@ h1 {
 }
 
 .article-text-block {
-    width:70vw;
+    width:68%;
     margin:auto;
 }
+
+.article-text-block>* {
+    text-align:justify;
+}
+
+.article-text-block>h1 {
+    text-align:center;
+}
+
 
 .faq-block {
     display:flex;
