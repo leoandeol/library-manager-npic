@@ -1,0 +1,37 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<nav class="menu-list">
+  <div class="menu-list-search">
+    <div class="InputAddOn">
+      <input class="InputAddOn-field" type="text">
+      <button class="InputAddOn-item">Search</button>
+    </div>
+  </div>
+  <div class="menu-list-element">
+    Sort by name
+  </div>
+  <div class="menu-list-element">
+    Sort by category
+  </div>
+  <div class="menu-list-element">
+    Sort by number of pages
+  </div>
+  <div class="menu-list-element">
+    Something something
+  </div>
+  <div class="menu-list-element">
+    Another thing
+  </div>
+  <div class="menu-list-element">
+    Yet another option
+  </div>
+</nav>
+<article class="item-list">
+  <h1>Details of item {% book.name %}</h1>
+  <div class="item-info-list">
+
+  </div>
+</article>
+{% endblock %}

@@ -9,4 +9,7 @@
     <a href="/user/changepass"><button class="InputAddOn-item">Change my password</button></a>
   </div>
 </article>
+{% if app.session.has('admin') %}
+
+{% endif %}
 {% endblock %}

@@ -10,7 +10,7 @@ class BookController extends Controller
 {
 
     /**
-     * @Route("/book/list", name="booklist")
+     * @Route("/book/list/{page}", name="booklist", requirements={"page": "\d+"})
      */
     public function readAll(Request $request)
     {
