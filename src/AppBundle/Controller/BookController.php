@@ -24,11 +24,9 @@ class BookController extends Controller
 		$total = $query_count->getResult();
 		
 		$item_per_page = 20;
+		$nb_max_pages = ceil($total / $item_per_page);
 		
-		if(!isset($current))
-		{ 
-			$current = 0;
-		}
+		$current = ($page * $item_per_page) - $item_per_page;
 		
 		$query_items = $manager->createQuery(
 			'SELECT it.title,it.author,ca.subject,it.language,it.publication_year,it.availability,it.note
@@ -39,8 +37,9 @@ class BookController extends Controller
 		$query_items->setMaxResults($item_per_page);
 		$items = $query_items->getResult();
 		
-		
         return $this->render('book/readAll.html.twig',[
+			'current_page' => $page,
+			'page_max' => $nb_max_pages,
 			'items' => $items,
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
