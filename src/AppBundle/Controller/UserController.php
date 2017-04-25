@@ -27,7 +27,7 @@ class UserController extends Controller
     {
     //temporary
         $session = $request->getSession();
-	$session->set('connected','true');
+		$session->set('connected','true');
         	
         // database check etc
         return $this->render('user/loggedin.html.twig', [

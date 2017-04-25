@@ -36,7 +36,7 @@ class Item{
 	private $publisher;
 	
 	/**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="integer")
      */
 	private $publication_year;
 	
@@ -95,6 +95,11 @@ class Item{
      * @ORM\Column(type="integer")
      */
 	private $note;
+	
+	/**
+     * @ORM\Column(type="string",length=13)
+     */
+	private $availability;
 
 	public function __construct()
 	{
