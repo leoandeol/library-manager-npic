@@ -41,6 +41,7 @@ class BookController extends Controller
 			'current_page' => $page,
 			'page_max' => $nb_max_pages,
 			'items' => $items,
+			'page' => $page,
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
     }

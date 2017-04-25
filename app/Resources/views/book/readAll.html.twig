@@ -79,6 +79,9 @@
 			{{item.note}}
 		</div>
 	</div>
+	
+    {% if page>1 %}<a href="/book/list/{% page - 1 %}"><button class="InputAddOn-item" type="submit">Previous</button></a>{% endif %}
+    <a href="/book/list/{% page + 1 %}"><button class="InputAddOn-item" type="submit">Next</button></a>
 {% endfor %}
 </div>
 
