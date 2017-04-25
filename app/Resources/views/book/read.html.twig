@@ -4,10 +4,14 @@
 {% block body %}
 <nav class="menu-list">
   <div class="menu-list-search">
-    <div class="InputAddOn">
-      <input class="InputAddOn-field" type="text">
-      <button class="InputAddOn-item">Search</button>
-    </div>
+	<form action="/book/search" method="post">
+		<div class="InputAddOn">
+			<input class="InputAddOn-field" type="text" name="search">
+		</div>
+		<div class="InputAddOn">
+			<button class="InputAddOn-item" type="submit">Search</button>
+		</div>
+	</form>
   </div>
   <div class="menu-list-element">
     Sort by name
