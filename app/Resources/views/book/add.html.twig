@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article class="article-text-block">
+  <h1>New item</h1>
+  <label for="sname">Short name :</label>
+  <input type="text" id="sname" name="shortname" />
+  <br />
+  <label for="lname">Long name :</label>
+  <input type="text" id="lname" name="longname" />
+  <br />
+  <label for="author">Author :</label>
+  <input type="text" id="author" name="author" />
+  <br />
+  <label for="dop">Date of publication :</label>
+  <input type="date" id="dop" name="publication" />
+  <br />
+  <label for="editor">Editor :</label>
+  <input type="text" id="editor" name="editor" />
+  <br />
+  <label for="categ">Category :</label>
+  <select id="categ" name="category">
+    <option selected>TODO from db</option>
+  </select>
+  <br />
+  <label for="lang">Language :</label>
+  <select id="lang" name="language">
+    <option selected>Khmer</option>
+    <option>English</option>
+    <option>Korean</option>
+    <option>French</option>
+    <option>Japanese</option>
+    <option>Chinese</option>
+  </select>
+  <br />
+  <label for="type">Type :</label>
+  <select id="type" name="type">
+    <option selected>Book</option>
+    <option>CD</option>
+    <option>DVD</option>
+    <option>VCD</option>
+  </select>
+  <br />
+  <label for="bookable">Bookable :</label>
+  <input type="checkbox" id="bookable" name="bookable" />
+  <br />
+</div>
+</article>
+{% endblock %}

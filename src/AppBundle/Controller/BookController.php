@@ -10,6 +10,16 @@ class BookController extends Controller
 {
 
     /**
+     * @Route("/book/add/", name="addbook")
+     */
+    public function AddAction(Request $request)
+    {		
+        return $this->render('book/add.html.twig',[
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }
+
+    /**
      * @Route("/book/list/{page}", name="booklist", requirements={"page": "\d+"})
      */
     public function readAll(Request $request, $page = 1)
