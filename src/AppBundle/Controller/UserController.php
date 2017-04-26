@@ -120,4 +120,26 @@ class UserController extends Controller
 			]);
 		}
 	}
+	
+    /**
+     * @Route("/user/changepass", name="changepass")
+     */
+    public function ChangePassAction(Request $request)
+    {
+        // replace this example code with whatever you need
+        return $this->render('user/changepass.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }
+
+    /**
+     * @Route("/user/changedpass", name="changedpass")
+     */
+    public function ChangedPassAction(Request $request)
+    {
+        // replace this example code with whatever you need
+        return $this->render('user/changedpass.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }
 }
