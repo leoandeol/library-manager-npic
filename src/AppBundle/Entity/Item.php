@@ -99,7 +99,7 @@ class Item{
 	/**
      * @ORM\Column(type="string",length=13)
      */
-	private $availability;
+	private $bookable;
 
 	public function __construct()
 	{

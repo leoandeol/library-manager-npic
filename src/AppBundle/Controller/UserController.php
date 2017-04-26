@@ -1,7 +1,8 @@
 <?php
 
 namespace AppBundle\Controller;
-
+use AppBundle\Entity\Member;
+use AppBundle\Entity\Librarian;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,26 +31,43 @@ class UserController extends Controller
 		
 		$librarian_repository = $this->getDoctrine()->getRepository("AppBundle:Librarian");
 		$member_repository = $this->getDoctrine()->getRepository("AppBundle:Member");
+		
+		$session = $request->getSession();
+		
 		if(($user = $member_repository->find($username)) == NULL){
 			if(($user = $librarian_repository->find($username)) == NULL){
-				//RAISE EXCEPTION
+				return $this->render('user/wronguser.html.twig', [
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
 			}
 			else{
-				//Connect
-				$session = $request->getSession();
-				$session->set('connected','true');
+				if(hash('sha256', $password) == $user->getPassword()){
+					$session->set('isAdmin','true');
+					$session->set('connected','true');
+				}
+				else{
+					return $this->render('user/wrongpassword.html.twig', [
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
+				}
 			}
 		}
 		else{
-			//Connect
-			$session = $request->getSession();
-			$session->set('connected','true');
+			if(hash('sha256', $password) == $user->getPassword()){	
+				$session->set('isadmin','false');
+				$session->set('connected','true');
+			}
+			else{
+				return $this->render('user/wrongpassword.html.twig', [
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
+			}
 		}
-        	
-        // database check etc
-        return $this->render('user/loggedin.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
+		if($session->get('connected') == 'true'){
+			return $this->render('user/loggedin.html.twig', [
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
+		}
     }
 
     /**

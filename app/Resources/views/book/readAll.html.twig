@@ -3,12 +3,12 @@
 
 {% block body %}
 <nav class="menu-list">
-  <div class="menu-list-search">
-    <div class="InputAddOn">
-      <input class="InputAddOn-field" type="text">
-      <button class="InputAddOn-item">Search</button>
-    </div>
-  </div>
+  <form class="menu-list-search" action="/book/search" method="post">
+		<div class="InputAddOn">
+			<input class="InputAddOn-field" type="text" name="Search">
+			<button class="InputAddOn-item" type="submit">Search</button>
+		</div>
+  </form>
   <div class="menu-list-element">
     Sort by name
   </div>
@@ -28,6 +28,8 @@
     Yet another option
   </div>
 </nav>
+
+
 <article class="item-list">
 <h1>List</h1>
 
@@ -49,7 +51,7 @@
         Year
       </div>
       <div class="cell">
-        Availability
+        Bookable
       </div>
       <div class="cell">
         Details
@@ -73,7 +75,7 @@
 			{{item.publication_year}}
 		</div>
 		<div class="cell">
-			{{item.availability}}
+			{{item.bookable}}
 		</div>
 		<div class="cell">
 			{{item.note}}
