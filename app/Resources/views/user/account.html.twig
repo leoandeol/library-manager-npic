@@ -6,10 +6,14 @@
   <h1>My account</h1>
   <div class="InputAddOn">
     <a href="/user/bookings"><button class="InputAddOn-item">Check my bookings</button></a>
+  </div>
+  <div class="InputAddOn">
     <a href="/user/changepass"><button class="InputAddOn-item">Change my password</button></a>
   </div>
-</article>
-{% if app.session.has('admin') %}
-
+{% if app.session.has('isAdmin') %}
+  <div class="InputAddOn">	
+    <a href="/admin/controlpanel"><button class="InputAddOn-item">Admin panel</button></a>
+  </div>
 {% endif %}
+</article>
 {% endblock %}

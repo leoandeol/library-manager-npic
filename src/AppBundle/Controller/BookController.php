@@ -14,25 +14,14 @@ class BookController extends Controller
      */
     public function readAll(Request $request, $page = 1)
     {
-		$manager = $this->getDoctrine()->getManager();
-		$item_repository = $this->getDoctrine()->getRepository('AppBundle:Item');
-		
-		$query_count = $manager->createQuery(
-			'SELECT COUNT(it.code)
-			FROM AppBundle:item it'
-		);
-		$total = $query_count->getResult();
+		$item_repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
+		$total = $item_repository->findTotalNumberOfItem();
 		
 		$item_per_page = 20;
-		$nb_max_pages = ceil($total[0][1] / $item_per_page);
-		
+		$nb_max_pages = ceil($total[0][1] / $item_per_page);		
 		$current = ($page * $item_per_page) - $item_per_page;
 		
-		$query_items = $manager->createQuery(
-			'SELECT it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
-			FROM AppBundle:Item it
-			JOIN AppBundle:Category ca WITH it.category = ca.id'
-		);
+		$query_items = $item_repository->findAllItems();
 		$query_items->setFirstResult($current);
 		$query_items->setMaxResults($item_per_page);
 		$items = $query_items->getResult();
@@ -48,29 +37,19 @@ class BookController extends Controller
 	/**
      * @Route("/book/search/{page}", name="booksearch", requirements={"page": "\d+"})
      */
-	 public function read(Request $request, $page = 1){
-		$manager = $this->getDoctrine()->getManager();
-		$item_repository = $this->getDoctrine()->getRepository('AppBundle:Item');
+	 public function read(Request $request, $page = 1)
+	 {
+		$item_repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 		
 		$search = $_POST['Search'];
+	
+		$total = $item_repository->findTotalNumberOfItemSearched($search);
 		
-		$query_count = $manager->createQuery(
-			"SELECT COUNT(it.code)
-			FROM AppBundle:item it
-			WHERE it.title LIKE '%$search%'"
-		);
-		
-		$total = $query_count->getResult();		
 		$item_per_page = 20;
 		$nb_max_pages = ceil($total[0][1] / $item_per_page);
 		$current = ($page * $item_per_page) - $item_per_page;
 		
-		$query_items = $manager->createQuery(
-			"SELECT it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
-			FROM AppBundle:Item it
-			JOIN AppBundle:Category ca WITH it.category = ca.id
-			WHERE it.title LIKE '%$search%'"
-		);
+		$query_items = $item_repository->findAllItemsSearched($search);
 		$query_items->setFirstResult($current);
 		$query_items->setMaxResults($item_per_page);
 		$items = $query_items->getResult();

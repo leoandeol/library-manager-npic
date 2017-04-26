@@ -29,8 +29,8 @@ class UserController extends Controller
 		$username = $_POST['Username'];
 		$password = $_POST['Password'];
 		
-		$librarian_repository = $this->getDoctrine()->getRepository("AppBundle:Librarian");
-		$member_repository = $this->getDoctrine()->getRepository("AppBundle:Member");
+		$librarian_repository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Librarian");
+		$member_repository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Member");
 		
 		$session = $request->getSession();
 		
@@ -42,6 +42,7 @@ class UserController extends Controller
 			}
 			else{
 				if(hash('sha256', $password) == $user->getPassword()){
+					$session->set('user',$user);
 					$session->set('isAdmin','true');
 					$session->set('connected','true');
 				}
@@ -54,6 +55,7 @@ class UserController extends Controller
 		}
 		else{
 			if(hash('sha256', $password) == $user->getPassword()){	
+				$session->set('user',$user);
 				$session->set('isadmin','false');
 				$session->set('connected','true');
 			}
@@ -75,21 +77,47 @@ class UserController extends Controller
      */
     public function logoffAction(Request $request)
     {
-		$request->getSession()->invalidate();
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
+		$session = $request->getSession();
+		if($session->get('connected')){
+			$session->invalidate();
+			// replace this example code with whatever you need
+			return $this->render('default/index.html.twig', [
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
+		}
     }
 
     /**
      * @Route("/user/account", name="account")
      */
-    public function AccountAction(Request $request)
+    public function accountAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('user/account.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
+		$session = $request->getSession();
+		if($session->get('connected')){
+			return $this->render('user/account.html.twig', [
+				'isAdmin' => $session->get('isAdmin'),
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
+		}
     }
+	
+	/**
+     * @Route("/user/bookings", name="bookings")
+     */
+	function checkBookingsAction(Request $request){
+		$session = $request->getSession();
+		if($session->get('connected')){
+			$member_repository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Member");
+			if($session->get('isAdmin')){
+				$bookings = $member_repository->getBookings($session->get('user')->getUsername());
+			}
+			else{
+				$bookings = $member_repository->getBookings($session->get('user')->getCode());
+			}
+			return $this->render('user/bookings.html.twig', [
+			'bookings' => $bookings,
+			'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
+		}
+	}
 }
