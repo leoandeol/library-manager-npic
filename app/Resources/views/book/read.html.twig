@@ -4,14 +4,14 @@
 {% block body %}
 <nav class="menu-list">
   <div class="menu-list-search">
-	<form action="/book/search" method="post">
-		<div class="InputAddOn">
-			<input class="InputAddOn-field" type="text" name="search">
-		</div>
-		<div class="InputAddOn">
-			<button class="InputAddOn-item" type="submit">Search</button>
-		</div>
-	</form>
+    <form action="/book/search" method="post">
+      <div class="InputAddOn">
+	<input class="InputAddOn-field" type="text" name="search">
+      </div>
+      <div class="InputAddOn">
+	<button class="InputAddOn-item" type="submit">Search</button>
+      </div>
+    </form>
   </div>
   <div class="menu-list-element">
     Sort by name
@@ -33,9 +33,16 @@
   </div>
 </nav>
 <article class="item-list">
-  <h1>Details of item {% book.name %}</h1>
+  <h1>Details of item {{ book.shortName }}</h1>
   <div class="item-info-list">
-
+    <div class="item-info">Name : {{ book.longName }}</div>
+    <div class="item-info">Date of publication : {{ book.published }}</div>
+    <div class="item-info">Author : {{ book.author }}</div>
+    <div class="item-info">Editor : {{ book.editor }}</div>
+    <div class="item-info">Category : {{ book.category }}</div>
+    <div class="item-info">Available : {{ book.longName }}</div>
   </div>
+  	<button class="InputAddOn-item" type="submit" onclick="goBack();">Previous</button>
+	<a href="/book/book/{{ book.id }}"><button class="InputAddOn-item" type="submit">Book</button></a>
 </article>
 {% endblock %}
