@@ -147,6 +147,13 @@ footer>p {
     max-width:80vw;
 }
 
+.big-form {
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:space-between;
+}
+
 .login-block {
     display:flex;
     flex-direction:column;
@@ -242,6 +249,7 @@ h1 {
     color: black;
     font: inherit;
     font-weight: normal;
+    text-align:center;
 }
 
 .InputAddOn-field,
