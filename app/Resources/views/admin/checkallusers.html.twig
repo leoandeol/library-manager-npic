@@ -1,0 +1,60 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<article class="item-list">
+
+<div class="table">
+    <div class="row header">
+      <div class="cell">
+        Code
+      </div>
+      <div class="cell">
+        First name
+      </div>
+      <div class="cell">
+        Last name
+      </div>
+      <div class="cell">
+        Activity
+      </div>
+      <div class="cell">
+        Details
+      </div>
+    </div>
+	{% for member in members %}
+	<div class="row">
+		<div class="cell">
+			{{member.code}}
+		</div>
+		<div class="cell">
+			{{member.first_name}}
+		</div>
+		<div class="cell">
+			{{member.last_name}}
+		</div>
+		<div class="cell">
+			{% if member.disable == 0 %}
+				<p>Active</p>
+			{% else %}
+				<p>Inactive</p>
+			{% endif %}
+		</div>
+		<div class="cell">
+			<button>details</button>
+		</div>
+	</div>
+{% endfor %}
+</div>
+
+{% if page>1 %}
+	<a href="/admin/checkAllUser/{{ page - 1 }}"><button class="InputAddOn-item" type="submit">Previous</button></a>
+{% endif %}
+{% if page<page_max %}
+	<a href="/admin/checkAllUser/{{ page + 1 }}"><button class="InputAddOn-item" type="submit">Next</button></a>
+{% endif %}
+
+
+</article>
+{% endblock %}
