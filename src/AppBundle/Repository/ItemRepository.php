@@ -60,7 +60,6 @@ class ItemRepository extends EntityRepository{
 	}
 
 	public function findLast5BooksAdded(){
-	       //TODO
 			$query = $this->getEntityManager()->createQuery(
 			"SELECT it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
 			FROM AppBundle:Item it
@@ -68,7 +67,17 @@ class ItemRepository extends EntityRepository{
 			ORDER BY it.add_date DESC");
 			$query->setFirstResult(5);
 			return $query->getResult();
-	}	
+	}
+
+	public function find5MostPopularBooks(){
+			$query = $this->getEntityManager()->createQuery(
+			"SELECT it.code,it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
+			FROM AppBundle:Item it
+			JOIN AppBundle:Category ca WITH it.category = ca.id1
+			WHERE it.code IN (Select distinct code from AppBundle:Transaction order by (count() desc  limit 5)");
+			$query->setFirstResult(5);
+			return $query->getResult();
+	}
 }
 
 ?>
