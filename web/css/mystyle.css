@@ -227,6 +227,22 @@ h1 {
     content="\f02d";
 }
 
+.news-block {
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    flex:1;
+    justify-content:space-between;
+    align-items:stretch;
+    align-content:space-between;
+}
+
+.news-item {
+    display:flex;
+    flex:1;
+    border:1px solid black;
+}
+
 /** SOLVED BY FLEXBOX **/
 
 .InputAddOn {

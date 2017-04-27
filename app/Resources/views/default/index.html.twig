@@ -1,6 +1,57 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<article class="article-large-block">
 <h1>insert most popular books, best rated books, last books in, and list of categories</h1>
-
+<div class="news-block">
+  <div class="news-item">
+    <div class="table">
+      <div class="row header">
+	<div class="cell">
+	  Top 5 Rated books
+	</div>
+      </div>
+      <div class="row header">
+	<div class="cell">
+	  Title
+	</div>
+	<div class="cell">
+	  Author
+	</div>
+	<div class="cell">
+	  Category
+	</div>
+      </div>
+      {% for top in tops %}
+      <div class="row">
+	<div class="cell">
+	  {{ top.title }}
+	</div>
+	<div class="cell">
+	  {{ top.author }}
+	</div>
+	<div class="cell">
+	  {{ top.category }}
+	</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="news-item">
+b
+  </div>
+  <div class="news-item">
+c
+  </div>
+  <div class="news-item">
+d
+  </div>
+  <div class="news-item">
+e
+  </div>
+  <div class="news-item">
+f
+  </div>
+</div>
+</article>
 {% endblock %}
