@@ -71,10 +71,13 @@ class ItemRepository extends EntityRepository{
 
 	public function find5MostPopularBooks(){
 			$query = $this->getEntityManager()->createQuery(
-			"SELECT it.code,it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
-			FROM AppBundle:Item it
-			JOIN AppBundle:Category ca WITH it.category = ca.id1
-			WHERE it.code IN (Select distinct code from AppBundle:Transaction order by (count() desc  limit 5)");
+			"SELECT it.code,it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note,
+			COUNT(tr.item) AS borrowed
+			FROM AppBundle:Transaction tr
+			JOIN AppBundle:Item it WITH tr.item = it.code
+			JOIN AppBundle:Category ca WITH it.category = ca.id
+			GROUP BY tr.item
+			");
 			$query->setFirstResult(5);
 			return $query->getResult();
 	}
