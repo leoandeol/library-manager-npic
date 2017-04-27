@@ -1,0 +1,60 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<article class="item-list">
+
+<div class="table">
+    <div class="row header">
+      <div class="cell">
+        Username
+      </div>
+      <div class="cell">
+        First name
+      </div>
+      <div class="cell">
+        Last name
+      </div>
+      <div class="cell">
+        Activity
+      </div>
+      <div class="cell">
+        Details
+      </div>
+    </div>
+	{% for lib in libs %}
+	<div class="row">
+		<div class="cell">
+			{{lib.username}}
+		</div>
+		<div class="cell">
+			{{lib.first_name}}
+		</div>
+		<div class="cell">
+			{{lib.last_name}}
+		</div>
+		<div class="cell">
+			{% if lib.disable == 0 %}
+				<p>Active</p>
+			{% else %}
+				<p>Inactive</p>
+			{% endif %}
+		</div>
+		<div class="cell">
+			<button>details</button>
+		</div>
+	</div>
+{% endfor %}
+</div>
+
+{% if page>1 %}
+	<a href="/admin/checkAllLib/{{ page - 1 }}"><button class="InputAddOn-item" type="submit">Previous</button></a>
+{% endif %}
+{% if page<page_max %}
+	<a href="/admin/checkAllLib/{{ page + 1 }}"><button class="InputAddOn-item" type="submit">Next</button></a>
+{% endif %}
+
+
+</article>
+{% endblock %}

@@ -101,6 +101,12 @@ class Item{
      */
 	private $bookable;
 
+	/**
+     * @ORM\Column(type="date")
+     */
+	private $add_date;
+		
+		
 	public function __construct()
 	{
 		//nothing
