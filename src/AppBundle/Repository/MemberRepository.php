@@ -25,6 +25,25 @@ class MemberRepository extends EntityRepository{
 			$em->flush();
 		}
 	}
+	
+	public function getNumberOfMembers(){
+		return $this->getEntityManager()->createQuery(
+			'SELECT COUNT(me.code)
+			FROM AppBundle:Member me
+			'
+		)->getResult();
+	}
+	
+	public function getAllMembers($current,$mem_per_page){
+		$query = $this->getEntityManager()->createQuery(
+			'SELECT me.code,me.first_name,me.last_name,me.disable
+			FROM AppBundle:Member me
+			'
+		);
+		$query->setFirstResult($current);
+		$query->setMaxResults($mem_per_page);
+		return $query->getResult();
+	}
 }
 
 ?>

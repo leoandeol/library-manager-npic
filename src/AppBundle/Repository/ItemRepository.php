@@ -14,12 +14,15 @@ class ItemRepository extends EntityRepository{
 		)->getResult();
 	}
 	
-	public function findAllItems(){
-		return $this->getEntityManager()->createQuery(
+	public function findAllItems($current,$item_per_page){
+		$query = $this->getEntityManager()->createQuery(
 			'SELECT it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id'
 		);
+		$query->setFirstResult($current);
+		$query->setMaxResults($item_per_page);
+		return $query->getResult();
 	}
 	
 	public function findAllCategories(){
@@ -36,13 +39,15 @@ class ItemRepository extends EntityRepository{
 		)->getResult();
 	}
 	
-	public function findAllItemsSearched($search){
-		return $this->getEntityManager()->createQuery(
+	public function findAllItemsSearched($search,$current,$item_per_page){
+		$query = $this->getEntityManager()->createQuery(
 			"SELECT it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id
-			WHERE it.title LIKE '%$search%'"
-		)->getResult();
+			WHERE it.title LIKE '%$search%'");
+		$query->setFirstResult($current);
+		$query->setMaxResults($item_per_page);
+		return $query->getResult();
 	}
 
 	public function findTop5PopularBooks(){

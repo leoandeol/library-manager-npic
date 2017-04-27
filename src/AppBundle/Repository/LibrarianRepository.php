@@ -15,6 +15,25 @@ class LibrarianRepository extends EntityRepository{
 			$em->flush();
 		}
 	}
+	
+	public function getNumberOfLibrarians(){
+			return $this->getEntityManager()->createQuery(
+				'SELECT COUNT(lib.username)
+				FROM AppBundle:Librarian lib
+				'
+			)->getResult();
+	}
+	
+	public function getAllLibrarians($current,$lib_per_page){
+		$query = $this->getEntityManager()->createQuery(
+			'SELECT lib.username, lib.first_name, lib.last_name, lib.disable
+			FROM AppBundle:Librarian lib
+			'
+		);
+		$query->setFirstResult($current);
+		$query->setMaxResults($lib_per_page);
+		return $query->getResult();
+	}
 }
 
 ?>

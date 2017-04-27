@@ -31,10 +31,7 @@ class BookController extends Controller
 		$nb_max_pages = ceil($total[0][1] / $item_per_page);		
 		$current = ($page * $item_per_page) - $item_per_page;
 		
-		$query_items = $item_repository->findAllItems();
-		$query_items->setFirstResult($current);
-		$query_items->setMaxResults($item_per_page);
-		$items = $query_items->getResult();
+		$items = $item_repository->findAllItems($current,$item_per_page);
 		
         return $this->render('book/readAll.html.twig',[
 			'page_max' => $nb_max_pages,
@@ -52,17 +49,14 @@ class BookController extends Controller
 		$item_repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 		
 		$search = $_POST['Search'];
-	
+		
 		$total = $item_repository->findTotalNumberOfItemSearched($search);
 		
 		$item_per_page = 20;
 		$nb_max_pages = ceil($total[0][1] / $item_per_page);
 		$current = ($page * $item_per_page) - $item_per_page;
 		
-		$query_items = $item_repository->findAllItemsSearched($search);
-		$query_items->setFirstResult($current);
-		$query_items->setMaxResults($item_per_page);
-		$items = $query_items->getResult();
+		$items = $item_repository->findAllItemsSearched($search,$current,$item_per_page);
 		
         return $this->render('book/readAll.html.twig',[
 			'page_max' => $nb_max_pages,
