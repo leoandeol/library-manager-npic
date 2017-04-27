@@ -255,16 +255,14 @@ class UserController extends Controller
 		if($session->get('connected')){
 			
 			if($session->get('isAdmin')){
-				//$user = $em->getRepository('AppBundle:Librarian')->getGeneralInfos($session->get('user')->getUsername());
+				$user = $em->getRepository('AppBundle:Librarian')->getGeneralInfos($session->get('user')->getUsername());
 			}
 			else{
 				$user = $em->getRepository('AppBundle:Member')->getGeneralInfos($session->get('user')->getCode());
 			}
 			
 			return $this->render('user/general_infos.html.twig', [
-				'page_max' => $nb_max_pages,
-				'libs' => $librarians,
-				'page' => $page,
+				'user' => $user,
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
