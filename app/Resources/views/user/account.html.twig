@@ -4,10 +4,12 @@
 {% block body %}
 <article class="article-text-block">
   <h1>My account</h1>
+{% if app.session.has('isAdmin') == false %}
   <div class="InputAddOn">
     <a href="/user/bookings"><button class="InputAddOn-item">Check my bookings</button></a>
-  </div>
-  <div class="InputAddOn">
+	</div>
+{% endif %}
+	<div class="InputAddOn">
     <a href="/user/changepass"><button class="InputAddOn-item">Change my password</button></a>
   </div>
 {% if app.session.has('isAdmin') %}
