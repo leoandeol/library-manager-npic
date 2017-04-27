@@ -13,6 +13,9 @@ class DefaultController extends Controller
      */
     public function homeAction(Request $request)
     {
+	$rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
+	$top = $rep->findTop5PopularBooks();
+	$last = $rep->findLast5BooksAdded();
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
