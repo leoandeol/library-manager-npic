@@ -16,8 +16,6 @@ class DefaultController extends Controller
 	$rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 	$top = $rep->findTop5PopularBooks();
 	$last = $rep->findLast5BooksAdded();
-	var_dump($top);
-	var_dump($last);
 	// replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
