@@ -66,7 +66,7 @@ class ItemRepository extends EntityRepository{
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			ORDER BY it.add_date DESC");
-			$query->setFirstResult(5);
+			$query->setMaxResults(5);
 			return $query->getResult();
 	}	
 }
