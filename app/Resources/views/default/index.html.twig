@@ -38,7 +38,37 @@
     </div>
   </div>
   <div class="news-item">
-b
+    <div class="table">
+      <div class="row header">
+	<div class="cell">
+	  Last books added
+	</div>
+      </div>
+      <div class="row header">
+	<div class="cell">
+	  Title
+	</div>
+	<div class="cell">
+	  Author
+	</div>
+	<div class="cell">
+	  Category
+	</div>
+      </div>
+      {% for top in lasts %}
+      <div class="row">
+	<div class="cell">
+	  {{ top.title }}
+	</div>
+	<div class="cell">
+	  {{ top.author }}
+	</div>
+	<div class="cell">
+	  {{ top.category }}
+	</div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
   <div class="news-item">
 c
