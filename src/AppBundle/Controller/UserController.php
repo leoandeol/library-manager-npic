@@ -81,9 +81,7 @@ class UserController extends Controller
 		if($session->get('connected')){
 			$session->invalidate();
 			// replace this example code with whatever you need
-			return $this->render('default/index.html.twig', [
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-			]);
+			return $this->redirect('/..');
 		}
     }
 
@@ -126,10 +124,15 @@ class UserController extends Controller
      */
     public function ChangePassAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('user/changepass.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
+		$session = $request->getSession();
+		if($session->get('connected')){		
+			$error = $session->get('error');
+			$session->remove('error');
+			return $this->render('user/changepass.html.twig', [
+				'error' => $error,
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
+		}
     }
 
     /**
@@ -137,9 +140,67 @@ class UserController extends Controller
      */
     public function ChangedPassAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('user/changedpass.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
+        $session = $request->getSession();
+		if($session->get('connected')){
+			
+			$curpass = $_POST['curpass'];
+			$newpass = $_POST['newpass'];
+			$newpassbis = $_POST['newpassbis'];
+			$changed = false;
+			
+			if(hash('sha256', $curpass) == $session->get('user')->getPassword()){
+				if($newpass == $newpassbis){
+					if($session->get('isAdmin')){
+						$this->getDoctrine()->getManager()->getRepository('AppBundle:Librarian')->changePassword($newpass,$session->get('user')->getUsername());
+					}else{
+						$this->getDoctrine()->getManager()->getRepository('AppBundle:Member')->changePassword($newpass,$session->get('user')->getCode());
+					}
+					$changed = true;
+				}
+				else{
+					$error = "The new passwords aren't corresponding";
+					$request->getSession()->set('error', $error);
+					return $this->redirect($this->generateUrl('changepass'));
+				}
+			}
+			else{
+				$error = "The current password given is wrong";
+				$request->getSession()->set('error', $error);
+				return $this->redirect($this->generateUrl('changepass'));
+			}
+			
+			if($changed){
+				return $this->render('user/changedpass.html.twig', [
+					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+				]);
+			}
+		}
     }
+	
+	/**
+     * @Route("/admin/controlpanel", name="controlpanel")
+     */
+	public function AccessControlPanelAction(Request $request){
+		$session = $request->getSession();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				return $this->render('admin/controlpanel.html.twig', [
+					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+				]);
+			}
+			else{
+				return $this->redirect($this->generateUrl('home'));
+			}
+		}
+		else{
+			return $this->redirect($this->generateUrl('login'));
+		}
+	}
+
+	/**
+     * @Route("/admin/checkAllUser", name="controlpanel")
+     */
+	public function CheckAllUserAction(Reques $request){
+		
+	}
 }

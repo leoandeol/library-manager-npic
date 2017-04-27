@@ -15,6 +15,16 @@ class MemberRepository extends EntityRepository{
 			'
 		)->getResult();
 	}
+	
+	public function changePassword($newPassword,$code){
+		$em = $this->getEntityManager();
+		$user = $em->getRepository('AppBundle:Member')->find($code);
+		$encrypted = hash('sha256', $newPassword);
+		if($user != NULL){
+			$user->setPassword($encrypted);
+			$em->flush();
+		}
+	}
 }
 
 ?>

@@ -36,7 +36,11 @@
       <div class="separator-80"></div>
     </header>
     <main>
-    {% block body %}{% endblock %}
+	{% if error is defined %}
+		<p>{{error}}</p>
+	{% endif %}
+    {% block body %}
+	{% endblock %}
     </main>
     <footer>
       <p>NPIC Library Manager - Copyright 2017 ©</p>
