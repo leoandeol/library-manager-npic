@@ -18,6 +18,8 @@ class DefaultController extends Controller
 	$last = $rep->findLast5BooksAdded();
 	// replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
+			"tops" => $top,
+			"last" => $last,
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
     }

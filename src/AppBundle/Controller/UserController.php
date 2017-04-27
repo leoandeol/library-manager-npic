@@ -245,22 +245,23 @@ class UserController extends Controller
 	}
 	
 	/**
-     * @Route("/user/general_infos", name="general_infos"
+     * @Route("/user/general_infos", name="general_infos")
      */
 	public function CheckGeneralInfosAction(Request $request){
+		
 		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		
 		if($session->get('connected')){
 			
-			$lib_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Librarian');
-			$total = $lib_rep->getNumberOfLibrarians();
+			if($session->get('isAdmin')){
+				//$user = $em->getRepository('AppBundle:Librarian')->getGeneralInfos($session->get('user')->getUsername());
+			}
+			else{
+				$user = $em->getRepository('AppBundle:Member')->getGeneralInfos($session->get('user')->getCode());
+			}
 			
-			$lib_per_page = 20;
-			$nb_max_pages = ceil($total[0][1] / $lib_per_page);
-			$current = ($page * $lib_per_page) - $lib_per_page;
-			
-			$librarians = $lib_rep->getAllLibrarians($current,$lib_per_page);
-			
-			return $this->render('admin/checkalllibs.html.twig', [
+			return $this->render('user/general_infos.html.twig', [
 				'page_max' => $nb_max_pages,
 				'libs' => $librarians,
 				'page' => $page,

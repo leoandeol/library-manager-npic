@@ -44,6 +44,21 @@ class MemberRepository extends EntityRepository{
 		$query->setMaxResults($mem_per_page);
 		return $query->getResult();
 	}
+	
+	public function getGeneralInfos($code){
+		return $this->getEntityManager()->createQuery(
+			"SELECT me.code,me.first_name,me.last_name,me.national_id,me.civil_situation,
+			me.gender,me.dob,me.tel_mobile,me.tel_home,me.tel_ref,me.email,me.entry_date,
+			st.id,st.major,st.degree,st.year,ad.city,ad.postal_code,ad.street,fc.name,
+			me.disable,me.disable_reason,me.disable_year
+			FROM AppBundle:Member me
+			JOIN AppBundle:Address ad WITH me.address = ad.id
+			JOIN AppBundle:Student st WITH me.student = st.id
+			JOIN AppBundle:Faculty fc WITH me.faculty = fc.id
+			WHERE me.code = $code
+			"
+		)->getResult();
+	}
 }
 
 ?>
