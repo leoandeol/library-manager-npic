@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article class="article-text-block">
+  <h1>Add new member</h1>
+  <h1>WORK IN PROGRESS </h1>
+  <form action="/book/added" method="post" class="big-form"><div class="InputAddOn">
+      <div class="InputAddOn-item" for="fname">First Name :</div>
+      <input type="text" id="fname" name="fname" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="lname">Last name :</div>
+      <input type="text" id="lname" name="lname" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="gender">Gender :</div>
+      <div class="InputAddOn-field">M<input type="radiox" id="gender" name="gender" value="M" />F<input type="radiox" id="gender" name="gender" value="F" /></div>
+    </div><div class="InputAddOn">
+    <div class="InputAddOn-item" for="nid">National ID :</div>
+      <input type="text" id="nid" name="nid" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="dob">Date of birth :</div>
+      <input type="date" id="dob" name="dob" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="email">Email :</div>
+      <input type="text" id="email" name="email" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="home_phone">Home Phone :</div>
+      <input type="number" id="home_phone" name="home_phone" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="mob_phone">Mobile Phone :</div>
+      <input type="number" id="mob_phone" name="mob_phone" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="ref_phone">Referant Phone :</div>
+      <input type="number" id="ref_phone" name="ref_phone" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="civsitu">Civil Situation :</div>
+      <select id="civsitu" name="civsitu" class="InputAddOn-field">
+	<option selected>Single</option>
+	<option>Married</option>
+	<option>Widower</option>
+	<option>Divorced</option>
+	<option>Other</option>
+      </select>
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="fac">Faculty :</div>
+      <select id="fac" name="fac" class="InputAddOn-field">
+	<option selected>TODO from db</option>
+      </select>
+    </div>
+    </div><div class="InputAddOn submit-login">
+      <button type="submit" class="InputAddOn-item">Submit</button>
+    </div>
+  </form>
+</article>
+{% endblock %}

@@ -13,10 +13,12 @@
     Sort by name
   </div>
   <div class="menu-list-element">
-    Sort by category
-  </div>
-  <div class="menu-list-element">
-    Sort by number of pages
+    <label>Sort by category</label>
+    <select>
+      {% for cat in categories %}
+      <option>{{ cat.subject }}</option>
+      {% endfor %}
+    </select>
   </div>
   <div class="menu-list-element">
     Something something
