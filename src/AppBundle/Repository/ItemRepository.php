@@ -78,7 +78,7 @@ class ItemRepository extends EntityRepository{
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			GROUP BY tr.item
 			");
-			$query->setFirstResult(5);
+			$query->setMaxResults(5);
 			return $query->getResult();
 	}
 }
