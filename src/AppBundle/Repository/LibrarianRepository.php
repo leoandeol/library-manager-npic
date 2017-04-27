@@ -34,6 +34,17 @@ class LibrarianRepository extends EntityRepository{
 		$query->setMaxResults($lib_per_page);
 		return $query->getResult();
 	}
+	
+	public function getGeneralInfos($code){
+		return $this->getEntityManager()->createQuery(
+			"SELECT li.username,li.first_name,li.last_name,li.gender,li.email,
+			li.tel,li.hire_date,li.resign_date,li.disable,ad.city,ad.postal_code,
+			ad.street
+			FROM AppBundle:Librarian li 
+			JOIN AppBundle:Address ad WITH li.address = ad.id
+			"
+		)->getResult();
+	}
 }
 
 ?>
