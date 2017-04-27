@@ -4,6 +4,9 @@
 {% block body %}
 <article class="article-text-block">
   <h1>My account</h1>
+  <div class="InputAddOn">
+    <a href="/user/general_infos"><button class="InputAddOn-item">General informations</button></a>
+  </div>  
 {% if app.session.has('isAdmin') == false %}
   <div class="InputAddOn">
     <a href="/user/bookings"><button class="InputAddOn-item">Check my bookings</button></a>

@@ -243,4 +243,29 @@ class UserController extends Controller
 			]);
 		}
 	}
+	
+	/**
+     * @Route("/user/general_infos", name="general_infos"
+     */
+	public function CheckGeneralInfosAction(Request $request){
+		$session = $request->getSession();
+		if($session->get('connected')){
+			
+			$lib_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Librarian');
+			$total = $lib_rep->getNumberOfLibrarians();
+			
+			$lib_per_page = 20;
+			$nb_max_pages = ceil($total[0][1] / $lib_per_page);
+			$current = ($page * $lib_per_page) - $lib_per_page;
+			
+			$librarians = $lib_rep->getAllLibrarians($current,$lib_per_page);
+			
+			return $this->render('admin/checkalllibs.html.twig', [
+				'page_max' => $nb_max_pages,
+				'libs' => $librarians,
+				'page' => $page,
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
+		}
+	}
 }
