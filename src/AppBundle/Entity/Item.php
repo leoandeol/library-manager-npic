@@ -543,4 +543,52 @@ class Item{
     {
         return $this->category;
     }
+
+    /**
+     * Set bookable
+     *
+     * @param string $bookable
+     *
+     * @return Item
+     */
+    public function setBookable($bookable)
+    {
+        $this->bookable = $bookable;
+
+        return $this;
+    }
+
+    /**
+     * Get bookable
+     *
+     * @return string
+     */
+    public function getBookable()
+    {
+        return $this->bookable;
+    }
+
+    /**
+     * Set addDate
+     *
+     * @param \DateTime $addDate
+     *
+     * @return Item
+     */
+    public function setAddDate($addDate)
+    {
+        $this->add_date = new \DateTime($addDate);
+
+        return $this;
+    }
+
+    /**
+     * Get addDate
+     *
+     * @return \DateTime
+     */
+    public function getAddDate()
+    {
+        return $this->add_date;
+    }
 }

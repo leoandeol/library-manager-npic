@@ -7,14 +7,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 use AppBundle\Entity\Item;
+use AppBundle\Entity\Type;
+use AppBundle\Entity\Category;
 
 class ItemController extends Controller
 {
 
     /**
-     * @Route("/item/add/", name="additem")
+     * @Route("/item/create", name="additem")
      */
-    public function AddAction(Request $request)
+    public function CreateAction(Request $request)
     {		
 		$session = $request->getSession();
 		if($session->get('connected')){
@@ -27,27 +29,31 @@ class ItemController extends Controller
     }
 	
 	/**
-     * @Route("/item/added/", name="addeditem")
+     * @Route("/item/created", name="addeditem")
      */
-    public function AddedAction(Request $request)
+    public function CreatedAction(Request $request)
     {	
+		var_dump($request->request);
 		$session = $request->getSession();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
-				if(isset($request->request->get('bookable'))){
+				if($request->request->get('bookable')==null){
 					$bookable = 1;
 				}else{
 					$bookable = 0;
 				}
-				if(isset($request->request->get('isbn'))){
+				if($request->request->get('isbn')==null){
 					$isbn = $request->request->get('isbn');
 				}else{
 					$isbn = NULL;
 				}
 				
+				$em = $this->getDoctrine()->getManager();
+				$type = $em->getRepository('AppBundle:Type')->find((int)$request->request->get('type'));
+				$category =$em->getRepository('AppBundle:Category')->find((int)$request->request->get('category'));
 				//TODO IN JS CHECK CODE WITH AJAX
 				
-				$new_item = new Item();
+				$new_item = new Item();	
 				
 				$new_item->setCode($request->request->get('code'));
 				$new_item->setTitle($request->request->get('title'));
@@ -59,19 +65,22 @@ class ItemController extends Controller
 				$new_item->setIsbn($isbn);		
 				$new_item->setTotalUnit(0);
 				$new_item->setBorrowedUnit(0);
-				$new_item->setCost($_POST['cost']);
+				$new_item->setCost($request->request->get('cost'));
 				$new_item->setDisable(0);
-				$new_item->setTyppe((int)$_POST['type']);
-				$new_item->setCategory((int)$_POST['category']);
+				$new_item->setCategory($category);
+				$new_item->setTyppe($type);
 				$new_item->setNote(NULL);
+				$new_item->setLostUnit(0);
 				$new_item->setBookable($bookable);
-				$new_item->setAddDate(date('Y-m-d'));
+				$new_item->setAddDate(date("Y-m-d"));
 				
-				$em=$this->getDoctrine()->getManager();
 				$em->persist($new_item);
 				$em->flush();
+				return $this->redirect($this->generateUrl('home'));
 			}
+			return $this->redirect($this->generateUrl('home'));
 		}
+		return $this->redirect($this->generateUrl('home'));
     }
 
     /**

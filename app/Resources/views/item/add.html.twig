@@ -3,71 +3,71 @@
 {% block body %}
 <article class="article-text-block">
   <h1>Add new (unique) item</h1>
-  <form action="/item/added" method="post" class="big-form">
+  <form action="/item/created" method="post" class="big-form">
     <div class="InputAddOn">
-      <div class="InputAddOn-item" for="code">Code :</div>
-      <input type="text" id="code" name="code" class="InputAddOn-field"/>
+      <div class="InputAddOn-item" >Code</div>
+      <input type="text" name="code" class="InputAddOn-field">
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="lname">Title :</div>
-      <input type="text" id="lname" name="title" class="InputAddOn-field" />
+      <div class="InputAddOn-item" >Title</div>
+      <input type="text" name="title" class="InputAddOn-field">
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="sname">Short title :</div>
-      <input type="text" id="sname" name="short_title" class="InputAddOn-field" />
+      <div class="InputAddOn-item" >Short title</div>
+      <input type="text" name="short_title" class="InputAddOn-field">
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="author">Author :</div>
-      <input type="text" id="author" name="author" class="InputAddOn-field" />
+      <div class="InputAddOn-item" >Author</div>
+      <input type="text" name="author" class="InputAddOn-field">
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="dop">Publication year :</div>
-      <input type="number" id="dop" name="publication_year" class="InputAddOn-field" />
+      <div class="InputAddOn-item" >Publication year</div>
+      <input type="number" name="publication_year" class="InputAddOn-field">
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="editor">Publisher :</div>
-      <input type="text" id="editor" name="publisher" class="InputAddOn-field" />
+      <div class="InputAddOn-item" >Publisher</div>
+      <input type="text" name="publisher" class="InputAddOn-field">
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="categ">Category :</div>
-      <select id="categ" name="category" class="InputAddOn-field">
-		<option value='1' selected>Mathematic</option>
+      <div class="InputAddOn-item" >Category</div>
+      <select name="category" class="InputAddOn-field">
+		<option value='1'>Mathematic</option>
 		<option value='2'>Languages</option>
 		<option value='3'>Phylosophia</option>
 		<option value='4'>Physics</option>
       </select>
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="lang">Language :</div>
-      <select id="lang" name="language" class="InputAddOn-field">
-		<option selected>Khmer</option>
-		<option>English</option>
-		<option>Korean</option>
-		<option>French</option>
-		<option>Japanese</option>
-		<option>Chinese</option>
+      <div class="InputAddOn-item" >Language</div>
+      <select name="language" class="InputAddOn-field">
+		<option value="Khmer">Khmer</option>
+		<option value='English'>English</option>
+		<option value='Korean'>Korean</option>
+		<option value='French'>French</option>
+		<option value='Japanese'>Japanese</option>
+		<option value='Chinese'>Chinese</option>
       </select>
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="type">Type :</div>
-      <select id="type" name="type" class="InputAddOn-field">
-		<option value='1' selected>Book</option>
+      <div class="InputAddOn-item" >Type</div>
+      <select name="type" class="InputAddOn-field">
+		<option value='1' >Book</option>
 		<option value='2' >CD</option>
 		<option value='3' >DVD</option>
 		<option value='4' >VCD</option>
       </select>
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="bookable">Bookable :</div>
-      <div class="InputAddOn-field"><input type="checkbox" id="bookable" name="bookable" /></div>
+      <div class="InputAddOn-item" >Bookable</div>
+      <div class="InputAddOn-field"><input type="checkbox" name="bookable"></div>
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="cost">Cost (USD $) :</div>
-      <input type="number" step="0.01" min="0" id="cost" name="cost" class="InputAddOn-field" />
+      <div class="InputAddOn-item" >Cost (USD $)</div>
+      <input type="number" step="0.01" min="0" name="cost" class="InputAddOn-field">
     </div>
 	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="isbn">ISBN (optional) :</div>
-      <input type="number" id="isbn" name="isbn" class="InputAddOn-field" />
+      <div class="InputAddOn-item" >ISBN (optional)</div>
+      <input type="number" name="isbn" class="InputAddOn-field">
     </div>
 	<div class="InputAddOn submit-login">
       <button type="submit" class="InputAddOn-item">Submit</button>
