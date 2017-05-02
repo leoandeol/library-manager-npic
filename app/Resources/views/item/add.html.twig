@@ -31,16 +31,15 @@
 	<div class="InputAddOn">
       <div class="InputAddOn-item" >Category</div>
       <select name="category" class="InputAddOn-field">
-		<option value='1'>Mathematic</option>
-		<option value='2'>Languages</option>
-		<option value='3'>Phylosophia</option>
-		<option value='4'>Physics</option>
+	{% for c in categories  %}
+		<option value='{{ c.id }}' >{{ c.subject }}</option>
+	{% endfor %}
       </select>
     </div>
 	<div class="InputAddOn">
       <div class="InputAddOn-item" >Language</div>
       <select name="language" class="InputAddOn-field">
-		<option value="Khmer">Khmer</option>
+		<option value='Khmer'>Khmer</option>
 		<option value='English'>English</option>
 		<option value='Korean'>Korean</option>
 		<option value='French'>French</option>
@@ -51,15 +50,14 @@
 	<div class="InputAddOn">
       <div class="InputAddOn-item" >Type</div>
       <select name="type" class="InputAddOn-field">
-		<option value='1' >Book</option>
-		<option value='2' >CD</option>
-		<option value='3' >DVD</option>
-		<option value='4' >VCD</option>
+	{% for t in types %}
+		<option value='{{ t.id }}' >{{ t.name }}</option>
+	{% endfor %}
       </select>
     </div>
 	<div class="InputAddOn">
       <div class="InputAddOn-item" >Bookable</div>
-      <div class="InputAddOn-field"><input type="checkbox" name="bookable"></div>
+      <div class="InputAddOn-field"><input type="checkbox" name="bookable" checked></div>
     </div>
 	<div class="InputAddOn">
       <div class="InputAddOn-item" >Cost (USD $)</div>

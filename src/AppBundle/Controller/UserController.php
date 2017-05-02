@@ -276,4 +276,28 @@ class UserController extends Controller
 			]);
 		}
 	}
+	
+	/**
+     * @Route("/admin/general_infos", name="library_general_infos")
+     */
+	public function CheckGeneralLibraryInfosAction(Request $request){
+		
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		
+		if($session->get('connected')){
+			
+			if($session->get('isAdmin')){
+				$user = $em->getRepository('AppBundle:Librarian')->getGeneralInfos($session->get('user')->getUsername());
+				return $this->render('admin/general_infos.html.twig', [
+				'user' => $user[0],
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+				]);
+			}
+		}
+		return $this->render('default/error.html.twig', [
+		       		'error' => "You must be an administrator to access this page",
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+				]);
+	}
 }
