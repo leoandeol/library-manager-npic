@@ -22,7 +22,7 @@ class Address {
 	private $city;
 	
 	/**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
 	private $postal_code;
 	

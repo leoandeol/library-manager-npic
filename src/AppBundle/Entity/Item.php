@@ -107,9 +107,33 @@ class Item{
 	private $add_date;
 		
 		
-	public function __construct()
+	/*
+	public function __construct($code,$title,$short_title,$author,$publisher,$publication_year,
+	$language,$isbn = NULL,$total_unit = 0,$borrowed_unit = 0,$cost,$disable,$type,$category,
+	$note = '',$bookable,$add_date)
 	{
-		//nothing
+		$this->$code = $code;
+		$this->$title = $title;
+		$this->$short_title = $short_title;
+		$this->$author = $author;
+		$this->$publisher = $publisher;
+		$this->$publication_year = $publication_year;
+		$this->$language = $language;
+		$this->$isbn = $isbn;
+		$this->$total_unit = $total_unit;
+		$this->$borrowed_unit = $borrowed_unit;
+		$this->$cost = $cost;
+		$this->$disable = $disable;
+		$this->$type = $type;
+		$this->$category = $category;
+		$this->$note = $note;
+		$this->$bookable = $bookable;
+		$this->$add_date = $add_date;
+	}
+	*/
+	
+	public function __construct(){
+		
 	}
 	
     /**

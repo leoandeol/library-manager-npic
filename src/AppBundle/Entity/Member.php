@@ -47,17 +47,17 @@ class Member{
 	private $dob;
 	
 	/**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
 	private $tel_mobile;
 	
 	/**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
 	private $tel_home;
 	
 	/**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
 	private $tel_ref;
 	
