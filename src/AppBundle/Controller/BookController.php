@@ -30,13 +30,15 @@ class BookController extends Controller
 		$item_per_page = 20;
 		$nb_max_pages = ceil($total[0][1] / $item_per_page);		
 		$current = ($page * $item_per_page) - $item_per_page;
-		
+
+		$categories = $item_repository->findAllCategories();
 		$items = $item_repository->findAllItems($current,$item_per_page);
 		
         return $this->render('book/readAll.html.twig',[
 			'page_max' => $nb_max_pages,
 			'items' => $items,
 			'page' => $page,
+			'categories' => $categories,
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
     }

@@ -27,7 +27,7 @@ class ItemRepository extends EntityRepository{
 	
 	public function findAllCategories(){
 		return $this->getEntityManager()->createQuery(
-			'Select * from AppBundle:Category'
+			'Select c.id, c.subject from AppBundle:Category c where c.disable=0'
 		)->getResult();
 	}
 	
