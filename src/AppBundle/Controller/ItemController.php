@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+
 use AppBundle\Entity\Item;
 
 class ItemController extends Controller
@@ -111,7 +112,7 @@ class ItemController extends Controller
 		$current = ($page * $item_per_page) - $item_per_page;
 		
 		$items = $item_repository->findAllItemsSearched($search,$current,$item_per_page);
-		
+
         return $this->render('item/readAll.html.twig',[
 			'page_max' => $nb_max_pages,
 			'items' => $items,
