@@ -38,14 +38,14 @@ class ItemController extends Controller
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				if($request->request->get('bookable')==null){
-					$bookable = 1;
-				}else{
 					$bookable = 0;
+				}else{
+					$bookable = 1;
 				}
 				if($request->request->get('isbn')==null){
-					$isbn = $request->request->get('isbn');
-				}else{
 					$isbn = NULL;
+				}else{
+					$isbn = $request->request->get('isbn');
 				}
 				
 				$em = $this->getDoctrine()->getManager();

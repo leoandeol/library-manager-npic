@@ -56,13 +56,15 @@ class ItemRepository extends EntityRepository{
 			"SELECT it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id
+			WHERE it.note IS NOT NULL
 			ORDER BY it.note DESC"
 		)->setMaxResults(5)->getResult();
 	}
 
 	public function findLast5BooksAdded(){
 			$query = $this->getEntityManager()->createQuery(
-			"SELECT it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
+			"SELECT it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note,
+			it.add_date
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			ORDER BY it.add_date DESC");

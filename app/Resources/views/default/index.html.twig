@@ -10,27 +10,33 @@
     </div>
     <div class="table">
       <div class="row header">
-	<div class="cell">
-	  Title
-	</div>
-	<div class="cell">
-	  Author
-	</div>
-	<div class="cell">
-	  Category
-	</div>
+		<div class="cell">
+		  Title
+		</div>
+		<div class="cell">
+		  Author
+		</div>
+		<div class="cell">
+		  Category
+		</div>
+		<div class="cell">
+		  Note
+		</div>
       </div>
       {% for top in tops %}
       <div class="row">
-	<div class="cell">
-	  {{ top.title }}
-	</div>
-	<div class="cell">
-	  {{ top.author }}
-	</div>
-	<div class="cell">
-	  {{ top.subject }}
-	</div>
+		<div class="cell">
+		  {{ top.title }}
+		</div>
+		<div class="cell">
+		  {{ top.author }}
+		</div>
+		<div class="cell">
+		  {{ top.subject }}
+		</div>
+		<div class="cell">
+		  {{ top.note }}
+		</div>
       </div>
       {% endfor %}
     </div>
@@ -38,30 +44,36 @@
   <div class="news-item">
     <div class="intro-table">
       <span>Last 5 books added</span>
-    </div>
-    <div class="table">
-      <div class="row header">
-	<div class="cell">
-	  Title
-	</div>
-	<div class="cell">
-	  Author
-	</div>
-	<div class="cell">
-	  Category
-	</div>
+		</div>
+		<div class="table">
+		  <div class="row header">
+		<div class="cell">
+		  Title
+		</div>
+		<div class="cell">
+		  Author
+		</div>
+		<div class="cell">
+		  Category
+		</div>
+		<div class="cell">
+		  Date
+		</div>
       </div>
       {% for last in lasts %}
       <div class="row">
-	<div class="cell">
-	  {{ last.title }}
-	</div>
-	<div class="cell">
-	  {{ last.author }}
-	</div>
-	<div class="cell">
-	  {{ last.subject }}
-	</div>
+		<div class="cell">
+		  {{ last.title }}
+		</div>
+		<div class="cell">
+		  {{ last.author }}
+		</div>
+		<div class="cell">
+		  {{ last.subject }}
+		</div>
+		<div class="cell">
+		  {{ last.add_date|date('Y-m-d') }}
+		</div>		
       </div>
       {% endfor %}
     </div>
@@ -81,30 +93,27 @@
 	<div class="cell">
 	  Category
 	</div>
+	<div class="cell">
+	  Borrow #
+	</div>
       </div>
-      {% for last in lasts %}
+      {% for pop in pops %}
       <div class="row">
 	<div class="cell">
-	  {{ last.title }}
+	  {{ pop.title }}
 	</div>
 	<div class="cell">
-	  {{ last.author }}
+	  {{ pop.author }}
 	</div>
 	<div class="cell">
-	  {{ last.subject }}
+	  {{ pop.subject }}
+	</div>
+	<div class="cell">
+	  {{ last.borrowed }}
 	</div>
       </div>
       {% endfor %}
     </div>
-  </div>
-  <div class="news-item">
-d
-  </div>
-  <div class="news-item">
-e
-  </div>
-  <div class="news-item">
-f
   </div>
 </div>
 </article>
