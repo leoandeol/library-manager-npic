@@ -455,7 +455,7 @@ class Item{
      *
      * @return Item
      */
-    public function setType($type)
+    public function setTyppe($type)
     {
         $this->type = $type;
 
@@ -467,7 +467,7 @@ class Item{
      *
      * @return integer
      */
-    public function getType()
+    public function getTyppe()
     {
         return $this->type;
     }

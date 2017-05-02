@@ -5,12 +5,10 @@
 <h1>insert most popular books, best rated books, last books in, and list of categories</h1>
 <div class="news-block">
   <div class="news-item">
+    <div class="intro-table">
+      <span>Top 5 Rated books</span>
+    </div>
     <div class="table">
-      <div class="row header">
-	<div class="cell">
-	  Top 5 Rated books
-	</div>
-      </div>
       <div class="row header">
 	<div class="cell">
 	  Title
@@ -38,12 +36,10 @@
     </div>
   </div>
   <div class="news-item">
+    <div class="intro-table">
+      <span>Last 5 books added</span>
+    </div>
     <div class="table">
-      <div class="row header">
-	<div class="cell">
-	  Last books added
-	</div>
-      </div>
       <div class="row header">
 	<div class="cell">
 	  Title
@@ -71,7 +67,35 @@
     </div>
   </div>
   <div class="news-item">
-c
+    <div class="intro-table">
+      <span>Most borrowed books</span>
+    </div>
+    <div class="table">
+      <div class="row header">
+	<div class="cell">
+	  Title
+	</div>
+	<div class="cell">
+	  Author
+	</div>
+	<div class="cell">
+	  Category
+	</div>
+      </div>
+      {% for last in lasts %}
+      <div class="row">
+	<div class="cell">
+	  {{ last.title }}
+	</div>
+	<div class="cell">
+	  {{ last.author }}
+	</div>
+	<div class="cell">
+	  {{ last.subject }}
+	</div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
   <div class="news-item">
 d
