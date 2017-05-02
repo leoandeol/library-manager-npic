@@ -55,7 +55,7 @@ class MemberRepository extends EntityRepository{
 			JOIN AppBundle:Address ad WITH me.address = ad.id
 			JOIN AppBundle:Student st WITH me.student = st.id
 			JOIN AppBundle:Faculty fc WITH me.faculty = fc.id
-			WHERE me.code = $code
+			WHERE me.code = '$code'
 			"
 		)->getResult();
 	}

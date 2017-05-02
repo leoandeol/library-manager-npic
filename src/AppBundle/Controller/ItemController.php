@@ -6,7 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class BookController extends Controller
+class ItemController extends Controller
 {
 
     /**
@@ -34,7 +34,7 @@ class BookController extends Controller
 		$categories = $item_repository->findAllCategories();
 		$items = $item_repository->findAllItems($current,$item_per_page);
 		
-        return $this->render('book/readAll.html.twig',[
+        	return $this->render('book/readAll.html.twig',[
 			'page_max' => $nb_max_pages,
 			'items' => $items,
 			'page' => $page,

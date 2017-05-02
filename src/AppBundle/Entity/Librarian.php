@@ -31,7 +31,7 @@ class Librarian{
      */
 	private $email;	
 	/**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
 	private $tel;	
 	/**

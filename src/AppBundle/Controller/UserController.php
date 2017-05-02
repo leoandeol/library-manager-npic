@@ -262,7 +262,8 @@ class UserController extends Controller
 			}
 			
 			return $this->render('user/general_infos.html.twig', [
-				'user' => $user,
+				'isAdmin' => $session->get('isAdmin'),
+				'user' => $user[0],
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
