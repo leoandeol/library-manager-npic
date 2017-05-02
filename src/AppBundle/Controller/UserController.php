@@ -26,8 +26,11 @@ class UserController extends Controller
      */
     public function loggedInAction(Request $request)
     {
-		$username = $_POST['Username'];
-		$password = $_POST['Password'];
+		//$username = $_POST['Username'];
+		//$password = $_POST['Password'];
+		
+		$username = $request->request->get('Username');
+		$password = $request->request->get('Password');
 		
 		$librarian_repository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Librarian");
 		$member_repository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Member");
@@ -140,9 +143,14 @@ class UserController extends Controller
         $session = $request->getSession();
 		if($session->get('connected')){
 			
-			$curpass = $_POST['curpass'];
-			$newpass = $_POST['newpass'];
-			$newpassbis = $_POST['newpassbis'];
+			//$curpass = $_POST['curpass'];
+			//$newpass = $_POST['newpass'];
+			//$newpassbis = $_POST['newpassbis'];
+			
+			$curpass = $request->request->get('curpass');
+			$newpass = $request->request->get('newpass');
+			$newpassbis = $request->request->get('newpassbis');
+			
 			$changed = false;
 			
 			if(hash('sha256', $curpass) == $session->get('user')->getPassword()){
