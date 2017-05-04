@@ -25,7 +25,9 @@ class ItemController extends Controller
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
+			return $this->redirect($this->generateUrl('home'));
 		}
+		return $this->redirect($this->generateUrl('login'));
     }
 	
 	/**
@@ -33,54 +35,56 @@ class ItemController extends Controller
      */
     public function CreatedAction(Request $request)
     {	
-		var_dump($request->request);
 		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
-				if($request->request->get('bookable')==null){
-					$bookable = 0;
-				}else{
-					$bookable = 1;
+				if($em->getRepository('AppBundle:Item')->find($request->request->get('code'))==NULL){
+					if($request->request->get('bookable')==null){
+						$bookable = "not available";
+					}else{
+						$bookable = "available";
+					}
+					if($request->request->get('isbn')==null){
+						$isbn = NULL;
+					}else{
+						$isbn = $request->request->get('isbn');
+					}
+					
+					$type = $em->getRepository('AppBundle:Type')->find((int)$request->request->get('type'));
+					$category =$em->getRepository('AppBundle:Category')->find((int)$request->request->get('category'));
+								
+					$new_item = new Item();	
+					
+					$new_item->setCode($request->request->get('code'));
+					$new_item->setTitle($request->request->get('title'));
+					$new_item->setShortTitle($request->request->get('short_title'));
+					$new_item->setAuthor($request->request->get('author'));
+					$new_item->setPublisher($request->request->get('publisher'));
+					$new_item->setPublicationYear($request->request->get('publication_year'));
+					$new_item->setLanguage($request->request->get('language'));
+					$new_item->setIsbn($isbn);		
+					$new_item->setTotalUnit(0);
+					$new_item->setBorrowedUnit(0);
+					$new_item->setCost($request->request->get('cost'));
+					$new_item->setDisable(0);
+					$new_item->setCategory($category);
+					$new_item->setTyppe($type);
+					$new_item->setNote(NULL);
+					$new_item->setLostUnit(0);
+					$new_item->setBookable($bookable);
+					$new_item->setAddDate(date("Y-m-d"));
+					
+					$em->persist($new_item);
+					$em->flush();
+					return $this->redirect($this->generateUrl('itemlist'));
 				}
-				if($request->request->get('isbn')==null){
-					$isbn = NULL;
-				}else{
-					$isbn = $request->request->get('isbn');
-				}
-				
-				$em = $this->getDoctrine()->getManager();
-				$type = $em->getRepository('AppBundle:Type')->find((int)$request->request->get('type'));
-				$category =$em->getRepository('AppBundle:Category')->find((int)$request->request->get('category'));
-				//TODO IN JS CHECK CODE WITH AJAX
-				
-				$new_item = new Item();	
-				
-				$new_item->setCode($request->request->get('code'));
-				$new_item->setTitle($request->request->get('title'));
-				$new_item->setShortTitle($request->request->get('short_title'));
-				$new_item->setAuthor($request->request->get('author'));
-				$new_item->setPublisher($request->request->get('publisher'));
-				$new_item->setPublicationYear($request->request->get('publication_year'));
-				$new_item->setLanguage($request->request->get('language'));
-				$new_item->setIsbn($isbn);		
-				$new_item->setTotalUnit(0);
-				$new_item->setBorrowedUnit(0);
-				$new_item->setCost($request->request->get('cost'));
-				$new_item->setDisable(0);
-				$new_item->setCategory($category);
-				$new_item->setTyppe($type);
-				$new_item->setNote(NULL);
-				$new_item->setLostUnit(0);
-				$new_item->setBookable($bookable);
-				$new_item->setAddDate(date("Y-m-d"));
-				
-				$em->persist($new_item);
-				$em->flush();
-				return $this->redirect($this->generateUrl('home'));
+				return $this->redirect($this->generateUrl('additem'));
 			}
 			return $this->redirect($this->generateUrl('home'));
 		}
-		return $this->redirect($this->generateUrl('home'));
+		return $this->redirect($this->generateUrl('login'));
     }
 
     /**

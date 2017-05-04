@@ -86,6 +86,7 @@ class UserController extends Controller
 			// replace this example code with whatever you need
 			return $this->redirect('/..');
 		}
+		return $this->redirect($this->generateUrl('login'));
     }
 
     /**
@@ -100,6 +101,7 @@ class UserController extends Controller
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
+		return $this->redirect($this->generateUrl('login'));
     }
 	
 	/**
@@ -116,7 +118,9 @@ class UserController extends Controller
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
+			return $this->redirect($this->generateUrl('home'));
 		}
+		return $this->redirect($this->generateUrl('login'));
 	}
 	
     /**
@@ -133,6 +137,7 @@ class UserController extends Controller
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
+		return $this->redirect($this->generateUrl('login'));
     }
 
     /**
@@ -180,6 +185,7 @@ class UserController extends Controller
 				]);
 			}
 		}
+		return $this->redirect($this->generateUrl('login'));
     }
 	
 	/**
@@ -207,24 +213,28 @@ class UserController extends Controller
      */
 	public function CheckAllUserAction(Request $request, $page=1){
 		$session = $request->getSession();
-		if($session->get('connected') && $session->get('isAdmin')){
-			
-			$member_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Member');
-			$total = $member_rep->getNumberOfMembers();
-			
-			$mem_per_page = 20;
-			$nb_max_pages = ceil($total[0][1] / $mem_per_page);
-			$current = ($page * $mem_per_page) - $mem_per_page;
-			
-			$members = $member_rep->getAllMembers($current,$mem_per_page);
-			
-			return $this->render('admin/checkallusers.html.twig', [
-				'page_max' => $nb_max_pages,
-				'members' => $members,
-				'page' => $page,
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-			]);
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				
+				$member_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Member');
+				$total = $member_rep->getNumberOfMembers();
+				
+				$mem_per_page = 20;
+				$nb_max_pages = ceil($total[0][1] / $mem_per_page);
+				$current = ($page * $mem_per_page) - $mem_per_page;
+				
+				$members = $member_rep->getAllMembers($current,$mem_per_page);
+				
+				return $this->render('admin/checkallusers.html.twig', [
+					'page_max' => $nb_max_pages,
+					'members' => $members,
+					'page' => $page,
+					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+				]);
+			}
+			return $this->redirect($this->generateUrl('home'));
 		}
+		return $this->redirect($this->generateUrl('login'));
 	}
 	
 	/**
@@ -232,24 +242,28 @@ class UserController extends Controller
      */
 	public function CheckAllLibrarianAction(Request $request, $page=1){
 		$session = $request->getSession();
-		if($session->get('connected') && $session->get('isAdmin')){
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
 			
-			$lib_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Librarian');
-			$total = $lib_rep->getNumberOfLibrarians();
-			
-			$lib_per_page = 20;
-			$nb_max_pages = ceil($total[0][1] / $lib_per_page);
-			$current = ($page * $lib_per_page) - $lib_per_page;
-			
-			$librarians = $lib_rep->getAllLibrarians($current,$lib_per_page);
-			
-			return $this->render('admin/checkalllibs.html.twig', [
-				'page_max' => $nb_max_pages,
-				'libs' => $librarians,
-				'page' => $page,
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-			]);
+				$lib_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Librarian');
+				$total = $lib_rep->getNumberOfLibrarians();
+				
+				$lib_per_page = 20;
+				$nb_max_pages = ceil($total[0][1] / $lib_per_page);
+				$current = ($page * $lib_per_page) - $lib_per_page;
+				
+				$librarians = $lib_rep->getAllLibrarians($current,$lib_per_page);
+				
+				return $this->render('admin/checkalllibs.html.twig', [
+					'page_max' => $nb_max_pages,
+					'libs' => $librarians,
+					'page' => $page,
+					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+				]);
+			}
+			return $this->redirect($this->generateUrl('home'));
 		}
+		return $this->redirect($this->generateUrl('login'));
 	}
 	
 	/**
@@ -275,5 +289,6 @@ class UserController extends Controller
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
+		return $this->redirect($this->generateUrl('login'));
 	}
 }
