@@ -10,16 +10,21 @@
     </div>
   </form>
   <div class="menu-list-element">
-    Sort by category
+    Category : <select name="category">
+      {% for c in categories %}
+      <option value="{{c.id}}">{{c.subject}}</option>
+      {% endfor %}
+      </select>
   </div>
   <div class="menu-list-element">
-    Sort by type of document
+    Type : <select name="type">
+      {% for t in types %}
+      <option value="{{t.id}}">{{t.name}}</option>
+      {% endfor %}
+      </select>
   </div>
   <div class="menu-list-element">
     Sort by language
-  </div>
-  <div class="menu-list-element">
-    Sort by year
   </div>
 </nav>
 
@@ -71,13 +76,13 @@
 			{{item.publication_year}}
 		</div>
 		<div class="cell">
-			{{item.bookable}}
+			{% if item.bookable == 1 %} Yes {% else %} No {% endif %}
 		</div>
 		<div class="cell">
-			{{item.note}}
+			{% if item.note == NULL %} 0 {% else %}{{item.note}}{% endif %}
 		</div>
 		<div class="cell">
-			<button>details</button>
+			<a href="/item/read/{{item.code}}"><button>Details</button></a>
 		</div>
 	</div>
 {% endfor %}

@@ -44,6 +44,14 @@ class MemberRepository extends EntityRepository{
 		$query->setMaxResults($mem_per_page);
 		return $query->getResult();
 	}
+
+	public function getAllFaculties(){
+		$query = $this->getEntityManager()->createQuery(
+			'SELECT f.id, f.name FROM AppBundle:Faculty f
+			'
+		);
+		return $query->getResult();
+	}
 	
 	public function getGeneralInfos($code){
 		return $this->getEntityManager()->createQuery(

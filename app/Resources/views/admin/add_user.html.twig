@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article class="article-text-block">
+  <h1>Add new member</h1>
+  <form action="/book/added" method="post" class="big-form"><div class="InputAddOn">
+      <div class="InputAddOn-item" for="fname">First Name :</div>
+      <input type="text" id="fname" name="fname" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="lname">Last name :</div>
+      <input type="text" id="lname" name="lname" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="gender">Gender :</div>
+      <div class="InputAddOn-field InputAddOn-field-radio">Male : <input type="radio" id="gender" name="gender" value="M"/>Female : <input type="radio" id="gender" name="gender" value="F" /></div>
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="nid">National ID :</div>
+      <input type="text" id="nid" name="nid" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="dob">Date of birth :</div>
+      <input type="date" id="dob" name="dob" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="email">Email :</div>
+      <input type="text" id="email" name="email" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="home_phone">Home Phone :</div>
+      <input type="number" id="home_phone" name="home_phone" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="mob_phone">Mobile Phone :</div>
+      <input type="number" id="mob_phone" name="mob_phone" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="ref_phone">Referant Phone :</div>
+      <input type="number" id="ref_phone" name="ref_phone" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="civsitu">Civil Situation :</div>
+      <select id="civsitu" name="civsitu" class="InputAddOn-field">
+	<option selected>Single</option>
+	<option>Married</option>
+	<option>Widower</option>
+	<option>Divorced</option>
+	<option>Other</option>
+      </select>
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="fac">Faculty :</div>
+      <select id="fac" name="fac" class="InputAddOn-field">
+	{% for f in faculties %}
+	<option value='{{f.id}}'>{{f.name}}</option>
+	{% endfor %}
+      </select>
+    </div>
+
+    <div class="InputAddOn">
+      <div class="InputAddOn-item">Position :</div>
+      <div class="InputAddOn-field InputAddOn-field-radio">Student : <input type="radio" id="student" name="position" value="student" />Staff : <input type="radio" id="staff" name="position" value="staff" /></div>
+    </div>
+
+    <fieldset id="student_form" disabled class="fieldset-50">
+      <div class="InputAddOn">
+	<div class="InputAddOn-item">Major :</div>
+	<input type="text" id="major" name="major" class="InputAddOn-field" />
+      </div>
+      <div class="InputAddOn">
+	<div class="InputAddOn-item">Degree :</div>
+	<input type="text" id="degree" name="degree" class="InputAddOn-field" />
+      </div>
+      <div class="InputAddOn">
+	<div class="InputAddOn-item">Year :</div>
+	<input type="text" id="year" name="year" class="InputAddOn-field" />
+      </div>
+    </fieldset>
+
+    <fieldset id="staff_form" disabled class="fieldset-50">
+      <div class="InputAddOn">
+	<div class="InputAddOn-item">Function</div>
+	<input type="text" id="staff_function" name="staff_function" class="InputAddOn-field" />
+      </div>
+    </fieldset>
+
+    <div class="InputAddOn submit-login">
+      <button type="submit" class="InputAddOn-item">Submit</button>
+    </div>
+  </form>
+</article>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+  var r_stu = document.getElementById("student");
+  var r_sta = document.getElementById("staff");
+  var stud = document.getElementById("student_form");
+  var staff = document.getElementById("staff_form");
+  r_stu.onclick=function(){ stud.disabled=false; staff.disabled=true; console.log("yolo");};
+  r_sta.onclick=function(){ stud.disabled=true; staff.disabled=false; };
+</script>
+{% endblock %}

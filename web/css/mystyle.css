@@ -161,7 +161,12 @@ footer>p {
     display:flex;
     flex-direction:row;
     flex-wrap:wrap;
-    justify-content:space-between;
+    justify-content:space-around;
+    flex:1;
+}
+
+.big-form .InputAddOn {
+    flex:1 1 40%;
 }
 
 .login-block {
@@ -255,16 +260,27 @@ h1 {
     margin:20px;
 }
 
+.fieldset-50 {
+    width:50%;
+}
+
 /** SOLVED BY FLEXBOX **/
 
 .InputAddOn {
     display: flex;
     margin-bottom: 1.5em;
+    margin-right: 1.5em;
 }
 
 .InputAddOn-field {
     flex: 1;
 }
+
+.InputAddOn-field-radio{
+    display:flex;
+    justify-content:space-around;
+}
+
 .InputAddOn-field:not(:first-child) {
     border-left: 0;
 }

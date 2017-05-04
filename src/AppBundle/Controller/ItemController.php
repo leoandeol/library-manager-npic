@@ -68,7 +68,7 @@ class ItemController extends Controller
 				$new_item->setPublicationYear($request->request->get('publication_year'));
 				$new_item->setLanguage($request->request->get('language'));
 				$new_item->setIsbn($isbn);		
-				$new_item->setTotalUnit($request->request-get('units'));
+				$new_item->setTotalUnit($request->request->get('units'));
 				$new_item->setBorrowedUnit(0);
 				$new_item->setCost($request->request->get('cost'));
 				$new_item->setDisable(0);
@@ -81,7 +81,7 @@ class ItemController extends Controller
 				
 				$em->persist($new_item);
 				$em->flush();
-				return $this->redirect($this->generateUrl('home'));
+				return $this->redirect($this->generateUrl('additem'));
 			}
 			return $this->redirect($this->generateUrl('home'));
 		}
@@ -95,6 +95,11 @@ class ItemController extends Controller
     {
 		$item_repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 		$total = $item_repository->findTotalNumberOfItem();
+
+
+		$em = $this->getDoctrine()->getManager();
+		$type = $em->getRepository('AppBundle:Item')->findAllTypes();
+		$category =$em->getRepository('AppBundle:Item')->findAllCategories();
 		
 		$item_per_page = 20;
 		$nb_max_pages = ceil($total[0][1] / $item_per_page);		
@@ -106,6 +111,8 @@ class ItemController extends Controller
 			'page_max' => $nb_max_pages,
 			'items' => $items,
 			'page' => $page,
+			'types' => $type,
+			'categories' => $category,
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
     }
@@ -113,7 +120,7 @@ class ItemController extends Controller
 	/**
      * @Route("/item/search/{page}", name="itemsearch", requirements={"page": "\d+"})
      */
-	 public function read(Request $request, $page = 1)
+	 public function search(Request $request, $page = 1)
 	 {
 		$item_repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 		
@@ -133,5 +140,18 @@ class ItemController extends Controller
 			'page' => $page,
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
+	 }
+
+	 /**
+	 * @Route("/item/read/{id}", name="readitem", requirements={"id":"\d+"})
+	 */
+	 public function read(Request $request, $id = -1){
+		$em = $this->getDoctrine()->getManager();
+		$item = $em->getRepository('AppBundle:Item')->find($id);
+		var_dump($item);
+         	return $this->render('item/read.html.twig',[
+		       'item' => $item,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            ]);
 	 }
 }
