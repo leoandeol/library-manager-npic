@@ -2,10 +2,14 @@
 
 namespace AppBundle\Controller;
 use AppBundle\Entity\Member;
+use AppBundle\Entity\Student;
+use AppBundle\Entity\Staff;
 use AppBundle\Entity\Librarian;
+use AppBundle\Entity\Address;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\DateTime; 
 
 class UserController extends Controller
 {
@@ -325,7 +329,7 @@ class UserController extends Controller
     {		
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
-		$fac = $em->getRepository('AppBundle:Member')->getAllFaculties();
+		$fac = $em->getRepository('AppBundle:Faculty')->getAllFaculties();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				return $this->render('admin/add_user.html.twig',[
@@ -333,7 +337,85 @@ class UserController extends Controller
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
+			return $this->redirect($this->generateUrl('home'));
 		}
+		return $this->redirect($this->generateUrl('login'));
+    }
+	
+	/**
+     * @Route("/admin/added_user", name="added_user")
+     */
+    public function AddedUserAction(Request $request)
+    {		
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		$mem_rep = $em->getRepository('AppBundle:Member');
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				if($mem_rep->find($request->request->get('code')) == NULL){
+					$dob = explode('-',$request->request->get('dob'));
+					$password = "NPIC".$dob[2].$dob[1].$dob[0];
+					$new_member = new Member();
+					$new_member->setCode($request->request->get('code'));
+					$new_member->setFirstName($request->request->get('fname'));
+					$new_member->setLastName($request->request->get('lname'));
+					$new_member->setGender($request->request->get('gender'));
+					$new_member->setNationalId($request->request->get('nid'));
+					$new_member->setDob(new \DateTime($request->request->get('dob')));
+					$new_member->setEmail($request->request->get('email'));
+					$new_member->setTelHome($request->request->get('home_phone'));
+					$new_member->setTelMobile($request->request->get('mob_phone'));
+					$new_member->setTelRef($request->request->get('ref_phone'));
+					$new_member->setCivilSituation($request->request->get('civsitu'));
+					$new_member->setFaculty($em->getRepository('AppBundle:Faculty')->find($request->request->get('fac')));
+					$new_member->setEntryDate(new \DateTime($request->request->get('ent_date')));
+					$new_member->setPassword($password);
+					$new_member->setDisable(0);
+					
+					$position = $request->request->get('position');
+					if($position == "student"){
+						if(($student_id = $em->getRepository('AppBundle:Student')->getStudentID(
+						$request->request->get('major'),
+						$request->request->get('degree'),
+						$request->request->get('year'))) != NULL){
+							$new_member->setStudent($em->getRepository('AppBundle:Student')->find($student_id[0]["id"]));
+						}else{
+							return $this->redirect($this->generateUrl('add_user'));
+						}
+					}else{
+						if(($staff_id = $em->getRepository('AppBundle:Staff')->getStaffId(
+						$request->request->get('staff_function'))) != NULL){
+							var_dump($staff_id);
+							$new_member->setStaff($em->getRepository('AppBundle:Staff')->find($staff_id[0]["id"]));
+						}else{
+							return $this->redirect($this->generateUrl('add_user'));
+						}
+					}
+					
+					if(($address_id = $em->getRepository('AppBundle:Address')->getAddressId(
+					$request->request->get('city'),
+					$request->request->get('pcode'),
+					$request->request->get('street'))) != NULL){
+						$new_member->setAddress($em->getRepository('AppBundle:Address')->find($address_id[0]["id"]));
+					}else{					
+						$new_address = new Address();
+						$new_address->setCity($request->request->get('city'));
+						$new_address->setPostalCode($request->request->get('pcode'));
+						$new_address->setStreet($request->request->get('street'));
+						$new_member->setAddress($new_address);
+						$em->persist($new_address);
+					}
+					
+					$em->persist($new_member);
+					$em->flush();
+					
+					return $this->redirect($this->generateUrl('checkalluser'));
+				}
+				return $this->redirect($this->generateUrl('add_user'));
+			}
+			return $this->redirect($this->generateUrl('home'));
+		}
+		return $this->redirect($this->generateUrl('login'));
     }
 
 }

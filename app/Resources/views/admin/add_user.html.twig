@@ -3,9 +3,12 @@
 {% block body %}
 <article class="article-text-block">
   <h1>Add new member</h1>
-  <form action="/book/added" method="post" class="big-form"><div class="InputAddOn">
+  <form action="/admin/added_user" method="post" class="big-form"><div class="InputAddOn">
       <div class="InputAddOn-item" for="fname">First Name :</div>
       <input type="text" id="fname" name="fname" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="code">Code :</div>
+      <input type="text" id="code" name="code" class="InputAddOn-field" />
     </div><div class="InputAddOn">
       <div class="InputAddOn-item" for="lname">Last name :</div>
       <input type="text" id="lname" name="lname" class="InputAddOn-field" />
@@ -19,26 +22,35 @@
       <div class="InputAddOn-item" for="dob">Date of birth :</div>
       <input type="date" id="dob" name="dob" class="InputAddOn-field" />
     </div><div class="InputAddOn">
-      <div class="InputAddOn-item" for="email">Email :</div>
-      <input type="text" id="email" name="email" class="InputAddOn-field" />
+      <div class="InputAddOn-item" for="city">City :</div>
+      <input type="text" id="city" name="city" class="InputAddOn-field" />
     </div><div class="InputAddOn">
       <div class="InputAddOn-item" for="home_phone">Home Phone :</div>
       <input type="number" id="home_phone" name="home_phone" class="InputAddOn-field" />
     </div><div class="InputAddOn">
-      <div class="InputAddOn-item" for="mob_phone">Mobile Phone :</div>
-      <input type="number" id="mob_phone" name="mob_phone" class="InputAddOn-field" />
+      <div class="InputAddOn-item" for="pcode">Postal code :</div>
+      <input type="text" id="pcode" name="pcode" class="InputAddOn-field" />
     </div><div class="InputAddOn">
       <div class="InputAddOn-item" for="ref_phone">Referant Phone :</div>
       <input type="number" id="ref_phone" name="ref_phone" class="InputAddOn-field" />
     </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="street">Street :</div>
+      <input type="text" id="street" name="street" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="mob_phone">Mobile Phone :</div>
+      <input type="number" id="mob_phone" name="mob_phone" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
       <div class="InputAddOn-item" for="civsitu">Civil Situation :</div>
       <select id="civsitu" name="civsitu" class="InputAddOn-field">
-	<option selected>Single</option>
-	<option>Married</option>
-	<option>Widower</option>
-	<option>Divorced</option>
-	<option>Other</option>
+	<option value="single" selected>Single</option>
+	<option value="married">Married</option>
+	<option value="widower">Widower</option>
+	<option value="divorced">Divorced</option>
+	<option value="other">Other</option>
       </select>
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="email">Email :</div>
+      <input type="text" id="email" name="email" class="InputAddOn-field" />
     </div><div class="InputAddOn">
       <div class="InputAddOn-item" for="fac">Faculty :</div>
       <select id="fac" name="fac" class="InputAddOn-field">
@@ -50,7 +62,7 @@
 
     <div class="InputAddOn">
       <div class="InputAddOn-item">Position :</div>
-      <div class="InputAddOn-field InputAddOn-field-radio">Student : <input type="radio" id="student" name="position" value="student" />Staff : <input type="radio" id="staff" name="position" value="staff" /></div>
+      <div class="InputAddOn-field InputAddOn-field-radio">Student : <input type="radio" id="student" name="position" value="student" selected/>Staff : <input type="radio" id="staff" name="position" value="staff" /></div>
     </div>
 
     <fieldset id="student_form" disabled class="fieldset-50">
@@ -75,9 +87,15 @@
       </div>
     </fieldset>
 
+	<div class="InputAddOn">
+      <div class="InputAddOn-item" for="ent_date">Entry Date :</div>
+      <input type="date" id="ent_date" name="ent_date" class="InputAddOn-field" />
+    </div>
+	
     <div class="InputAddOn submit-login">
       <button type="submit" class="InputAddOn-item">Submit</button>
     </div>
+	
   </form>
 </article>
 {% endblock %}

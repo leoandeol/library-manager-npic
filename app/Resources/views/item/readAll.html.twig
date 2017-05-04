@@ -78,6 +78,9 @@
 		<div class="cell">
 			{% if item.note == NULL %} 0 {% else %}{{item.note}}{% endif %}
 		</div>
+		<div class="cell">
+			<a href="/item/read/{{item.code}}"><button>Details</button></a>
+		</div>
 	</div>
 {% endfor %}
 </div>

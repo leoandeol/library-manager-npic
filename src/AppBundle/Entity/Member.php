@@ -62,7 +62,7 @@ class Member{
 	private $tel_ref;
 	
 	/**
-     * @ORM\Column(type="string",length=25)
+     * @ORM\Column(type="string",length=255)
      */
 	private $email;
 	

@@ -152,7 +152,6 @@ class ItemController extends Controller
 	 public function read(Request $request, $id = -1){
 		$em = $this->getDoctrine()->getManager();
 		$item = $em->getRepository('AppBundle:Item')->find($id);
-		var_dump($item);
          	return $this->render('item/read.html.twig',[
 		       'item' => $item,
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
