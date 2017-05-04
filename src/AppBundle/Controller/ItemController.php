@@ -19,9 +19,14 @@ class ItemController extends Controller
     public function CreateAction(Request $request)
     {		
 		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		$type = $em->getRepository('AppBundle:Item')->findAllTypes();
+		$category =$em->getRepository('AppBundle:Item')->findAllCategories();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				return $this->render('item/add.html.twig',[
+				        'types' => $type,
+					'categories' => $category,
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}

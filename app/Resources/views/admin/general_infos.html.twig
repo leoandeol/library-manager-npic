@@ -1,0 +1,20 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article class="article-text-block">
+  <h2>General infos</h2>
+  <div class="InputAddOn">	
+    <a href="/admin/checkAllUser"><button class="InputAddOn-item">Member list</button></a>
+  </div>
+  <div class="InputAddOn">	
+    <a href="/admin/checkAllLibs"><button class="InputAddOn-item">Librarian list</button></a>
+  </div>
+  <div class="InputAddOn">	
+    <a href="/admin/general_infos"><button class="InputAddOn-item">General informations</button></a>
+  </div>
+  <div class="InputAddOn">	
+    <a href="/item/create"><button class="InputAddOn-item">Add a new item</button></a>
+  </div>
+</article>
+{% endblock %}
