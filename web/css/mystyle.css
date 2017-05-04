@@ -383,6 +383,10 @@ h1 {
 .row:nth-of-type(odd) {
     background-color: #e9e9e9;
 }
+.row:not(:first-child) {
+    background-color:#4b4b4b;
+}
+
 .row.header {
     font-weight: 900;
     color: #ffffff;
