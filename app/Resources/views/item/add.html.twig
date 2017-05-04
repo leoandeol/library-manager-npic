@@ -8,66 +8,70 @@
       <div class="InputAddOn-item" >Code</div>
       <input type="text" name="code" class="InputAddOn-field">
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >Title</div>
       <input type="text" name="title" class="InputAddOn-field">
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >Short title</div>
       <input type="text" name="short_title" class="InputAddOn-field">
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >Author</div>
       <input type="text" name="author" class="InputAddOn-field">
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >Publication year</div>
       <input type="number" name="publication_year" class="InputAddOn-field">
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >Publisher</div>
       <input type="text" name="publisher" class="InputAddOn-field">
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >Category</div>
       <select name="category" class="InputAddOn-field">
 	{% for c in categories  %}
-		<option value='{{ c.id }}' >{{ c.subject }}</option>
+	<option value='{{ c.id }}' >{{ c.subject }}</option>
 	{% endfor %}
       </select>
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >Language</div>
       <select name="language" class="InputAddOn-field">
-		<option value='Khmer'>Khmer</option>
-		<option value='English'>English</option>
-		<option value='Korean'>Korean</option>
-		<option value='French'>French</option>
-		<option value='Japanese'>Japanese</option>
-		<option value='Chinese'>Chinese</option>
+	<option value='Khmer'>Khmer</option>
+	<option value='English'>English</option>
+	<option value='Korean'>Korean</option>
+	<option value='French'>French</option>
+	<option value='Japanese'>Japanese</option>
+	<option value='Chinese'>Chinese</option>
       </select>
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >Type</div>
       <select name="type" class="InputAddOn-field">
 	{% for t in types %}
-		<option value='{{ t.id }}' >{{ t.name }}</option>
+	<option value='{{ t.id }}' >{{ t.name }}</option>
 	{% endfor %}
       </select>
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >Bookable</div>
       <div class="InputAddOn-field"><input type="checkbox" name="bookable" checked></div>
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >Cost (USD $)</div>
       <input type="number" step="0.01" min="0" name="cost" class="InputAddOn-field">
     </div>
-	<div class="InputAddOn">
+    <div class="InputAddOn">
       <div class="InputAddOn-item" >ISBN (optional)</div>
       <input type="number" name="isbn" class="InputAddOn-field">
     </div>
-	<div class="InputAddOn submit-login">
+    <div class="InputAddOn">
+      <div class="InputAddOn-item" >Total Units : </div>
+      <input type="number" name="units" class="InputAddOn-field" value="1">
+    </div>
+    <div class="InputAddOn submit-login">
       <button type="submit" class="InputAddOn-item">Submit</button>
     </div>
   </form>

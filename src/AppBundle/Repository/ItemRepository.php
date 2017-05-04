@@ -17,7 +17,7 @@ class ItemRepository extends EntityRepository{
 	
 	public function findAllItems($current,$item_per_page){
 		$query = $this->getEntityManager()->createQuery(
-			'SELECT it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
+			'SELECT it.code,it.title,it.author,ca.subject,it.language,it.publication_year,it.bookable,it.note
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id'
 		);

@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends Controller
 {
+						
+
 
     /**
      * @Route("/user/login", name="login")
@@ -315,4 +317,23 @@ class UserController extends Controller
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 	}
+
+	/**
+     * @Route("/admin/add_user", name="add_user")
+     */
+    public function AddUserAction(Request $request)
+    {		
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		$fac = $em->getRepository('AppBundle:Member')->getAllFaculties();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				return $this->render('admin/add_user.html.twig',[
+				        'faculties' => $fac,
+					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+				]);
+			}
+		}
+    }
+
 }

@@ -33,16 +33,16 @@
   </div>
 </nav>
 <article class="item-list">
-  <h1>Details of item {{ book.shortName }}</h1>
+  <h1>Details of item {{ item.short_title }}</h1>
   <div class="item-info-list">
-    <div class="item-info">Name : {{ book.longName }}</div>
-    <div class="item-info">Date of publication : {{ book.published }}</div>
-    <div class="item-info">Author : {{ book.author }}</div>
-    <div class="item-info">Editor : {{ book.editor }}</div>
-    <div class="item-info">Category : {{ book.category }}</div>
-    <div class="item-info">Available : {{ book.longName }}</div>
+    <div class="item-info">Name : {{ item.title }}</div>
+    <div class="item-info">Date of publication : {{ item.published }}</div>
+    <div class="item-info">Author : {{ item.author }}</div>
+    <div class="item-info">Editor : {{ item.editor }}</div>
+    <div class="item-info">Category : {{ item.category }}</div>
+    <div class="item-info">Available : {{ item.longName }}</div>
   </div>
   	<button class="InputAddOn-item" type="submit" onclick="goBack();">Previous</button>
-	<a href="/book/book/{{ book.id }}"><button class="InputAddOn-item" type="submit">Book</button></a>
+	<a href="/item/item/{{ item.id }}"><button class="InputAddOn-item" type="submit">Book</button></a>
 </article>
 {% endblock %}
