@@ -401,7 +401,7 @@ class Member{
      */
     public function setEntryDate($entryDate)
     {
-        $this->entry_date = $entryDate;
+        $this->entry_date = new \DateTime($entryDate);
 
         return $this;
     }

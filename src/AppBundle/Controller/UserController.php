@@ -352,23 +352,30 @@ class UserController extends Controller
 		$mem_rep = $em->getRepository('AppBundle:Member');
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
-				if($mem_rep->find($request->request->get('code')) == NULL){
-					$dob = explode('-',$request->request->get('dob'));
-					$password = "NPIC".$dob[2].$dob[1].$dob[0];
+				if(($mem_rep->find($request->request->get('code'))) == NULL){
+					
+					$dob['day'] = $request->request->get('day');
+					$dob['month'] = $request->request->get('month');
+					$dob['year'] = $request->request->get('year');
+					
+					$password = "NPIC".$dob['day'].$dob['month'].$dob['year'];
+					
+					$dobDataBase = $dob['year'].'-'.$dob['month'].'-'.$dob['day'];
+										
 					$new_member = new Member();
 					$new_member->setCode($request->request->get('code'));
 					$new_member->setFirstName($request->request->get('fname'));
 					$new_member->setLastName($request->request->get('lname'));
 					$new_member->setGender($request->request->get('gender'));
 					$new_member->setNationalId($request->request->get('nid'));
-					$new_member->setDob(new \DateTime($request->request->get('dob')));
+					$new_member->setDob(new \DateTime("$dobDataBase"));
 					$new_member->setEmail($request->request->get('email'));
 					$new_member->setTelHome($request->request->get('home_phone'));
 					$new_member->setTelMobile($request->request->get('mob_phone'));
 					$new_member->setTelRef($request->request->get('ref_phone'));
 					$new_member->setCivilSituation($request->request->get('civsitu'));
 					$new_member->setFaculty($em->getRepository('AppBundle:Faculty')->find($request->request->get('fac')));
-					$new_member->setEntryDate(new \DateTime($request->request->get('ent_date')));
+					$new_member->setEntryDate(date("Y-m-d"));
 					$new_member->setPassword($password);
 					$new_member->setDisable(0);
 					
@@ -380,15 +387,22 @@ class UserController extends Controller
 						$request->request->get('year'))) != NULL){
 							$new_member->setStudent($em->getRepository('AppBundle:Student')->find($student_id[0]["id"]));
 						}else{
-							return $this->redirect($this->generateUrl('add_user'));
+							$new_student = new Student();
+							$new_student->setMajor($request->request->get('major'));
+							$new_student->setDegree($request->request->get('degree'));
+							$new_student->setYear($request->request->get('year'));
+							$em->persist($new_student);
+							$new_member->setStudent($new_student);
 						}
 					}else{
 						if(($staff_id = $em->getRepository('AppBundle:Staff')->getStaffId(
 						$request->request->get('staff_function'))) != NULL){
-							var_dump($staff_id);
 							$new_member->setStaff($em->getRepository('AppBundle:Staff')->find($staff_id[0]["id"]));
 						}else{
-							return $this->redirect($this->generateUrl('add_user'));
+							$new_staff = new Staff();
+							$new_staff->setFunction('staff_function');
+							$em->persist($new_staff);
+							$new_member->setStaff($new_staff);
 						}
 					}
 					
