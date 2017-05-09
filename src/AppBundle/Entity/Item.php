@@ -41,7 +41,10 @@ class Item{
 	private $publication_year;
 	
 	/**
-     * @ORM\Column(type="string",length=12)
+     * @var language
+	 *
+	 * @ORM\ManyToOne(targetEntity="Languages")
+	 * JoinColumn(name="language_id", referencedColumnName="id", onDelete="CASCADE")
      */
 	private $language;
 	
