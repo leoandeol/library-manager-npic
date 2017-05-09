@@ -39,13 +39,10 @@
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Language</div>
       <select name="language" class="InputAddOn-field">
-	<option value='Khmer'>Khmer</option>
-	<option value='English'>English</option>
-	<option value='Korean'>Korean</option>
-	<option value='French'>French</option>
-	<option value='Japanese'>Japanese</option>
-	<option value='Chinese'>Chinese</option>
-      </select>
+		{% for l in languages %}
+		<option value="{{l.id}}">{{l.getLangName()}}</option>
+		{%endfor%}
+		</select>
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Type</div>
