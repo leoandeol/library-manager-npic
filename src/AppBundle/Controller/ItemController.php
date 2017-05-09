@@ -137,7 +137,7 @@ class ItemController extends Controller
 		$current = ($page * $item_per_page) - $item_per_page;
 		
 		$items = $item_repository->findAllItemsSearched($search,$current,$item_per_page);
-
+		
         return $this->render('item/readAll.html.twig',[
 			'page_max' => $nb_max_pages,
 			'items' => $items,
@@ -152,9 +152,13 @@ class ItemController extends Controller
 	 public function read(Request $request, $id = -1){
 		$em = $this->getDoctrine()->getManager();
 		$item = $em->getRepository('AppBundle:Item')->find($id);
+		$type = $em->getRepository('AppBundle:Item')->findAllTypes();
+		$category =$em->getRepository('AppBundle:Item')->findAllCategories();
          	return $this->render('item/read.html.twig',[
 		       'item' => $item,
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			   'types' => $type,
+			   'categories' => $category,
+			   'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
             ]);
 	 }
 

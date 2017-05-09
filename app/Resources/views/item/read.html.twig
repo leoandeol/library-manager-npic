@@ -3,35 +3,31 @@
 
 {% block body %}
 <nav class="menu-list">
-  <div class="menu-list-search">
-    <form action="/item/search" method="post">
-      <div class="InputAddOn">
-	<input class="InputAddOn-field" type="text" name="search">
-      </div>
-      <div class="InputAddOn">
-	<button class="InputAddOn-item" type="submit">Search</button>
-      </div>
-    </form>
+  <form class="menu-list-search" action="/item/search" method="post">
+    <div class="InputAddOn">
+      <input class="InputAddOn-field" type="text" name="Search">
+      <button class="InputAddOn-item" type="submit">Search</button>
+    </div>
+  </form>
+  <div class="menu-list-element">
+    Category : <select name="category">
+      {% for c in categories %}
+      <option value="{{c.id}}">{{c.subject}}</option>
+      {% endfor %}
+      </select>
   </div>
   <div class="menu-list-element">
-    Sort by name
+    Type : <select name="type">
+      {% for t in types %}
+      <option value="{{t.id}}">{{t.name}}</option>
+      {% endfor %}
+      </select>
   </div>
   <div class="menu-list-element">
-    Sort by category
-  </div>
-  <div class="menu-list-element">
-    Sort by number of pages
-  </div>
-  <div class="menu-list-element">
-    Something something
-  </div>
-  <div class="menu-list-element">
-    Another thing
-  </div>
-  <div class="menu-list-element">
-    Yet another option
+    Sort by language
   </div>
 </nav>
+
 <article class="item-list">
   <h1>Details of item</h1>
   <div class="item-info-list">
