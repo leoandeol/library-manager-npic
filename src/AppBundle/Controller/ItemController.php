@@ -161,7 +161,7 @@ class ItemController extends Controller
          	return $this->render('item/read.html.twig',[
 		       'item' => $item,
 			   'types' => $type,
-			   'languages' => $language
+			   'languages' => $language,
 			   'categories' => $category,
 			   'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
             ]);
