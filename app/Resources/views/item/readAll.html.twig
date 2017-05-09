@@ -24,7 +24,11 @@
       </select>
   </div>
   <div class="menu-list-element">
-    Sort by language
+    Language : <select name="language">
+		{% for l in languages %}
+		<option value="{{l.id}}">{{l.lang_name}}</option>
+		{%endfor%}
+	</select>
   </div>
 </nav>
 

@@ -27,18 +27,6 @@ class ItemRepository extends EntityRepository{
 		return $query->getResult();
 	}
 	
-	public function findAllCategories(){
-		return $this->getEntityManager()->createQuery(
-			'Select c.id, c.subject from AppBundle:Category c where c.disable=0'
-		)->getResult();
-	}
-	
-	public function findAllTypes(){
-		return $this->getEntityManager()->createQuery(
-			'Select c.id, c.name from AppBundle:Type c'
-		)->getResult();
-	}
-	
 	public function findTotalNumberOfItemSearched($search){	
 		return $this->getEntityManager()->createQuery(
 			"SELECT COUNT(it.code)

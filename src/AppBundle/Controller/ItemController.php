@@ -20,12 +20,14 @@ class ItemController extends Controller
     {		
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
-		$type = $em->getRepository('AppBundle:Item')->findAllTypes();
-		$category =$em->getRepository('AppBundle:Item')->findAllCategories();
+		$type = $em->getRepository('AppBundle:Type')->findAll();
+		$category = $em->getRepository('AppBundle:Category')->findAllCategories();
+		$language = $em->getRepository('AppBundle:Languages')->findAll();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				return $this->render('item/add.html.twig',[
-				        'types' => $type,
+					'languages' => $language,
+					'types' => $type,
 					'categories' => $category,
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
@@ -102,9 +104,9 @@ class ItemController extends Controller
 
 
 		$em = $this->getDoctrine()->getManager();
-		$type = $em->getRepository('AppBundle:Item')->findAllTypes();
-		$category =$em->getRepository('AppBundle:Item')->findAllCategories();
-		
+		$type = $em->getRepository('AppBundle:Type')->findAll();
+		$category = $em->getRepository('AppBundle:Category')->findAllCategories();
+		$language = $em->getRepository('AppBundle:Languages')->findAll();
 		$item_per_page = 20;
 		$nb_max_pages = ceil($total[0][1] / $item_per_page);		
 		$current = ($page * $item_per_page) - $item_per_page;
@@ -113,6 +115,7 @@ class ItemController extends Controller
 		
         return $this->render('item/readAll.html.twig',[
 			'page_max' => $nb_max_pages,
+			'languages' => $language,
 			'items' => $items,
 			'page' => $page,
 			'types' => $type,
@@ -152,11 +155,13 @@ class ItemController extends Controller
 	 public function read(Request $request, $id = -1){
 		$em = $this->getDoctrine()->getManager();
 		$item = $em->getRepository('AppBundle:Item')->find($id);
-		$type = $em->getRepository('AppBundle:Item')->findAllTypes();
-		$category =$em->getRepository('AppBundle:Item')->findAllCategories();
+		$type = $em->getRepository('AppBundle:Type')->findAll();
+		$category = $em->getRepository('AppBundle:Category')->findAllCategories();
+		$language = $em->getRepository('AppBundle:Languages')->findAll();
          	return $this->render('item/read.html.twig',[
 		       'item' => $item,
 			   'types' => $type,
+			   'languages' => $language
 			   'categories' => $category,
 			   'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
             ]);
