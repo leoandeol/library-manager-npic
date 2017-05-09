@@ -38,5 +38,86 @@ class ItemUnits {
 	 public function __construct(){
 		 //nothing
 	 }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set amount
+     *
+     * @param integer $amount
+     *
+     * @return ItemUnits
+     */
+    public function setAmount($amount)
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
+    /**
+     * Get amount
+     *
+     * @return integer
+     */
+    public function getAmount()
+    {
+        return $this->amount;
+    }
+
+    /**
+     * Set addDate
+     *
+     * @param \DateTime $addDate
+     *
+     * @return ItemUnits
+     */
+    public function setAddDate($addDate)
+    {
+        $this->add_date = $addDate;
+
+        return $this;
+    }
+
+    /**
+     * Get addDate
+     *
+     * @return \DateTime
+     */
+    public function getAddDate()
+    {
+        return $this->add_date;
+    }
+
+    /**
+     * Set item
+     *
+     * @param \AppBundle\Entity\Item $item
+     *
+     * @return ItemUnits
+     */
+    public function setItem(\AppBundle\Entity\Item $item)
+    {
+        $this->item = $item;
+
+        return $this;
+    }
+
+    /**
+     * Get item
+     *
+     * @return \AppBundle\Entity\Item
+     */
+    public function getItem()
+    {
+        return $this->item;
+    }
 }
-?>
