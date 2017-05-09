@@ -323,7 +323,7 @@ class UserController extends Controller
 	}
 
 	/**
-     * @Route("/admin/add_user", name="add_user")
+     * @Route("/admin/add_user/", name="add_user")
      */
     public function AddUserAction(Request $request)
     {		

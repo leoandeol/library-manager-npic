@@ -161,4 +161,16 @@ class ItemController extends Controller
 			   'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
             ]);
 	 }
+
+	 /**
+	 * @Route("/item/book/{id}", name="bookitem", requirements={"id":"\d+"})
+	 */
+	 public function book(Request $request, $id = -1){
+		$em = $this->getDoctrine()->getManager();
+		$item = $em->getRepository('AppBundle:Item')->find($id);
+         	return $this->render('item/read.html.twig',[
+		       'item' => $item,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            ]);
+	 }
 }
