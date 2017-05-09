@@ -40,7 +40,7 @@
     <div class="item-info">Author : {{ item.getAuthor() }}</div>
     <div class="item-info">Publisher : {{ item.getPublisher() }}</div>
     <div class="item-info">Category : {{ item.getCategory().getSubject() }}</div>
-    <div class="item-info">Available : {{ item.getTitle() }}</div>
+    <div class="item-info">Available : {% if item.getDisable() %}False{% else %}True{% endif %}</div>
   </div>
   	<button class="InputAddOn-item" type="submit" onclick="goBack();">Previous</button>
 	<a href="/item/book/{{ item.getCode() }}"><button class="InputAddOn-item" type="submit">Book</button></a>
