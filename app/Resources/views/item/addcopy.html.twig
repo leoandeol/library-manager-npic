@@ -6,7 +6,7 @@
   <form action="/item/added" method="post" class="big-form">
     <div class="InputAddOn">
       <div class="InputAddOn-item" for="code">Code (blank if unknown) :</div>
-      <input type="text" id="code" name="code" class="InputAddOn-field"/>
+      <input type="text" id="code" onchange="testCode(this)" name="code" class="InputAddOn-field"/>
     </div><div class="InputAddOn">
       <div class="InputAddOn-item" for="sname">Short name :</div>
       <input type="text" id="sname" name="shortname" class="InputAddOn-field" />

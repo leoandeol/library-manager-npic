@@ -1,105 +1,132 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
 <article class="article-text-block">
 	<h1>General informations</h1>
-	{% if isAdmin %}
-    <div class="InputAddOn">
-		<div class="InputAddOn-item" >Username:</div>
-    	<p>{{user.username}}</p>
-	</div>
+	{% if isMember==false %}
+		<div class="InputAddOn">
+			<div class="InputAddOn-item" >Username:</div>
+			<p>{{user.getUsername()}}</p>
+		</div>
 	{% else %}
-    <div class="InputAddOn">
-		<div class="InputAddOn-item" >Code:</div>
-    	<p>{{user.code}}</p>
-	</div>
+		<div class="InputAddOn">
+			<div class="InputAddOn-item" >Code:</div>
+			<p>{{user.getCode()}}</p>
+		</div>
 	{% endif %}
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Firstname:</div>
-    	<p>{{user.first_name}}</p>
+    	<p>{{user.getFirstName()}}</p>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Lastname:</div>
-    	<p>{{user.last_name}}</p>
+    	<p>{{user.getLastName()}}</p>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Email:</div>
-    	<p>{{user.email}}</p>
+    	<p>{{user.getEmail()}}</p>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Gender:</div>
-    	<p>{{user.gender}}</p>
+    	<p>{{user.getGender()}}</p>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >City:</div>
-    	<p>{{user.city}}</p>
+    	<p>{{user.getAddress().getCity()}}</p>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Postal code:</div>
-    	<p>{{user.postal_code}}</p>
+    	<p>{{user.getAddress().getPostalCode()}}</p>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Street:</div>
-    	<p>{{user.street}}</p>
+    	<p>{{user.getAddress().getStreet()}}</p>
 	</div>
-	{% if isAdmin %}
+	{% if isMember==false %}
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Tel:</div>
-			<p>{{user.tel}}</p>
-		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Username:</div>
-			<p>{{user.username}}</p>
+			<p>{{user.getTel()}}</p>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Hire date:</div>
-			<p>{{user.hire_date|date('Y-m-d')}}</p>
+			<p>{{user.getHireDate()|date('Y-m-d')}}</p>
 		</div>
 	{% else %}
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >National ID:</div>
-			<p>{{user.national_id}}</p>
+			<p>{{user.getNationalId()}}</p>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Civil situation:</div>
-			<p>{{user.civil_situation}}</p>
+			<p>{{user.getCivilSituation()}}</p>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Date of birth:</div>
-			<p>{{user.dob|date('Y-m-d')}}</p>
+			<p>{{user.getDob()|date('Y-m-d')}}</p>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Tel mobile:</div>
-			<p>{{user.tel_mobile}}</p>
+			<p>{{user.getTelMobile()}}</p>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Tel home:</div>
-			<p>{{user.tel_home}}</p>
+			<p>{{user.getTelHome()}}</p>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Tel ref:</div>
-			<p>{{user.tel_ref}}</p>
+			<p>{{user.getTelRef()}}</p>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Entry date:</div>
-			<p>{{user.entry_date|date('Y-m-d')}}</p>
+			<p>{{user.getEntryDate()|date('Y-m-d')}}</p>
 		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Major:</div>
-			<p>{{user.major}}</p>
-		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Degree:</div>
-			<p>{{user.degree}}</p>
-		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Degree year:</div>
-			<p>{{user.year}}</p>
-		</div>
+		{% if user.getStudent() %}
+			<div class="InputAddOn">
+				<div class="InputAddOn-item" >Major:</div>
+				<p>{{user.getMajor().getName()}}</p>
+			</div>
+			<div class="InputAddOn">
+				<div class="InputAddOn-item" >Degree:</div>
+				<p>{{user.getDegree().getName()}}</p>
+			</div>
+			<div class="InputAddOn">
+				<div class="InputAddOn-item" >Degree year:</div>
+				<p>{{user.getDegreeYear().getYear()}}</p>
+			</div>
+		{% else %}
+			<div class="InputAddOn">
+				<div class="InputAddOn-item" >Function:</div>
+				<p>{{user.getFunction().getName()}}</p>
+			</div>
+		{% endif %}
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Faculty:</div>
-			<p>{{user.name}}</p>
+			<p>{{user.getFaculty().getName()}}</p>
 		</div>
+	{% endif %}
+	{% if isAdmin %}
+		{% if user.getDisable()==0 %}
+			<div class="InputAddOn">	
+				<a href="/admin/disable_user/
+				{% if isMember %}
+					{{user.getCode()}}
+				{% else %}
+					{{user.getUsername()}}
+				{% endif %}
+				"><button class="InputAddOn-item">Disable</button></a>
+			</div>
+		{% else %}
+			<div class="InputAddOn">	
+				<a href="/admin/reactivate_user/
+				{% if isMember %}
+					{{user.getCode()}}
+				{% else %}
+					{{user.getUsername()}}
+				{% endif %}
+				"><button class="InputAddOn-item">Reactivate</button></a>
+			</div>
+		{% endif %}
 	{% endif %}
 </article>
 

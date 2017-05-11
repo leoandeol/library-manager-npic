@@ -6,7 +6,7 @@
   <form action="/item/created" method="post" class="big-form" autocomplete="on">
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Code</div>
-      <input type="text" name="code" class="InputAddOn-field">
+      <input type="text" name="code" onchange="testCode(this)" class="InputAddOn-field">
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Title</div>
@@ -73,4 +73,7 @@
     </div>
   </form>
 </article>
+{% endblock %}
+{% block javascripts %}
+<script src="{{ asset('js/testForms.js') }}"></script>
 {% endblock %}

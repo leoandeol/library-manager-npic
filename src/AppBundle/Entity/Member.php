@@ -77,20 +77,46 @@ class Member{
 	private $password;
 	
 	/**
-     * @var Staff
-	 *
-	 * @ORM\ManyToOne(targetEntity="Staff")
-	 * @ORM\JoinColumn(name="staff_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\Column(type="boolean")
      */
 	private $staff;
 	
 	/**
-     * @var Student
+     * @var function
 	 *
-	 * @ORM\OneToOne(targetEntity="Student")
-	 * @ORM\JoinColumn(name="student_id", referencedColumnName="id", onDelete="CASCADE")
+	 * @ORM\ManyToOne(targetEntity="StaffFunction")
+	 * @ORM\JoinColumn(name="function_id",nullable=true, referencedColumnName="id", onDelete="CASCADE")
+     */
+	private $function;
+	
+	/**
+     * @ORM\Column(type="boolean")
      */
 	private $student;
+	
+	/**
+     * @var major
+	 *
+	 * @ORM\ManyToOne(targetEntity="Major")
+	 * @ORM\JoinColumn(name="major_id",nullable=true, referencedColumnName="id", onDelete="CASCADE")
+     */
+	private $major;
+	
+	/**
+     * @var degree
+	 *
+	 * @ORM\ManyToOne(targetEntity="Degree")
+	 * @ORM\JoinColumn(name="degree_id",nullable=true, referencedColumnName="id", onDelete="CASCADE")
+     */
+	private $degree;
+	
+	/**
+     * @var degree_year
+	 *
+	 * @ORM\ManyToOne(targetEntity="DegreeYear")
+	 * @ORM\JoinColumn(name="degree_year_id",nullable=true, referencedColumnName="id", onDelete="CASCADE")
+     */
+	private $degree_year;
 	
 	/**
      * @var Address
@@ -119,9 +145,9 @@ class Member{
 	private $disable_reason;
 	
 	/**
-     * @ORM\Column(type="integer",nullable=true)
+     * @ORM\Column(type="date",nullable=true)
      */
-	private $disable_year;
+	private $disable_date;
 	
 	public function __construct()
 	{
@@ -585,26 +611,122 @@ class Member{
     }
 
     /**
-     * Set disableYear
+     * Set disableDate
      *
-     * @param integer $disableYear
+     * @param integer $disableDate
      *
      * @return Member
      */
-    public function setDisableYear($disableYear)
+    public function setDisableDate($disableDate)
     {
-        $this->disable_year = $disableYear;
+        $this->disable_date = new \DateTime($disableDate);
 
         return $this;
     }
 
     /**
-     * Get disableYear
+     * Get disableDate
      *
      * @return integer
      */
-    public function getDisableYear()
+    public function getDisableDate()
     {
-        return $this->disable_year;
+        return $this->disable_date;
+    }
+
+    /**
+     * Set function
+     *
+     * @param \AppBundle\Entity\StaffFunction $function
+     *
+     * @return Member
+     */
+    public function setFunction(\AppBundle\Entity\StaffFunction $function = null)
+    {
+        $this->function = $function;
+
+        return $this;
+    }
+
+    /**
+     * Get function
+     *
+     * @return \AppBundle\Entity\StaffFunction
+     */
+    public function getFunction()
+    {
+        return $this->function;
+    }
+
+    /**
+     * Set major
+     *
+     * @param \AppBundle\Entity\Major $major
+     *
+     * @return Member
+     */
+    public function setMajor(\AppBundle\Entity\Major $major = null)
+    {
+        $this->major = $major;
+
+        return $this;
+    }
+
+    /**
+     * Get major
+     *
+     * @return \AppBundle\Entity\Major
+     */
+    public function getMajor()
+    {
+        return $this->major;
+    }
+
+    /**
+     * Set degree
+     *
+     * @param \AppBundle\Entity\Degree $degree
+     *
+     * @return Member
+     */
+    public function setDegree(\AppBundle\Entity\Degree $degree = null)
+    {
+        $this->degree = $degree;
+
+        return $this;
+    }
+
+    /**
+     * Get degree
+     *
+     * @return \AppBundle\Entity\Degree
+     */
+    public function getDegree()
+    {
+        return $this->degree;
+    }
+
+    /**
+     * Set degreeYear
+     *
+     * @param \AppBundle\Entity\DegreeYear $degreeYear
+     *
+     * @return Member
+     */
+    public function setDegreeYear(\AppBundle\Entity\DegreeYear $degreeYear = null)
+    {
+        $this->degree_year = $degreeYear;
+
+        return $this;
+    }
+
+    /**
+     * Get degreeYear
+     *
+     * @return \AppBundle\Entity\DegreeYear
+     */
+    public function getDegreeYear()
+    {
+        return $this->degree_year;
     }
 }

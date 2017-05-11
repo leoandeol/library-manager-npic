@@ -5,9 +5,13 @@
 <article class="article-text-block">
   <h1>My account</h1>
   <div class="InputAddOn">
-    <a href="/user/general_infos"><button class="InputAddOn-item">General informations</button></a>
+    <a href="/user/general_infos/{% if app.session.get('isAdmin') %}
+	{{ app.session.get('user').getUsername() }}
+	{% else %}
+	{{ app.session.get('user').getCode() }}
+	{% endif %}"><button class="InputAddOn-item">General informations</button></a>
   </div>  
-{% if app.session.has('isAdmin') == false %}
+{% if app.session.get('isAdmin') == false %}
   <div class="InputAddOn">
     <a href="/user/bookings"><button class="InputAddOn-item">Check my bookings</button></a>
 	</div>
@@ -15,7 +19,7 @@
 	<div class="InputAddOn">
     <a href="/user/changepass"><button class="InputAddOn-item">Change my password</button></a>
   </div>
-{% if app.session.has('isAdmin') %}
+{% if app.session.get('isAdmin') %}
   <div class="InputAddOn">	
     <a href="/admin/controlpanel"><button class="InputAddOn-item">Admin panel</button></a>
   </div>

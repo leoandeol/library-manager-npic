@@ -3,7 +3,7 @@
 {% block body %}
 <article class="article-text-block" >
   <h1>Add new member</h1>
-  <form action="/admin/added_user" method="post" class="big-form" onsubmit="checkForm(this)">
+  <form action="/admin/added_user" method="post" class="big-form" onsubmit="return checkForm(this)">
     <div class="InputAddOn">
       <div class="InputAddOn-item" for="fname">First Name :</div>
       <input required type="text" id="fname" name="fname" onchange="testName(this)" class="InputAddOn-field" />
@@ -92,24 +92,40 @@
 
     <fieldset id="student_form" disabled class="fieldset-50">
       <div class="InputAddOn">
-	<div class="InputAddOn-item">Major :</div>
-	<input required type="text" onchange="testName(this)" id="major" name="major" class="InputAddOn-field" />
-      </div>
+		<div class="InputAddOn-item">Major :</div>
+			<select required id="major" name="major" class="InputAddOn-field">
+			{% for m in majors %}
+				<option value='{{m.getId()}}'>{{m.getName()}}</option>
+			{% endfor %}
+			</select>
+	  </div>
+	  <div class="InputAddOn">
+		<div class="InputAddOn-item">Degree :</div>
+			<select required id="degree" name="degree" class="InputAddOn-field">
+			{% for d in degrees %}
+				<option value='{{d.getId()}}'>{{d.getName()}}</option>
+			{% endfor %}
+			</select>
+	  </div>
       <div class="InputAddOn">
-	<div class="InputAddOn-item">Degree :</div>
-	<input required type="text" onchange="testName(this)" id="degree" name="degree" class="InputAddOn-field" />
-      </div>
-      <div class="InputAddOn">
-	<div class="InputAddOn-item">Year :</div>
-	<input required type="text" onchange="testStudentYear(this)" id="year" name="year" class="InputAddOn-field" />
-      </div>
+		<div class="InputAddOn-item">Year :</div>
+			<select required id="dyear" name="degree_year" class="InputAddOn-field">
+			{% for y in degYears %}
+				<option value='{{y.getId()}}'>{{y.getYear()}}</option>
+			{% endfor %}
+			</select>
+	  </div>
     </fieldset>
 
     <fieldset id="staff_form" disabled class="fieldset-50">
       <div class="InputAddOn">
-	<div class="InputAddOn-item">Function</div>
-	<input required type="text" id="staff_function" name="staff_function" class="InputAddOn-field" />
-      </div>
+		<div class="InputAddOn-item">Function :</div>
+			<select required id="function" name="function" class="InputAddOn-field">
+			{% for f in functions %}
+				<option value='{{f.getId()}}'>{{f.getName()}}</option>
+			{% endfor %}
+			</select>
+	  </div>
     </fieldset>
 	
     <div class="InputAddOn submit-login">

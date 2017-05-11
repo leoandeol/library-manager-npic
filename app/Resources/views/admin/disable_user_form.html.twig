@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article class="article-text-block">
+  <h1>Disable form</h1>
+  <form action="/admin/disable_user/{{code}}" method="post" class="login-block">
+    <div class="InputAddOn">
+      <div class="InputAddOn-item">Disable reason</div>
+      <input class="InputAddOn-field" name="reason" type="text">
+    </div>
+	<input type="hidden" name="flag" value="true">
+    <div class="InputAddOn submit-login">
+      <button class="InputAddOn-item" type="submit">Submit</button>
+    </div>
+  </form>
+</article>
+{% endblock %}

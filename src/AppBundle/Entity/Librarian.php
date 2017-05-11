@@ -216,7 +216,7 @@ class Librarian{
      */
     public function setHireDate($hireDate)
     {
-        $this->hire_date = $hireDate;
+		$this->hire_date = new \DateTime($hireDate);
 
         return $this;
     }

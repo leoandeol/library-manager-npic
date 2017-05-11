@@ -77,7 +77,7 @@
 			{{item.publication_year}}
 		</div>
 		<div class="cell">
-			{% if item.bookable == 1 %} Yes {% else %} No {% endif %}
+			{% if item.bookable == 1 %} Available {% else %} Not available {% endif %}
 		</div>
 		<div class="cell">
 			{% if item.note == NULL %} 0 {% else %}{{item.note}}{% endif %}

@@ -45,36 +45,36 @@ class UserController extends Controller
 		
 		if(($user = $member_repository->find($username)) == NULL){
 			if(($user = $librarian_repository->find($username)) == NULL){
-				return $this->render('user/wronguser.html.twig', [
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-			]);
+				return $this->redirect($this->generateUrl('login'));
 			}
 			else{
 				if(hash('sha256', $password) == $user->getPassword()){
-					$session->set('user',$user);
-					$session->set('isAdmin','true');
-					$session->set('connected','true');
-				}
-				else{
-					return $this->render('user/wrongpassword.html.twig', [
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-			]);
+					if($user->getDisable() == 0){
+						$session->set('user',$user);
+						$session->set('isAdmin',true);
+						$session->set('connected',true);
+					}else{
+						return $this->redirect($this->generateUrl('login'));
+					}
+				}else{
+					return $this->redirect($this->generateUrl('login'));
 				}
 			}
 		}
 		else{
 			if(hash('sha256', $password) == $user->getPassword()){	
-				$session->set('user',$user);
-				$session->set('isadmin','false');
-				$session->set('connected','true');
-			}
-			else{
-				return $this->render('user/wrongpassword.html.twig', [
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-			]);
+				if($user->getDisable() == 0){
+					$session->set('user',$user);
+					$session->set('isadmin',false);
+					$session->set('connected',true);
+				}else{
+					return $this->redirect($this->generateUrl('login'));
+				}
+			}else{
+				return $this->redirect($this->generateUrl('login'));
 			}
 		}
-		if($session->get('connected') == 'true'){
+		if($session->get('connected')){
 			return $this->render('user/loggedin.html.twig', [
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
@@ -136,10 +136,7 @@ class UserController extends Controller
     {
 		$session = $request->getSession();
 		if($session->get('connected')){		
-			$error = $session->get('error');
-			$session->remove('error');
 			return $this->render('user/changepass.html.twig', [
-				'error' => $error,
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
@@ -174,17 +171,12 @@ class UserController extends Controller
 					$changed = true;
 				}
 				else{
-					$error = "The new passwords aren't corresponding";
-					$request->getSession()->set('error', $error);
 					return $this->redirect($this->generateUrl('changepass'));
 				}
 			}
 			else{
-				$error = "The current password given is wrong";
-				$request->getSession()->set('error', $error);
 				return $this->redirect($this->generateUrl('changepass'));
-			}
-			
+			}			
 			if($changed){
 				return $this->render('user/changedpass.html.twig', [
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
@@ -273,25 +265,29 @@ class UserController extends Controller
 	}
 	
 	/**
-     * @Route("/user/general_infos", name="general_infos")
+     * @Route("/user/general_infos/{id}", name="general_infos")
      */
-	public function CheckGeneralInfosAction(Request $request){
+	public function CheckGeneralInfosAction(Request $request, $id){
 		
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
 		
-		if($session->get('connected')){
-			
-			if($session->get('isAdmin')){
-				$user = $em->getRepository('AppBundle:Librarian')->getGeneralInfos($session->get('user')->getUsername());
+		if($session->get('connected')){		
+			if(!$session->get('isAdmin')){
+				if($em->getRepository('AppBundle:Libraria')->find($id) != NULL){
+					return $this->redirect($this->generateUrl('home'));
+				}
 			}
-			else{
-				$user = $em->getRepository('AppBundle:Member')->getGeneralInfos($session->get('user')->getCode());
+			if(($user = $em->getRepository('AppBundle:Member')->find($id)) == NULL){
+				$user = $em->getRepository('AppBundle:Librarian')->find($id);
+				$isMember = false;
+			}else{
+				$isMember = true;
 			}
-			
 			return $this->render('user/general_infos.html.twig', [
+				'isMember' => $isMember,
 				'isAdmin' => $session->get('isAdmin'),
-				'user' => $user[0],
+				'user' => $user,
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
@@ -299,7 +295,7 @@ class UserController extends Controller
 	}
 	
 	/**
-     * @Route("/admin/general_infos", name="library_general_infos")
+     * @Route("/admin/general_infos/{id}", name="library_general_infos",requirements={"id": "\d+"})
      */
 	public function CheckGeneralLibraryInfosAction(Request $request){
 		
@@ -307,19 +303,15 @@ class UserController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		
 		if($session->get('connected')){
-			
 			if($session->get('isAdmin')){
-				$user = $em->getRepository('AppBundle:Librarian')->getGeneralInfos($session->get('user')->getUsername());
 				return $this->render('admin/general_infos.html.twig', [
-				'user' => $user[0],
+				'user' => $session->get('user'),
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
+			return $this->redirect($this->generateUrl('home'));
 		}
-		return $this->render('default/error.html.twig', [
-		       		'error' => "You must be an administrator to access this page",
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-				]);
+		return $this->redirect($this->generateUrl('login'));
 	}
 
 	/**
@@ -330,10 +322,19 @@ class UserController extends Controller
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
 		$fac = $em->getRepository('AppBundle:Faculty')->getAllFaculties();
+		$maj = $em->getRepository('AppBundle:Major')->findAll();
+		$deg = $em->getRepository('AppBundle:Degree')->findAll();
+		$degYear = $em->getRepository('AppBundle:DegreeYear')->findAll();
+		$func = $em->getRepository('AppBundle:StaffFunction')->findAll();
+		
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				return $this->render('admin/add_user.html.twig',[
-				        'faculties' => $fac,
+				    'functions' => $func,
+					'majors' => $maj,
+					'degrees' => $deg,
+					'degYears' => $degYear,
+					'faculties' => $fac,
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
@@ -381,29 +382,15 @@ class UserController extends Controller
 					
 					$position = $request->request->get('position');
 					if($position == "student"){
-						if(($student_id = $em->getRepository('AppBundle:Student')->getStudentID(
-						$request->request->get('major'),
-						$request->request->get('degree'),
-						$request->request->get('year'))) != NULL){
-							$new_member->setStudent($em->getRepository('AppBundle:Student')->find($student_id[0]["id"]));
-						}else{
-							$new_student = new Student();
-							$new_student->setMajor($request->request->get('major'));
-							$new_student->setDegree($request->request->get('degree'));
-							$new_student->setYear($request->request->get('year'));
-							$em->persist($new_student);
-							$new_member->setStudent($new_student);
-						}
+						$new_member->setStudent(true);
+						$new_member->setStaff(false);
+						$new_member->setMajor($em->getRepository('AppBundle:Major')->find($request->request->get('major')));
+						$new_member->setDegree($em->getRepository('AppBundle:Degree')->find($request->request->get('degree')));
+						$new_member->setDegreeYear($em->getRepository('AppBundle:DegreeYear')->find($request->request->get('degree_year')));
 					}else{
-						if(($staff_id = $em->getRepository('AppBundle:Staff')->getStaffId(
-						$request->request->get('staff_function'))) != NULL){
-							$new_member->setStaff($em->getRepository('AppBundle:Staff')->find($staff_id[0]["id"]));
-						}else{
-							$new_staff = new Staff();
-							$new_staff->setFunction('staff_function');
-							$em->persist($new_staff);
-							$new_member->setStaff($new_staff);
-						}
+						$new_member->setStaff(true);
+						$new_member->setStudent(false);
+						$new_member->setFunction($em->getRepository('AppBundle:StaffFunction')->find($request->request->get('function')));
 					}
 					
 					if(($address_id = $em->getRepository('AppBundle:Address')->getAddressId(
@@ -431,5 +418,70 @@ class UserController extends Controller
 		}
 		return $this->redirect($this->generateUrl('login'));
     }
-
+	
+	/**
+     * @Route("/admin/disable_user/{code}", name="disable_user")
+     */
+	public function DisableUserAction(Request $request, $code){
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				if(($user = $em->getRepository('AppBundle:Member')->find($code)) != NULL){
+					if(null==$request->request->get('flag')){
+						$flag = false;
+					}else{
+						$flag = true;
+					}
+					if(!$flag){
+						return $this->render('admin/disable_user_form.html.twig',[
+				        'code' => $code,
+						'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+						]);
+					}else{
+						$user->setDisable(1);
+						$user->setDisableReason($request->request->get('reason'));
+						$user->setDisabledate(date("Y-m-d"));
+						$em->flush();
+						return $this->redirect($this->generateUrl('checkalluser'));
+					}
+				}else{
+					$user = $em->getRepository('AppBundle:Librarian')->find($code);
+					$user->setDisable(1);
+					$em->flush();
+					return $this->redirect($this->generateUrl('checkalllib'));
+				}
+			}else{
+				return $this->redirect($this->generateUrl('home'));
+			}
+		}else{
+			return $this->redirect($this->generateUrl('login'));
+		}
+	}
+	
+	/**
+     * @Route("/admin/reactivate_user/{code}", name="reactivate_user")
+     */
+	public function ReactivateUserAction(Request $request, $code){
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				if(($user = $em->getRepository('AppBundle:Member')->find($code)) != NULL){
+					$user->setDisable(0);
+					$em->flush();
+					return $this->redirect($this->generateUrl('checkalluser'));
+				}else{
+					$user = $em->getRepository('AppBundle:Librarian')->find($code);
+					$user->setDisable(0);
+					$em->flush();
+					return $this->redirect($this->generateUrl('checkalllib'));
+				}
+			}else{
+				return $this->redirect($this->generateUrl('home'));
+			}
+		}else{
+			return $this->redirect($this->generateUrl('login'));
+		}
+	}
 }
