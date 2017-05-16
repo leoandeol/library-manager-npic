@@ -40,9 +40,56 @@
     <div class="item-info">Author : {{ item.getAuthor() }}</div>
     <div class="item-info">Publisher : {{ item.getPublisher() }}</div>
     <div class="item-info">Category : {{ item.getCategory().getSubject() }}</div>
-    <div class="item-info">Available : {% if item.getDisable() %}Not available{% else %}Available{% endif %}</div>
+    <div class="item-info">Disponibility : {{ item.getBookable() }}</div>
   </div>
-  	<button class="InputAddOn-item" type="submit" onclick="goBack();">Previous</button>
-	<a href="/item/book/{{ item.getCode() }}"><button class="InputAddOn-item" type="submit">Book</button></a>
+  <a href="/item/book/{{ item.getCode() }}"><button class="InputAddOn-item" type="submit">Book</button></a>
+	{% if app.session.get('isAdmin') %}
+	
+	<h1>Details for admin</h1>
+	<div class="item-info-list">
+	<div class="item-info">Total units : {{ item.getTotalUnit() }} </div>
+	</div>
+		{% if item.getDisable()==0 %}
+				<div class="item-info">Disabled : No </div>
+				</div>
+				<a href="/admin/disable_item/
+				{{item.getCode()}}
+				"><button class="InputAddOn-item">Disable</button></a>
+		{% else %}
+				<div class="item-info">Disabled : Yes </div>
+				</div>
+				<a href="/admin/reactivate_item/
+				{{item.getCode()}}
+				"><button class="InputAddOn-item">Reactivate</button></a>
+		{% endif %}
+		<form action="/item/add_units/{{item.getCode()}}" method="post" onsubmit="return testForm(this)" class="big-form">
+		<div class="InputAddOn">
+			<input type="number" id="amount" onchange="testAmount(this)" name="amount" class="InputAddOn-field">
+		</div>
+		<div class="InputAddOn submit-login">
+			<button type="submit" id="submit" class="InputAddOn-item">Add units</button>
+		</div>
+		</form>
+	{% endif %}
+	
 </article>
+{% endblock %}
+{% block javascripts %}
+<script>
+	
+	function testAmount(input){
+		var reg = new RegExp("^[1-9][0-9]*$");
+		if(reg.test(input.value)){
+			input.style.borderColor="";
+			return true;
+		}else{
+			input.style.borderColor="red";
+			return false;
+		}
+	}
+	
+	function testForm(form){
+		return testAmount(form.amount);
+	}
+</script>
 {% endblock %}

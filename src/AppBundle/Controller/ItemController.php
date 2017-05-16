@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
+use AppBundle\Entity\ItemUnits;
 use AppBundle\Entity\Item;
 use AppBundle\Entity\Type;
 use AppBundle\Entity\Category;
@@ -32,9 +33,9 @@ class ItemController extends Controller
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
-			return $this->redirect($this->generateUrl('home'));
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
     }
 	
 	/**
@@ -49,9 +50,9 @@ class ItemController extends Controller
 			if($session->get('isAdmin')){
 				if($em->getRepository('AppBundle:Item')->find($request->request->get('code'))==NULL){
 					if($request->request->get('bookable')==null){
-						$bookable = "not available";
+						$bookable = "Not available";
 					}else{
-						$bookable = "available";
+						$bookable = "Available";
 					}
 					if($request->request->get('isbn')==null){
 						$isbn = NULL;
@@ -70,7 +71,7 @@ class ItemController extends Controller
 					$new_item->setAuthor($request->request->get('author'));
 					$new_item->setPublisher($request->request->get('publisher'));
 					$new_item->setPublicationYear($request->request->get('publication_year'));
-					$new_item->setLanguage($request->request->get('language'));
+					$new_item->setLanguage($em->getRepository('AppBundle:Languages')->find($request->request->get('language')));
 					$new_item->setIsbn($isbn);		
 					$new_item->setTotalUnit(0);
 					$new_item->setBorrowedUnit(0);
@@ -87,17 +88,18 @@ class ItemController extends Controller
 					$em->flush();
 					return $this->redirect($this->generateUrl('itemlist'));
 				}
-				return $this->redirect($this->generateUrl('additem'));
+				$error = "This item already exists.";
+				return $this->redirect($this->generateUrl('error',array('error' => $error)));
 			}
-			return $this->redirect($this->generateUrl('home'));
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
     }
 
     /**
      * @Route("/item/list/{page}", name="itemlist", requirements={"page": "\d+"})
      */
-    public function readAll(Request $request, $page = 1)
+    public function readAllAction(Request $request, $page = 1)
     {
 		$item_repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 		$total = $item_repository->findTotalNumberOfItem();
@@ -127,7 +129,7 @@ class ItemController extends Controller
 	/**
      * @Route("/item/search/{page}", name="itemsearch", requirements={"page": "\d+"})
      */
-	 public function search(Request $request, $page = 1)
+	 public function searchAction(Request $request, $page = 1)
 	 {
 		$item_repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 		
@@ -152,30 +154,62 @@ class ItemController extends Controller
 	 /**
 	 * @Route("/item/read/{id}", name="readitem", requirements={"id":"\d+"})
 	 */
-	 public function read(Request $request, $id = -1){
+	 public function readAction(Request $request, $id = -1){
 		$em = $this->getDoctrine()->getManager();
-		$item = $em->getRepository('AppBundle:Item')->find($id);
-		$type = $em->getRepository('AppBundle:Type')->findAll();
-		$category = $em->getRepository('AppBundle:Category')->findAllCategories();
-		$language = $em->getRepository('AppBundle:Languages')->findAll();
-         	return $this->render('item/read.html.twig',[
-		       'item' => $item,
-			   'types' => $type,
-			   'languages' => $language,
-			   'categories' => $category,
-			   'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-            ]);
+		if(($item = $em->getRepository('AppBundle:Item')->find($id)) != NULL){
+			$type = $em->getRepository('AppBundle:Type')->findAll();
+			$category = $em->getRepository('AppBundle:Category')->findAllCategories();
+			$language = $em->getRepository('AppBundle:Languages')->findAll();
+			return $this->render('item/read.html.twig',[
+				   'item' => $item,
+				   'types' => $type,
+				   'languages' => $language,
+				   'categories' => $category,
+				   'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
+		}
+		return $this->redirect($this->generateUrl('errorNotExistingItem'));		
+	 }
+	 
+	 /**
+	 * @Route("/item/add_units/{id}", name="add_units", requirements={"id":"\d+"})
+	 */
+	 public function addUnitsAction(Request $request, $id){
+		$em = $this->getDoctrine()->getManager();
+		$session = $request->getSession();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				if(($item = $em->getRepository('AppBundle:Item')->find($id)) != NULL){
+					$new_units = new ItemUnits();
+					$new_units->setAmount($request->request->get('amount'));
+					$new_units->setItem($em->getRepository('AppBundle:Item')->find($id));
+					$new_units->setAddDate(new \DateTime(date('Y-m-d')));
+					$em->persist($new_units);
+					
+					$item = $em->getRepository('AppBundle:item')->find($id);
+					$item->setTotalUnit($item->getTotalUnit()+$request->request->get('amount'));
+					$em->flush();
+					return $this->redirect($this->generateUrl('readitem',['id'=>$id]));
+				}
+				return $this->redirect($this->generateUrl('errorNotExistingItem'));	
+			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	 }
 
 	 /**
 	 * @Route("/item/book/{id}", name="bookitem", requirements={"id":"\d+"})
 	 */
-	 public function book(Request $request, $id = -1){
+	 public function bookAction(Request $request, $id){
 		$em = $this->getDoctrine()->getManager();
-		$item = $em->getRepository('AppBundle:Item')->find($id);
-         	return $this->render('item/read.html.twig',[
-		       'item' => $item,
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-            ]);
+		$session = $request->getSession();
+		if($session->get('connected')){
+			if(($item = $em->getRepository('AppBundle:Item')->find($id)) != NULL){
+				
+			}
+			return $this->redirect($this->generateUrl('errorNotExistingItem'));	
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	 }
 }

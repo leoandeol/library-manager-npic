@@ -53,11 +53,16 @@
         Year
       </div>
       <div class="cell">
-        Bookable
+        Availability
       </div>
 	  <div class="cell">
 		Note
       </div>
+	  {% if app.session.get('isAdmin') %}
+		<div class="cell">
+			Total units
+		</div>
+	  {% endif %}
     </div>
 	{% for item in items %}
 	<div class="row">
@@ -77,11 +82,16 @@
 			{{item.publication_year}}
 		</div>
 		<div class="cell">
-			{% if item.bookable == 1 %} Available {% else %} Not available {% endif %}
+			{{ item.bookable }}
 		</div>
 		<div class="cell">
 			{% if item.note == NULL %} 0 {% else %}{{item.note}}{% endif %}
 		</div>
+		{% if app.session.get('isAdmin') %}
+		<div class="cell">
+			{{ item.total_unit }}
+		</div>
+	  {% endif %}
 		<div class="cell">
 			<a href="/item/read/{{item.code}}"><button>Details</button></a>
 		</div>

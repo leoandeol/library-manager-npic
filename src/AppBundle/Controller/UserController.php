@@ -13,9 +13,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
 
 class UserController extends Controller
 {
-						
-
-
+	
     /**
      * @Route("/user/login", name="login")
      */
@@ -45,7 +43,7 @@ class UserController extends Controller
 		
 		if(($user = $member_repository->find($username)) == NULL){
 			if(($user = $librarian_repository->find($username)) == NULL){
-				return $this->redirect($this->generateUrl('login'));
+				return $this->redirect($this->generateUrl('errorNotExistingUser'));
 			}
 			else{
 				if(hash('sha256', $password) == $user->getPassword()){
@@ -54,10 +52,10 @@ class UserController extends Controller
 						$session->set('isAdmin',true);
 						$session->set('connected',true);
 					}else{
-						return $this->redirect($this->generateUrl('login'));
+						return $this->redirect($this->generateUrl('errorDisabledUser'));
 					}
 				}else{
-					return $this->redirect($this->generateUrl('login'));
+					return $this->redirect($this->generateUrl('errorWrongPassword'));
 				}
 			}
 		}
@@ -68,10 +66,10 @@ class UserController extends Controller
 					$session->set('isadmin',false);
 					$session->set('connected',true);
 				}else{
-					return $this->redirect($this->generateUrl('login'));
+					return $this->redirect($this->generateUrl('errorDisabledUser'));
 				}
 			}else{
-				return $this->redirect($this->generateUrl('login'));
+				return $this->redirect($this->generateUrl('errorWrongPassword'));
 			}
 		}
 		if($session->get('connected')){
@@ -92,7 +90,7 @@ class UserController extends Controller
 			// replace this example code with whatever you need
 			return $this->redirect('/..');
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
     }
 
     /**
@@ -107,7 +105,7 @@ class UserController extends Controller
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
     }
 	
 	/**
@@ -124,9 +122,9 @@ class UserController extends Controller
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
-			return $this->redirect($this->generateUrl('home'));
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 	
     /**
@@ -140,7 +138,7 @@ class UserController extends Controller
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
     }
 
     /**
@@ -150,10 +148,6 @@ class UserController extends Controller
     {
         $session = $request->getSession();
 		if($session->get('connected')){
-			
-			//$curpass = $_POST['curpass'];
-			//$newpass = $_POST['newpass'];
-			//$newpassbis = $_POST['newpassbis'];
 			
 			$curpass = $request->request->get('curpass');
 			$newpass = $request->request->get('newpass');
@@ -171,11 +165,12 @@ class UserController extends Controller
 					$changed = true;
 				}
 				else{
-					return $this->redirect($this->generateUrl('changepass'));
+					$error = "The passwords given does not match each others.";
+					return $this->redirect($this->generateUrl('error',array('error' => $error)));
 				}
 			}
 			else{
-				return $this->redirect($this->generateUrl('changepass'));
+				return $this->redirect($this->generateUrl('errorWrongPassword'));
 			}			
 			if($changed){
 				return $this->render('user/changedpass.html.twig', [
@@ -183,7 +178,7 @@ class UserController extends Controller
 				]);
 			}
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
     }
 	
 	/**
@@ -197,13 +192,9 @@ class UserController extends Controller
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
-			else{
-				return $this->redirect($this->generateUrl('home'));
-			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
-		else{
-			return $this->redirect($this->generateUrl('login'));
-		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 
 	/**
@@ -230,9 +221,9 @@ class UserController extends Controller
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
-			return $this->redirect($this->generateUrl('home'));
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 	
 	/**
@@ -259,9 +250,9 @@ class UserController extends Controller
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
-			return $this->redirect($this->generateUrl('home'));
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 	
 	/**
@@ -274,13 +265,16 @@ class UserController extends Controller
 		
 		if($session->get('connected')){		
 			if(!$session->get('isAdmin')){
-				if($em->getRepository('AppBundle:Libraria')->find($id) != NULL){
-					return $this->redirect($this->generateUrl('home'));
+				if($em->getRepository('AppBundle:Librarian')->find($id) != NULL){
+					return $this->redirect($this->generateUrl('errorNotAdmin'));
 				}
 			}
 			if(($user = $em->getRepository('AppBundle:Member')->find($id)) == NULL){
-				$user = $em->getRepository('AppBundle:Librarian')->find($id);
-				$isMember = false;
+				if(($user = $em->getRepository('AppBundle:Librarian')->find($id)) == NULL){
+					return $this->redirect($this->generateUrl('errorNotExistingUser'));
+				}else{
+					$isMember = false;
+				}
 			}else{
 				$isMember = true;
 			}
@@ -291,7 +285,7 @@ class UserController extends Controller
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 	
 	/**
@@ -309,9 +303,9 @@ class UserController extends Controller
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
-			return $this->redirect($this->generateUrl('home'));
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 
 	/**
@@ -360,6 +354,7 @@ class UserController extends Controller
 					$dob['year'] = $request->request->get('year');
 					
 					$password = "NPIC".$dob['day'].$dob['month'].$dob['year'];
+					$passwordHashed = hash('sha256', $password);
 					
 					$dobDataBase = $dob['year'].'-'.$dob['month'].'-'.$dob['day'];
 										
@@ -377,7 +372,7 @@ class UserController extends Controller
 					$new_member->setCivilSituation($request->request->get('civsitu'));
 					$new_member->setFaculty($em->getRepository('AppBundle:Faculty')->find($request->request->get('fac')));
 					$new_member->setEntryDate(date("Y-m-d"));
-					$new_member->setPassword($password);
+					$new_member->setPassword($passwordHashed);
 					$new_member->setDisable(0);
 					
 					$position = $request->request->get('position');
@@ -412,11 +407,12 @@ class UserController extends Controller
 					
 					return $this->redirect($this->generateUrl('checkalluser'));
 				}
-				return $this->redirect($this->generateUrl('add_user'));
+				$error = "This user already exist.";
+				return $this->redirect($this->generateUrl('error',array('error' => $error)));
 			}
-			return $this->redirect($this->generateUrl('home'));
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
-		return $this->redirect($this->generateUrl('login'));
+		return $this->redirect($this->generateUrl('errorNotLogged'));
     }
 	
 	/**
@@ -445,18 +441,17 @@ class UserController extends Controller
 						$em->flush();
 						return $this->redirect($this->generateUrl('checkalluser'));
 					}
-				}else{
-					$user = $em->getRepository('AppBundle:Librarian')->find($code);
+				}else if(($user = $em->getRepository('AppBundle:Librarian')->find($code)) != NULL){
 					$user->setDisable(1);
 					$em->flush();
 					return $this->redirect($this->generateUrl('checkalllib'));
+				}else{
+					return $this->redirect($this->generateUrl('errorNotExistingUser'));
 				}
-			}else{
-				return $this->redirect($this->generateUrl('home'));
 			}
-		}else{
-			return $this->redirect($this->generateUrl('login'));
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 	
 	/**
@@ -471,17 +466,58 @@ class UserController extends Controller
 					$user->setDisable(0);
 					$em->flush();
 					return $this->redirect($this->generateUrl('checkalluser'));
-				}else{
-					$user = $em->getRepository('AppBundle:Librarian')->find($code);
+				}else if(($user = $em->getRepository('AppBundle:Librarian')->find($code)) != NULL){
 					$user->setDisable(0);
 					$em->flush();
 					return $this->redirect($this->generateUrl('checkalllib'));
+				}else{
+					return $this->redirect($this->generateUrl('errorNotExistingUser'));
 				}
-			}else{
-				return $this->redirect($this->generateUrl('home'));
 			}
-		}else{
-			return $this->redirect($this->generateUrl('login'));
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
+	}
+	
+	/**
+     * @Route("/admin/disable_item/{code}", name="disable_item")
+     */
+	public function DisableItemAction(Request $request, $code){
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				if(($item = $em->getRepository('AppBundle:Item')->find($code)) != NULL){
+					$item->setDisable(1);
+					$em->flush();
+					return $this->redirect($this->generateUrl('itemlist'));
+				}else{
+					return $this->redirect($this->generateUrl('errorNotExistingItem'));
+				}
+			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
+	}
+	
+	/**
+     * @Route("/admin/reactivate_item/{code}", name="reactivate_item")
+     */
+	public function ReactivateItemAction(Request $request, $code){
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				if(($item = $em->getRepository('AppBundle:Item')->find($code)) != NULL){
+					$item->setDisable(0);
+					$em->flush();
+					return $this->redirect($this->generateUrl('itemlist'));
+				}else{
+					return $this->redirect($this->generateUrl('errorNotExistingItem'));
+				}
+			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 }
