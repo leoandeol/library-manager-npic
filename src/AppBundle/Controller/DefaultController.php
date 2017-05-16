@@ -13,6 +13,8 @@ class DefaultController extends Controller
      */
     public function homeAction(Request $request)
     {
+        $locale = $this->get('translator')->getLocale();
+	$request->setLocale("km");
 	$rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 	$top = $rep->findTop5PopularBooks();
 	$last = $rep->findLast5BooksAdded();
