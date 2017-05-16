@@ -7,3 +7,7 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+     my.listener:
+         class: AppBundle\Listener\LocaleListener
+         tags: [{ name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 11 }]
+         arguments: ["%kernel.default_locale%"]

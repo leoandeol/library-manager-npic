@@ -13,6 +13,8 @@ class DefaultController extends Controller
      */
     public function homeAction(Request $request)
     {
+        $locale = $this->get('translator')->getLocale();
+	$request->setLocale("km");
 	$rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 	$top = $rep->findTop5PopularBooks();
 	$last = $rep->findLast5BooksAdded();
@@ -47,4 +49,31 @@ class DefaultController extends Controller
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
     }
+
+/**
+ * Change the locale for the current user
+ *
+ * @param String $language
+ * @return array
+ *
+ * @Route("/setlocale/{language}", name="setlocale")
+ */
+public function setLocaleAction(Request $request, $language = null)
+{
+    if($language != null)
+    {
+        // On enregistre la langue en session
+        $this->get('session')->set('_locale', $language);
+	var_dump($language);
+    }
+ 
+    // on tente de rediriger vers la page d'origine
+    $url = $request->headers->get('referer');
+    if(empty($url))
+    {
+        $url = $this->generateUrl('home');
+    }
+ 
+    //return $this->redirect($url);;
+}
 }
