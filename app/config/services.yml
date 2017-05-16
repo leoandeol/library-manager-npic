@@ -10,4 +10,4 @@ services:
      my.listener:
          class: AppBundle\Listener\LocaleListener
          tags: [{ name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 11 }]
-         arguments: [ "@service_container", [ 'en', 'km' ] ]
+         arguments: ["%kernel.default_locale%"]
