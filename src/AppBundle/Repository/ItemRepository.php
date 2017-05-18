@@ -49,7 +49,7 @@ class ItemRepository extends EntityRepository{
 
 	public function findTop5PopularBooks(){
 	       return $this->getEntityManager()->createQuery(
-			"SELECT it.title,it.author,ca.subject,la.lang_name,it.publication_year,it.bookable,it.note
+			"SELECT it.title,it.code,it.author,ca.subject,la.lang_name,it.publication_year,it.bookable,it.note
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			JOIN AppBundle:Languages la WITH it.language = la.id
@@ -61,7 +61,7 @@ class ItemRepository extends EntityRepository{
 	public function findLast5BooksAdded(){
 			$query = $this->getEntityManager()->createQuery(
 			"SELECT it.title,it.author,ca.subject,la.lang_name,it.publication_year,it.bookable,it.note,
-			it.add_date
+			it.add_date,it.code
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			JOIN AppBundle:Languages la WITH it.language = la.id
@@ -82,6 +82,33 @@ class ItemRepository extends EntityRepository{
 			");
 			$query->setMaxResults(5);
 			return $query->getResult();
+	}
+	
+	public function findByCategTypeLanguage($current,$item_per_page,$cat,$type,$lang){
+		$query = $this->getEntityManager()->createQuery(
+			"SELECT it.code,it.title,it.author,ca.subject,la.lang_name,it.publication_year,it.bookable,it.note
+			FROM AppBundle:Item it
+			JOIN AppBundle:Type ty WITH it.type = ty.id
+			JOIN AppBundle:Category ca WITH it.category = ca.id
+			JOIN AppBundle:Languages la WITH it.language = la.id
+			WHERE ca.id lIKE '%$cat%' AND ty.id LIKE '%$type%' AND la.id LIKE '%$lang%'
+			"
+		);
+		$query->setFirstResult($current);
+		$query->setMaxResults($item_per_page);
+		return $query->getResult();
+	}
+	
+	public function findTotalByCategTypeLanguage($cat,$type,$lang){
+		return $this->getEntityManager()->createQuery(
+			"SELECT COUNT(it.code)
+			FROM AppBundle:Item it
+			JOIN AppBundle:Type ty WITH it.type = ty.id
+			JOIN AppBundle:Category ca WITH it.category = ca.id
+			JOIN AppBundle:Languages la WITH it.language = la.id
+			WHERE ca.id lIKE '%$cat%' AND ty.id LIKE '%$type%' AND la.id LIKE '%$lang%'
+			"
+		)->getResult();
 	}
 }
 

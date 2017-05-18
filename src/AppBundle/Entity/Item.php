@@ -594,4 +594,13 @@ class Item{
     {
         return $this->add_date;
     }
+	
+	/**
+	 * isInStock
+	 * 
+	 * @return boolean
+	 */
+	function isInStock(){
+		return getTotalUnit() > getBorrowedUnit()+getLostUnit();
+	}
 }

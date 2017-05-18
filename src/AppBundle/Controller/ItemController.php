@@ -115,7 +115,10 @@ class ItemController extends Controller
 		
 		$items = $item_repository->findAllItems($current,$item_per_page);
 		
+		$this->get('acme.js_vars')->items = $items;
+		
         return $this->render('item/readAll.html.twig',[
+			'method' => 'list',
 			'page_max' => $nb_max_pages,
 			'languages' => $language,
 			'items' => $items,
@@ -158,7 +161,7 @@ class ItemController extends Controller
 	 }
 
 	 /**
-	 * @Route("/item/read/{id}", name="readitem", requirements={"id":"\d+"})
+	 * @Route("/item/read/{id}", name="readitem", requirements={"id":"\d+"}, options={"expose"=true})
 	 */
 	 public function readAction(Request $request, $id = -1){
 		$em = $this->getDoctrine()->getManager();
@@ -210,26 +213,34 @@ class ItemController extends Controller
 	 public function bookAction(Request $request, $id){
 		$em = $this->getDoctrine()->getManager();
 		$session = $request->getSession();
+		$itemRep = $em->getRepository('AppBundle:Item');
+		$transRep = $em->getRepository('AppBundle:Transaction');
+		$membRep = $em->getRepository('AppBundle:Member');
 		if($session->get('connected')){
-			if(($item = $em->getRepository('AppBundle:Item')->find($id)) != NULL){
+			if(($item = $itemRep->find($id)) != NULL){
 				if($item->getDisable() == 0){
 					if($item->getTotalUnit() > 0){
 						$user = $session->get('user');
-						if($em->getRepository('AppBundle:Transaction')->findByMemberAndItem($user->getCode(),$item->getCode()) == NULL){
-							if($user->getCurrentBorrowedBooksNb() < 2){
-								$new_transaction = new Transaction();
-								$new_transaction->setMember($em->getRepository('AppBundle:Member')->find($user->getCode()));
-								$new_transaction->setItem($item);
-								$new_transaction->setBorrowdate(new \DateTime(date('Y-m-d')));
-								$new_transaction->setFineCostPerDay(0);
-								$new_transaction->setState('Booked');
-								
-								$em->persist($new_transaction);
-								$em->flush();
-								
-								return $this->redirect($this->generateUrl('bookings'));
+						if($transRep->findByMemberAndItem($user->getCode(),$item->getCode()) == NULL){
+							if($item->isInStock()){
+								if($user->getCurrentBorrowedBooksNb() < 2){
+									$new_transaction = new Transaction();
+									$new_transaction->setMember($membRep->find($user->getCode()));
+									$new_transaction->setItem($item);
+									$new_transaction->setBorrowdate(new \DateTime(date('Y-m-d')));
+									$new_transaction->setFineCostPerDay(0);
+									$new_transaction->setState('Booked');
+									
+									$item->setBorrowedUnit($this->getBorrowedUnit()-1);
+									
+									$em->persist($new_transaction);
+									$em->flush();
+									
+									return $this->redirect($this->generateUrl('bookings'));
+								}
+								return $this->redirect($this->generateUrl('errorLimitBorrow'));
 							}
-							return $this->redirect($this->generateUrl('errorLimitBorrow'));
+							return $this->redirect($this->generateUrl('errorNotAvailable'));
 						}						
 						return $this->redirect($this->generateUrl('errorAlreadyBooked'));
 					}
@@ -240,5 +251,39 @@ class ItemController extends Controller
 			return $this->redirect($this->generateUrl('errorNotExistingItem'));	
 		}
 		return $this->redirect($this->generateUrl('errorNotLogged'));
-	 }
+	}
+	
+	/**
+     * @Route("/item/sort/{page}", name="sort", requirements={"id":"\d+"})
+     */
+    public function SortItemAction(Request $request, $page=1)
+    {		
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		$type = $em->getRepository('AppBundle:Type')->findAll();
+		$category = $em->getRepository('AppBundle:Category')->findAllCategories();
+		$language = $em->getRepository('AppBundle:Languages')->findAll();
+		
+		$cat = $request->request->get('category');
+		$typ = $request->request->get('type');
+		$lang = $request->request->get('language');
+		
+		$item_per_page = 20;
+		$total = $em->getRepository('AppBundle:Item')->findTotalByCategTypeLanguage($cat,$typ,$lang);
+		$nb_max_pages = ceil($total[0][1] / $item_per_page);
+		$current = ($page * $item_per_page) - $item_per_page;
+		$items = $em->getRepository('AppBundle:Item')->findByCategTypeLanguage($current,$item_per_page,$cat,$typ,$lang);
+		
+		return $this->render('item/readAll.html.twig',[
+			'method' => 'sort',
+			'page_max' => $nb_max_pages,
+			'languages' => $language,
+			'items' => $items,
+			'page' => $page,
+			'types' => $type,
+			'categories' => $category,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }
 }
+

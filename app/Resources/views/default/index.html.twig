@@ -9,7 +9,7 @@
       <span>Top 5 Rated books</span>
     </div>
     <div class="table">
-      <div class="row header">
+      <div class="header row">
 		<div class="cell">
 		  Title
 		</div>
@@ -52,7 +52,7 @@
 		</div>
       </div>
       {% for last in lasts %}
-      <div class="row">
+      <div class="row" id={{last.code}}>
 		<div class="cell">
 		  {{ last.title }}
 		</div>
@@ -71,7 +71,7 @@
       <span>Most borrowed books</span>
     </div>
     <div class="table">
-      <div class="row header">
+      <div class="header row">
 	<div class="cell">
 	  Title
 	</div>
@@ -83,7 +83,7 @@
 	</div>
       </div>
       {% for pop in pops %}
-      <div class="row">
+      <div class="row" id={{pop.code}}>
 	<div class="cell">
 	  {{ pop.title }}
 	</div>
@@ -99,4 +99,8 @@
   </div>
 </div>
 </article>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('js/tables.js') }}"></script>
 {% endblock %}

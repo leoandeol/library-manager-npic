@@ -1,13 +1,15 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/service_container.html
 parameters:
-#    parameter_name: value
+#   parameter_name: value
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
-     my.listener:
-         class: AppBundle\Listener\LocaleListener
-         tags: [{ name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 11 }]
-         arguments: ["%kernel.default_locale%"]
+#   service_name:
+#       class: AppBundle\Directory\ClassName
+#       arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    my.listener:
+        class: AppBundle\Listener\LocaleListener
+        tags: [{ name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 11 }]
+        arguments: ["%kernel.default_locale%"]
+    acme.js_vars:
+        class: stdClass

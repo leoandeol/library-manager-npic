@@ -169,7 +169,18 @@ class ErrorController extends Controller
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
     }
-				
+	
+	/**
+     * @Route("/error/NotAvailable", name="errorNotAvailable")
+     */
+    public function errorNotAvailableAction(Request $request)
+    {
+		$error = "This item is not available anymore. Wait for someone to return it back or the resupplying";
+        return $this->render('default/error.html.twig',	[
+			'error' => $error,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }	
 }
 
 ?>
