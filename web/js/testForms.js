@@ -21,7 +21,19 @@ function testMail(input){
 }
 
 function testCode(input){
-	var reg = new RegExp('^[0-9]{10}$');
+	var reg = new RegExp('^NPIC-[0-9]{4}$');
+	
+	if(reg.test(input.value)){
+		surligne(input,false);
+		return true;
+	}else{
+		surligne(input,true);
+		return false;
+	}
+}
+
+function testCodeItem(input){
+	var reg = new RegExp('^[0-9]{6}$');
 	
 	if(reg.test(input.value)){
 		surligne(input,false);
@@ -34,6 +46,18 @@ function testCode(input){
 
 function testTel(input){
 	var reg = new RegExp('^(855)?[0-9]{8}$');
+	
+	if(reg.test(input.value)){
+		surligne(input,false);
+		return true;
+	}else{
+		surligne(input,true);
+		return false;
+	}
+}
+
+function testTitle(input){
+	var reg = new RegExp('^[a-zA-Z]+$');
 	
 	if(reg.test(input.value)){
 		surligne(input,false);
@@ -57,7 +81,7 @@ function testStudentYear(input){
 }
 
 function testName(input){
-	var reg = new RegExp('^[a-zA-Z][a-zA-Z]{0,23}[a-zA-Z]$');
+	var reg = new RegExp('^[a-zA-Z]{2,25}$');
 	
 	if(reg.test(input.value)){
 		surligne(input,false);
@@ -80,8 +104,20 @@ function testNationalID(input){
 	}
 }
 
+function testPubYear(input){
+	var reg = new RegExp('^1[0-9]{3}$');
+
+	if(reg.test(input.value)){
+		surligne(input,false);
+		return true;
+	}else{
+		surligne(input,true);
+		return false;
+	}
+}
+
 function testPostCode(input){
-	var reg = new RegExp('[0-9]{5}');
+	var reg = new RegExp('^[0-9]{5}$');
 
 	if(reg.test(input.value)){
 		surligne(input,false);
@@ -104,6 +140,35 @@ function testCity(input){
 	}
 }
 
+function testPrice(input){
+	
+	if(input.value > 0 ){
+		surligne(input,false);
+		return true;
+	}else{
+		surligne(input,true);
+		return false;
+	}
+}
+
+function checkFormItem(form){
+	
+	var codeOk = testCodeItem(form.code);
+	var titleOk = testCity(form.title);
+	var stitleOk = testCity(form.short_title);
+	var authorOk = testName(form.author);
+	var pubYearOk = testPubYear(form.publication_year);
+	var publiOk = testName(form.publisher);
+	var priceOk = testPrice(form.price);
+	
+	if(codeOk && titleOk && stitleOk && authorOk && pubYearOk && publiOk && priceOk){
+		return true;
+	}else{
+		alert("Please fill in all fields correctly");
+		return false;
+	}
+}
+
 function checkForm(form){
 	
 	var fNameOk = testName(form.fname);
@@ -111,15 +176,10 @@ function checkForm(form){
 	var codeOk = testCode(form.code);
 	var nationalIdOk = testNationalID(form.nid);
 	var cityOk = testCity(form.city);
-	var hPhoneOk = testTel(form.home_phone);
-	var rPhoneOk = testTel(form.ref_phone);
-	var mPhoneOk = testTel(form.mob_phone);
 	var pCodeOk = testPostCode(form.pcode);
-	var StreetOk = testCity(form.street);
 	var emailOk = testMail(form.email);
 	
-	if(fNameOk && lNameOk && codeOk && nationalIdOk && cityOk && hPhoneOk &&
-	rPhoneOk && mPhoneOk && pCodeOk && StreetOk && emailOk){
+	if(fNameOk && lNameOk && codeOk && nationalIdOk && cityOk && pCodeOk && emailOk){
 		return true;
 	}else{
 		alert("Please fill in all fields correctly");

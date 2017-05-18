@@ -37,7 +37,7 @@ class ItemRepository extends EntityRepository{
 	
 	public function findAllItemsSearched($search,$current,$item_per_page){
 		$query = $this->getEntityManager()->createQuery(
-			"SELECT it.title,it.author,ca.subject,la.lang_name,it.publication_year,it.bookable,it.note
+			"SELECT it.code,it.title,it.author,ca.subject,la.lang_name,it.publication_year,it.bookable,it.note
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			JOIN AppBundle:Languages la WITH it.language = la.id

@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TransactionRepository")
  * @ORM\Table(name="transaction")
  */
 class Transaction{
@@ -18,37 +18,23 @@ class Transaction{
 	/**
      * @var Member
 	 *
-	 * @ORM\OneToOne(targetEntity="Member")
+	 * @ORM\ManyToOne(targetEntity="Member")
 	 * @ORM\JoinColumn(name="member_code", referencedColumnName="code", onDelete="CASCADE")
      */
 	private $member;
 	/**
      * @var Item
 	 *
-	 * @ORM\OneToOne(targetEntity="Item")
+	 * @ORM\ManyToOne(targetEntity="Item")
 	 * @ORM\JoinColumn(name="item_code", referencedColumnName="code", onDelete="CASCADE")
      */
 	private $item;
-	/**
-     * @var Librarian
-	 *
-	 * @ORM\OneToOne(targetEntity="Librarian")
-	 * @ORM\JoinColumn(name="librarian_borrow_username", referencedColumnName="username", onDelete="CASCADE")
-     */
-	private $lib_borrow;
-	/**
-     * @var Librarian
-	 *
-	 * @ORM\OneToOne(targetEntity="Librarian")
-	 * @ORM\JoinColumn(name="librarian_return_username", referencedColumnName="username", onDelete="CASCADE")
-     */
-	private $lib_return;
 	/**
      * @ORM\Column(type="date")
      */
 	private $borrow_date;
 	/**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date",nullable=true)
      */
 	private $return_date;
 	/**
@@ -60,7 +46,7 @@ class Transaction{
      */
 	private $state;
 	/**
-     * @ORM\Column(type="string",length=64)
+     * @ORM\Column(type="string",length=64,nullable=true)
      */
 	private $note;
 
@@ -125,54 +111,6 @@ class Transaction{
     public function getItem()
     {
         return $this->item;
-    }
-
-    /**
-     * Set libBorrow
-     *
-     * @param string $libBorrow
-     *
-     * @return Transaction
-     */
-    public function setLibBorrow($libBorrow)
-    {
-        $this->lib_borrow = $libBorrow;
-
-        return $this;
-    }
-
-    /**
-     * Get libBorrow
-     *
-     * @return string
-     */
-    public function getLibBorrow()
-    {
-        return $this->lib_borrow;
-    }
-
-    /**
-     * Set libReturn
-     *
-     * @param string $libReturn
-     *
-     * @return Transaction
-     */
-    public function setLibReturn($libReturn)
-    {
-        $this->lib_return = $libReturn;
-
-        return $this;
-    }
-
-    /**
-     * Get libReturn
-     *
-     * @return string
-     */
-    public function getLibReturn()
-    {
-        return $this->lib_return;
     }
 
     /**

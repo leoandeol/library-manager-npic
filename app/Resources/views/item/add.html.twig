@@ -3,30 +3,30 @@
 {% block body %}
 <article class="article-text-block">
   <h1>Add new (unique) item</h1>
-  <form action="/item/created" method="post" class="big-form" autocomplete="on">
+  <form action="/item/created" method="post" onsubmit="return checkFormItem(this)" class="big-form" autocomplete="on">
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Code</div>
-      <input type="text" name="code" onchange="testCode(this)" class="InputAddOn-field">
+      <input required type="text" name="code" onchange="testCodeItem(this)" class="InputAddOn-field">
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Title</div>
-      <input type="text" name="title" class="InputAddOn-field">
+      <input required type="text" onchange="testCity(this)" name="title" class="InputAddOn-field">
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Short title</div>
-      <input type="text" name="short_title" class="InputAddOn-field">
+      <input required type="text" onchange="testCity(this)" name="short_title" class="InputAddOn-field">
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Author</div>
-      <input type="text" name="author" class="InputAddOn-field">
+      <input required type="text" onchange="testName(this)" name="author" class="InputAddOn-field">
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Publication year</div>
-      <input type="number" name="publication_year" class="InputAddOn-field">
+      <input required type="number" onchange="testPubYear(this)" name="publication_year" class="InputAddOn-field">
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Publisher</div>
-      <input type="text" name="publisher" class="InputAddOn-field">
+      <input required type="text" onchange="testName(this)" name="publisher" class="InputAddOn-field">
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Category</div>
@@ -58,7 +58,7 @@
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Cost (USD $)</div>
-      <input type="number" step="0.01" min="0" name="cost" class="InputAddOn-field">
+      <input required type="number" step="0.01" onchange="testPrice(this)" min="0" name="cost" class="InputAddOn-field">
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >ISBN (optional)</div>

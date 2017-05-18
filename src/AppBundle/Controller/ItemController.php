@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\ItemUnits;
 use AppBundle\Entity\Item;
 use AppBundle\Entity\Type;
+use AppBundle\Entity\Transaction;
 use AppBundle\Entity\Category;
 
 class ItemController extends Controller
@@ -88,8 +89,7 @@ class ItemController extends Controller
 					$em->flush();
 					return $this->redirect($this->generateUrl('itemlist'));
 				}
-				$error = "This item already exists.";
-				return $this->redirect($this->generateUrl('error',array('error' => $error)));
+				return $this->redirect($this->generateUrl('errorAlreadyExistItem'));
 			}
 			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
@@ -132,7 +132,7 @@ class ItemController extends Controller
 	 public function searchAction(Request $request, $page = 1)
 	 {
 		$item_repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
-		
+		$em = $this->getDoctrine()->getManager();
 		$search = $_POST['Search'];
 		
 		$total = $item_repository->findTotalNumberOfItemSearched($search);
@@ -142,11 +142,17 @@ class ItemController extends Controller
 		$current = ($page * $item_per_page) - $item_per_page;
 		
 		$items = $item_repository->findAllItemsSearched($search,$current,$item_per_page);
+		$type = $em->getRepository('AppBundle:Type')->findAll();
+		$category = $em->getRepository('AppBundle:Category')->findAllCategories();
+		$language = $em->getRepository('AppBundle:Languages')->findAll();
 		
         return $this->render('item/readAll.html.twig',[
 			'page_max' => $nb_max_pages,
 			'items' => $items,
 			'page' => $page,
+			'languages' => $language,
+			'types' => $type,
+			'categories' => $category,
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
 	 }
@@ -206,7 +212,30 @@ class ItemController extends Controller
 		$session = $request->getSession();
 		if($session->get('connected')){
 			if(($item = $em->getRepository('AppBundle:Item')->find($id)) != NULL){
-				
+				if($item->getDisable() == 0){
+					if($item->getTotalUnit() > 0){
+						$user = $session->get('user');
+						if($em->getRepository('AppBundle:Transaction')->findByMemberAndItem($user->getCode(),$item->getCode()) == NULL){
+							if($user->getCurrentBorrowedBooksNb() < 2){
+								$new_transaction = new Transaction();
+								$new_transaction->setMember($em->getRepository('AppBundle:Member')->find($user->getCode()));
+								$new_transaction->setItem($item);
+								$new_transaction->setBorrowdate(new \DateTime(date('Y-m-d')));
+								$new_transaction->setFineCostPerDay(0);
+								$new_transaction->setState('Booked');
+								
+								$em->persist($new_transaction);
+								$em->flush();
+								
+								return $this->redirect($this->generateUrl('bookings'));
+							}
+							return $this->redirect($this->generateUrl('errorLimitBorrow'));
+						}						
+						return $this->redirect($this->generateUrl('errorAlreadyBooked'));
+					}
+					return $this->redirect($this->generateUrl('errorNoMoreStock'));
+				}
+				return $this->redirect($this->generateUrl('errorDisabledItem'));
 			}
 			return $this->redirect($this->generateUrl('errorNotExistingItem'));	
 		}

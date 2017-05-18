@@ -113,10 +113,10 @@ class UserController extends Controller
      */
 	function checkBookingsAction(Request $request){
 		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			if(!$session->get('isAdmin')){
-				$member_repository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Member");
-				$bookings = $member_repository->getBookings($session->get('user')->getCode());
+				$bookings = $em->getRepository('AppBundle:Transaction')->findByMember($session->get('user')->getCode());
 				return $this->render('user/bookings.html.twig', [
 				'bookings' => $bookings,
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
@@ -165,8 +165,7 @@ class UserController extends Controller
 					$changed = true;
 				}
 				else{
-					$error = "The passwords given does not match each others.";
-					return $this->redirect($this->generateUrl('error',array('error' => $error)));
+					return $this->redirect($this->generateUrl('errorPasswordNotmatching'));
 				}
 			}
 			else{
@@ -407,8 +406,7 @@ class UserController extends Controller
 					
 					return $this->redirect($this->generateUrl('checkalluser'));
 				}
-				$error = "This user already exist.";
-				return $this->redirect($this->generateUrl('error',array('error' => $error)));
+				return $this->redirect($this->generateUrl('errorAlreadyExistingUser'));
 			}
 			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}

@@ -149,6 +149,11 @@ class Member{
      */
 	private $disable_date;
 	
+	/**
+     * @ORM\Column(type="integer")
+     */
+	private $current_borrowed_books_nb;
+	
 	public function __construct()
 	{
 		//nothing
@@ -728,5 +733,29 @@ class Member{
     public function getDegreeYear()
     {
         return $this->degree_year;
+    }
+
+    /**
+     * Set currentBorrowedBooksNb
+     *
+     * @param integer $currentBorrowedBooksNb
+     *
+     * @return Member
+     */
+    public function setCurrentBorrowedBooksNb($currentBorrowedBooksNb)
+    {
+        $this->current_borrowed_books_nb = $currentBorrowedBooksNb;
+
+        return $this;
+    }
+
+    /**
+     * Get currentBorrowedBooksNb
+     *
+     * @return integer
+     */
+    public function getCurrentBorrowedBooksNb()
+    {
+        return $this->current_borrowed_books_nb;
     }
 }

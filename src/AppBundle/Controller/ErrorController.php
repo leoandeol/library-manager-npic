@@ -108,6 +108,68 @@ class ErrorController extends Controller
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
     }
+	
+	/**
+     * @Route("/error/LimitBorrow", name="errorLimitBorrow")
+     */
+    public function errorLimitBorrowAction(Request $request)
+    {
+		$erorr = 'You reached the limit of borrow you can have.';
+        return $this->render('default/error.html.twig',	[
+			'error' => $error,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }
+	
+	/**
+     * @Route("/error/AlreadyBooked", name="errorAlreadyBooked")
+     */
+    public function errorAlreadyBookedAction(Request $request)
+    {
+		$error = 'You already booked this item';
+        return $this->render('default/error.html.twig',	[
+			'error' => $error,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }
+	
+	/**
+     * @Route("/error/NoMoreStock", name="errorNoMoreStock")
+     */
+    public function errorNoMoreStockAction(Request $request)
+    {
+		$error = 'This item is no more in stock.';
+        return $this->render('default/error.html.twig',	[
+			'error' => $error,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }
+
+	/**
+     * @Route("/error/PasswordNotMatching", name="errorPasswordNotMacthing")
+     */
+    public function errorPasswordNotMacthingAction(Request $request)
+    {
+		$error = "The passwords given does not match each others.";
+        return $this->render('default/error.html.twig',	[
+			'error' => $error,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }
+	
+	
+	/**
+     * @Route("/error/AlreadyExistingItem", name="errorAlreadyExistingItem")
+     */
+    public function errorAlreadyExistingItemAction(Request $request)
+    {
+		$error = "This item already exists.";
+        return $this->render('default/error.html.twig',	[
+			'error' => $error,
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+        ]);
+    }
+				
 }
 
 ?>
