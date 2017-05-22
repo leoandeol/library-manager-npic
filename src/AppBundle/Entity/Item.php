@@ -21,11 +21,6 @@ class Item{
 	private $title;
 	
 	/**
-     * @ORM\Column(type="string",length=32)
-     */
-	private $short_title;
-	
-	/**
      * @ORM\Column(type="string",length=25)
      */
 	private $author;

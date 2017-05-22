@@ -70,7 +70,7 @@ function testTitle(input){
 
 function testStudentYear(input){
 	var reg = new RegExp('^[1-2-3-4-5]{1}$');
-	
+    return true;
 	if(reg.test(input.value)){
 		surligne(input,false);
 		return true;
@@ -105,7 +105,7 @@ function testNationalID(input){
 }
 
 function testPubYear(input){
-	var reg = new RegExp('^1[0-9]{3}$');
+	var reg = new RegExp('^[0-9]{0-4}$');
 
 	if(reg.test(input.value)){
 		surligne(input,false);
@@ -156,7 +156,7 @@ function checkFormItem(form){
 	var codeOk = testCodeItem(form.code);
 	var titleOk = testCity(form.title);
 	var stitleOk = testCity(form.short_title);
-	var authorOk = testName(form.author);
+    var authorOk = testName(form.author);
 	var pubYearOk = testPubYear(form.publication_year);
 	var publiOk = testName(form.publisher);
 	var priceOk = testPrice(form.price);
