@@ -14,7 +14,7 @@ class DefaultController extends Controller
     public function homeAction(Request $request)
     {
         $locale = $this->get('translator')->getLocale();
-	$request->setLocale("km");
+	//var_dump($locale);
 	$rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 	$top = $rep->findTop5PopularBooks();
 	$last = $rep->findLast5BooksAdded();
@@ -64,8 +64,7 @@ public function setLocaleAction(Request $request, $language = null)
     {
         // On enregistre la langue en session
         $this->get('session')->set('_locale', $language);
-	var_dump($language);
-    }
+	}
  
     // on tente de rediriger vers la page d'origine
     $url = $request->headers->get('referer');
@@ -74,6 +73,6 @@ public function setLocaleAction(Request $request, $language = null)
         $url = $this->generateUrl('home');
     }
  
-    //return $this->redirect($url);;
+    return $this->redirect($url);;
 }
 }
