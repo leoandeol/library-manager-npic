@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\DateTime; 
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UserController extends Controller
 {
@@ -26,15 +27,15 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/loggedin", name="loggedin")
+     * @Route("/user/loggedin", name="loggedin", options={"expose"=true})
      */
     public function loggedInAction(Request $request)
     {
 		//$username = $_POST['Username'];
 		//$password = $_POST['Password'];
 		
-		$username = $request->request->get('Username');
-		$password = $request->request->get('Password');
+		$username = $_POST['username'];
+		$password = $_POST['password'];
 		
 		$librarian_repository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Librarian");
 		$member_repository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Member");
@@ -43,7 +44,7 @@ class UserController extends Controller
 		
 		if(($user = $member_repository->find($username)) == NULL){
 			if(($user = $librarian_repository->find($username)) == NULL){
-				return $this->redirect($this->generateUrl('errorNotExistingUser'));
+				$res = "This user doesn't exist";
 			}
 			else{
 				if(hash('sha256', $password) == $user->getPassword()){
@@ -51,11 +52,12 @@ class UserController extends Controller
 						$session->set('user',$user);
 						$session->set('isAdmin',true);
 						$session->set('connected',true);
+						$res = "Success";
 					}else{
-						return $this->redirect($this->generateUrl('errorDisabledUser'));
+						$res = "This user is disabled";
 					}
 				}else{
-					return $this->redirect($this->generateUrl('errorWrongPassword'));
+					$res = "Wrong password given";
 				}
 			}
 		}
@@ -65,18 +67,15 @@ class UserController extends Controller
 					$session->set('user',$user);
 					$session->set('isadmin',false);
 					$session->set('connected',true);
+					$res = "Success";
 				}else{
-					return $this->redirect($this->generateUrl('errorDisabledUser'));
+					$res = "This user is disabled";
 				}
 			}else{
-				return $this->redirect($this->generateUrl('errorWrongPassword'));
+				$res = "Wrong password given";
 			}
 		}
-		if($session->get('connected')){
-			return $this->render('user/loggedin.html.twig', [
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-			]);
-		}
+		return new JsonResponse(array('data' => $res));
     }
 
     /**

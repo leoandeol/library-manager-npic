@@ -4,33 +4,39 @@
 {% block body %}
 
 <nav class="menu-list">
-  <form class="menu-list-search" action="/item/search" method="post">
+  <form class="menu-list-search" id="sortForm" action="/item/list" method="post">
     <div class="InputAddOn">
       <input class="InputAddOn-field" type="text" name="Search">
-      <button class="InputAddOn-item" type="submit">Search</button>
-    </div>
-  </form>
-  <div class="menu-list-element">
-    Category : <select name="category">
-      {% for c in categories %}
-      <option value="{{c.id}}">{{c.subject}}</option>
-      {% endfor %}
-      </select>
-  </div>
-  <div class="menu-list-element">
-    Type : <select name="type">
-      {% for t in types %}
-      <option value="{{t.id}}">{{t.name}}</option>
-      {% endfor %}
-      </select>
-  </div>
-  <div class="menu-list-element">
-       Language : <select name="language">
+	</div>
+
+	<div class="menu-list-element">
+		Category : <select name="category">
+		<option value='' selected>-</option>
+		{% for c in categories %}
+		<option value="{{c.id}}">{{c.subject}}</option>
+		{% endfor %}
+		</select>
+	</div>
+	<div class="menu-list-element">
+		Type : <select name="type">
+		<option value='' selected>-</option>
+		{% for t in types %}
+		<option value="{{t.id}}">{{t.name}}</option>
+		{% endfor %}
+		</select>
+	</div>
+	<div class="menu-list-element">
+		Language : <select name="language">
+		<option value='' selected>-</option>
 		{% for l in languages %}
 		<option value="{{l.id}}">{{l.getLangName()}}</option>
 		{%endfor%}
-	</select>
-  </div>
+		</select>
+	</div>
+	<div class="menu-list-element">
+      <button class="InputAddOn-item" type="submit">Search</button>
+	</div>
+  </form>
 </nav>
 
 <article class="item-list">
@@ -93,4 +99,5 @@
 		return testAmount(form.amount);
 	}
 </script>
+<script src="{{ asset('js/ajax.js') }}"></script>
 {% endblock %}

@@ -3,17 +3,20 @@
 
 {% block body %}
 	{{ parent() }}
- <form action="/user/loggedin" method="post" class="login-block">
+ <form id="loginForm" action="/user/loggedin" method="post" class="login-block">
   <div class="InputAddOn">
     <div class="InputAddOn-item">Username</div>
-    <input class="InputAddOn-field" name="Username">
+    <input class="InputAddOn-field" id="username" name="username">
   </div>
   <div class="InputAddOn">
     <div class="InputAddOn-item">Password</div>
-    <input class="InputAddOn-field" type="password" name="Password">
+    <input class="InputAddOn-field" type="password" id="password" name="password">
   </div>
   <div class="InputAddOn submit-login">
-    <button class="InputAddOn-item" type="submit">Submit</button>
+    <button class="InputAddOn-item" id="loginSubmit" type="submit">Submit</button>
   </div>
  </form>
+{% endblock %}
+{% block javascripts %}
+	 <script src="{{ asset('js/ajax.js') }}"></script>
 {% endblock %}
