@@ -10,6 +10,7 @@ use AppBundle\Entity\ItemUnits;
 use AppBundle\Entity\Item;
 use AppBundle\Entity\Type;
 use AppBundle\Entity\Transaction;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Category;
 
 class ItemController extends Controller
@@ -96,68 +97,58 @@ class ItemController extends Controller
     }
 
     /**
-     * @Route("/item/list/{page}", name="itemlist", requirements={"page": "\d+"})
+     * @Route("/item/list/{page}", name="itemlist", requirements={"page": "\d+"}, options={"expose"=true})
      */
     public function readAllAction(Request $request, $page = 1)
     {
-		$item_repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
-		$total = $item_repository->findTotalNumberOfItem();
-
-
+		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
 		$type = $em->getRepository('AppBundle:Type')->findAll();
 		$category = $em->getRepository('AppBundle:Category')->findAllCategories();
 		$language = $em->getRepository('AppBundle:Languages')->findAll();
-		$item_per_page = 20;
-		$nb_max_pages = ceil($total[0][1] / $item_per_page);		
-		$current = ($page * $item_per_page) - $item_per_page;
 		
-		$items = $item_repository->findAllItems($current,$item_per_page);
 		
-		$this->get('acme.js_vars')->items = $items;
-		
-        return $this->render('item/readAll.html.twig',[
-			'method' => 'list',
-			'page_max' => $nb_max_pages,
-			'languages' => $language,
-			'items' => $items,
-			'page' => $page,
-			'types' => $type,
-			'categories' => $category,
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
-    }
-	
-	/**
-     * @Route("/item/search/{page}", name="itemsearch", requirements={"page": "\d+"})
-     */
-	 public function searchAction(Request $request, $page = 1)
-	 {
-		$item_repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
-		$em = $this->getDoctrine()->getManager();
-		$search = $_POST['Search'];
-		
-		$total = $item_repository->findTotalNumberOfItemSearched($search);
+		$search = $request->request->get('Search');
+		$cat = $request->request->get('category');
+		$typ = $request->request->get('type');
+		$lang = $request->request->get('language');
 		
 		$item_per_page = 20;
+		$total = $em->getRepository('AppBundle:Item')->findTotalByCategTypeLanguageSearch($cat,$typ,$lang,$search);
 		$nb_max_pages = ceil($total[0][1] / $item_per_page);
 		$current = ($page * $item_per_page) - $item_per_page;
+		$items = $em->getRepository('AppBundle:Item')->findByCategTypeLanguageSearch($current,$item_per_page,$cat,$typ,$lang,$search);
 		
-		$items = $item_repository->findAllItemsSearched($search,$current,$item_per_page);
-		$type = $em->getRepository('AppBundle:Type')->findAll();
-		$category = $em->getRepository('AppBundle:Category')->findAllCategories();
-		$language = $em->getRepository('AppBundle:Languages')->findAll();
+		// return new JsonResponse([
+			// 'page_max' => $nb_max_pages,
+			// 'languages' => $language,
+			// 'items' => $items,
+			// 'page' => $page,
+			// 'types' => $type,
+			// 'categories' => $category,
+		// ]);
 		
-        return $this->render('item/readAll.html.twig',[
-			'page_max' => $nb_max_pages,
-			'items' => $items,
-			'page' => $page,
-			'languages' => $language,
-			'types' => $type,
-			'categories' => $category,
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
-	 }
+		if($request->isXmlHttpRequest()){
+			return new JsonResponse(array(
+				'page_max' => $nb_max_pages,
+				'languages' => $language,
+				'items' => $items,
+				'page' => $page,
+				'types' => $type,
+				'categories' => $category,
+			));
+		}else{
+			return $this->render('item/readAll.html.twig',[
+				'page_max' => $nb_max_pages,
+				'languages' => $language,
+				'items' => $items,
+				'page' => $page,
+				'types' => $type,
+				'categories' => $category,
+				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
+		}
+    }
 
 	 /**
 	 * @Route("/item/read/{id}", name="readitem", requirements={"id":"\d+"}, options={"expose"=true})
@@ -250,39 +241,6 @@ class ItemController extends Controller
 			return $this->redirect($this->generateUrl('errorNotExistingItem'));	
 		}
 		return $this->redirect($this->generateUrl('errorNotLogged'));
-	}
-	
-	/**
-     * @Route("/item/sort/{page}", name="sort", requirements={"id":"\d+"})
-     */
-    public function SortItemAction(Request $request, $page=1)
-    {		
-		$session = $request->getSession();
-		$em = $this->getDoctrine()->getManager();
-		$type = $em->getRepository('AppBundle:Type')->findAll();
-		$category = $em->getRepository('AppBundle:Category')->findAllCategories();
-		$language = $em->getRepository('AppBundle:Languages')->findAll();
-		
-		$cat = $request->request->get('category');
-		$typ = $request->request->get('type');
-		$lang = $request->request->get('language');
-		
-		$item_per_page = 20;
-		$total = $em->getRepository('AppBundle:Item')->findTotalByCategTypeLanguage($cat,$typ,$lang);
-		$nb_max_pages = ceil($total[0][1] / $item_per_page);
-		$current = ($page * $item_per_page) - $item_per_page;
-		$items = $em->getRepository('AppBundle:Item')->findByCategTypeLanguage($current,$item_per_page,$cat,$typ,$lang);
-		
-		return $this->render('item/readAll.html.twig',[
-			'method' => 'sort',
-			'page_max' => $nb_max_pages,
-			'languages' => $language,
-			'items' => $items,
-			'page' => $page,
-			'types' => $type,
-			'categories' => $category,
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
-    }
+	}		
 }
 

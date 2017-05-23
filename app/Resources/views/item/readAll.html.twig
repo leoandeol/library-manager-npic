@@ -3,16 +3,13 @@
 
 {% block body %}
 <nav class="menu-list">
-  <form class="menu-list-search" action="/item/search" method="post">
-    <div class="InputAddOn">
+  <form class="menu-list-search" id="sortForm" action="/item/list" method="post">
+	<div class="menu-list-element">
       <input class="InputAddOn-field" type="text" name="Search">
-      <button class="InputAddOn-item" type="submit">Search</button>
 	</div>
-  </form>
-  <form class="menu-list-search" action="/item/sort" method="post">
 	<div class="menu-list-element">
 		Category : <select name="category">
-		<option value='' selected>-</option>
+		<option value='' selected>All</option>
 		{% for c in categories %}
 		<option value="{{c.id}}">{{c.subject}}</option>
 		{% endfor %}
@@ -20,7 +17,7 @@
 	</div>
 	<div class="menu-list-element">
 		Type : <select name="type">
-		<option value='' selected>-</option>
+		<option value='' selected>All</option>
 		{% for t in types %}
 		<option value="{{t.id}}">{{t.name}}</option>
 		{% endfor %}
@@ -28,22 +25,22 @@
 	</div>
 	<div class="menu-list-element">
 		Language : <select name="language">
-		<option value='' selected>-</option>
+		<option value='' selected>All</option>
 		{% for l in languages %}
 		<option value="{{l.id}}">{{l.getLangName()}}</option>
 		{%endfor%}
 		</select>
 	</div>
 	<div class="menu-list-element">
-		<button class="InputAddOn-item" type="submit">Sort</button>
+      <button class="InputAddOn-item" type="submit">Search</button>
 	</div>
   </form>
 </nav>
 	
 
-<article class="item-list">
+<article id="item-list" class="item-list">
 
-<div class="table">
+<div class="table" id="table">
     <div class="header row">
       <div class="cell">
         Title
@@ -66,60 +63,50 @@
 	  <div class="cell">
 		Note
       </div>
-	  {% if app.session.get('isAdmin') %}
 		<div class="cell">
 			Total units
 		</div>
-	  {% endif %}
-    </div>
+    </div>	
+	
 	{% for item in items %}
-	<div class="row" id={{item.code}}>
-		<div class="cell">
-			{{item.title}}
+		<div class="row" id={{item.code}}>
+			<div class="cell">
+				{{item.title}}
+			</div>
+			<div class="cell">
+				{{item.author}}
+			</div>
+			<div class="cell">
+				{{item.subject}}
+			</div>
+			<div class="cell">
+				{{item.lang_name}}
+			</div>
+			<div class="cell">
+				{{item.publication_year}}
+			</div>
+			<div class="cell">
+				{{ item.bookable }}
+			</div>
+			<div class="cell">
+				{% if item.note == NULL %} 0 {% else %}{{item.note}}{% endif %}
+			</div>
+			<div class="cell">
+				{{ item.total_unit }}
+			</div>
+			<div class="cell">
+				<a href="/item/book/{{item.code}}"><button>Book</button></a>
+			</div>
 		</div>
-		<div class="cell">
-			{{item.author}}
-		</div>
-		<div class="cell">
-			{{item.subject}}
-		</div>
-		<div class="cell">
-			{{item.lang_name}}
-		</div>
-		<div class="cell">
-			{{item.publication_year}}
-		</div>
-		<div class="cell">
-			{{ item.bookable }}
-		</div>
-		<div class="cell">
-			{% if item.note == NULL %} 0 {% else %}{{item.note}}{% endif %}
-		</div>
-		{% if app.session.get('isAdmin') %}
-		<div class="cell">
-			{{ item.total_unit }}
-		</div>
-	  {% endif %}
-		<div class="cell">
-			<a href="/item/book/{{item.code}}"><button>Book</button></a>
-		</div>
-	</div>
-{% endfor %}
+	{% endfor %}
+	
 </div>
 
 {% if page>1 %}
-	{% if method == "list" %}
-		<a href="/item/list/{{ page - 1 }}"><button class="InputAddOn-item" type="submit">Previous</button></a>
-	{% else %}	
-		<a href="/item/sort/{{ page - 1 }}"><button class="InputAddOn-item" type="submit">Previous</button></a>
-	{% endif %}
+	<button class="InputAddOn-item" type="submit">Previous</button>
 {% endif %}
 {% if page<page_max %}
-	{% if method == "list" %}
-		<a href="/item/list/{{ page + 1 }}"><button class="InputAddOn-item" type="submit">Next</button></a>
-	{% else %}
-		<a href="/item/sort/{{ page + 1 }}"><button class="InputAddOn-item" type="submit">Next</button></a>
-	{% endif %}		
+	<button class="InputAddOn-item" type="submit">Next</button>
 {% endif %}
 
 
@@ -128,4 +115,5 @@
 
 {% block javascripts %}
 <script src="{{ asset('js/tables.js') }}"></script>
+<script src="{{ asset('js/ajax.js') }}"></script>
 {% endblock %}
