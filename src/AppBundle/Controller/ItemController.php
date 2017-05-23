@@ -68,7 +68,6 @@ class ItemController extends Controller
 					
 					$new_item->setCode($request->request->get('code'));
 					$new_item->setTitle($request->request->get('title'));
-					$new_item->setShortTitle($request->request->get('short_title'));
 					$new_item->setAuthor($request->request->get('author'));
 					$new_item->setPublisher($request->request->get('publisher'));
 					$new_item->setPublicationYear($request->request->get('publication_year'));
