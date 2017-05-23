@@ -120,34 +120,19 @@ class ItemController extends Controller
 		$current = ($page * $item_per_page) - $item_per_page;
 		$items = $em->getRepository('AppBundle:Item')->findByCategTypeLanguageSearch($current,$item_per_page,$cat,$typ,$lang,$search);
 		
-		// return new JsonResponse([
-			// 'page_max' => $nb_max_pages,
-			// 'languages' => $language,
-			// 'items' => $items,
-			// 'page' => $page,
-			// 'types' => $type,
-			// 'categories' => $category,
-		// ]);
-		
+		$data = array(
+				'page_max' => $nb_max_pages,
+				'languages' => $language,
+				'items' => $items,
+				'page' => $page,
+				'types' => $type,
+				'categories' => $category
+				);
+
 		if($request->isXmlHttpRequest()){
-			return new JsonResponse(array(
-				'page_max' => $nb_max_pages,
-				'languages' => $language,
-				'items' => $items,
-				'page' => $page,
-				'types' => $type,
-				'categories' => $category,
-			));
+			return new JsonResponse($data);
 		}else{
-			return $this->render('item/readAll.html.twig',[
-				'page_max' => $nb_max_pages,
-				'languages' => $language,
-				'items' => $items,
-				'page' => $page,
-				'types' => $type,
-				'categories' => $category,
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-			]);
+			return $this->render('item/readAll.html.twig',$data);
 		}
     }
 
@@ -199,9 +184,9 @@ class ItemController extends Controller
 	 }
 
 	 /**
-	 * @Route("/item/book/{id}", name="bookitem", requirements={"id":"\d+"})
+	 * @Route("/item/book/{id}", name="bookitem", requirements={"id":"\d+"}, options={"expose"=true})
 	 */
-	 public function bookAction(Request $request, $id){
+	public function bookAction(Request $request, $id){
 		$em = $this->getDoctrine()->getManager();
 		$session = $request->getSession();
 		$itemRep = $em->getRepository('AppBundle:Item');
@@ -211,37 +196,50 @@ class ItemController extends Controller
 			if(($item = $itemRep->find($id)) != NULL){
 				if($item->getDisable() == 0){
 					if($item->getTotalUnit() > 0){
-						$user = $session->get('user');
-						if($transRep->findByMemberAndItem($user->getCode(),$item->getCode()) == NULL){
-							if($item->isInStock()){
-								if($user->getCurrentBorrowedBooksNb() < 2){
-									$new_transaction = new Transaction();
-									$new_transaction->setMember($membRep->find($user->getCode()));
-									$new_transaction->setItem($item);
-									$new_transaction->setBorrowdate(new \DateTime(date('Y-m-d')));
-									$new_transaction->setFineCostPerDay(0);
-									$new_transaction->setState('Booked');
-									
-									$item->setBorrowedUnit($this->getBorrowedUnit()-1);
-									
-									$em->persist($new_transaction);
-									$em->flush();
-									
-									return $this->redirect($this->generateUrl('bookings'));
+						if(!$session->get('isAdmin')){
+							$user = $session->get('user');
+							if($transRep->findByMemberAndItem($user->getCode(),$item->getCode()) == NULL){
+								if($item->isInStock()){
+									if($user->getCurrentBorrowedBooksNb() < 2){
+										$new_transaction = new Transaction();
+										$new_transaction->setMember($membRep->find($user->getCode()));
+										$new_transaction->setItem($item);
+										$new_transaction->setBorrowdate(new \DateTime(date('Y-m-d')));
+										$new_transaction->setFineCostPerDay(0);
+										$new_transaction->setState('Booked');
+										
+										$user->setCurrentBorrowedBooksNb($user->getCurrentBorrowedBooksNb()+1);
+										$item->setBorrowedUnit($item->getBorrowedUnit()+1);
+										
+										$em->persist($new_transaction);
+										$em->flush();
+										
+										$res = 'Success';
+									}else{
+										$res = 'You reached the limit of items you can borrow.';
+									}
+								}else{
+									$res = 'This item is not available.';
 								}
-								return $this->redirect($this->generateUrl('errorLimitBorrow'));
+							}else{		
+								$res = 'You already booked this item.';
 							}
-							return $this->redirect($this->generateUrl('errorNotAvailable'));
-						}						
-						return $this->redirect($this->generateUrl('errorAlreadyBooked'));
+						}else{
+							$res = "Administrators can't book items.";
+						}
+					}else{
+						$res = 'This item is not in stock anymore.';
 					}
-					return $this->redirect($this->generateUrl('errorNoMoreStock'));
+				}else{
+					$res = 'This item is disabled.';
 				}
-				return $this->redirect($this->generateUrl('errorDisabledItem'));
+			}else{
+				$res = "This item doesn't exist.";
 			}
-			return $this->redirect($this->generateUrl('errorNotExistingItem'));	
+		}else{
+			$res = 'You must loggin to do this.';
 		}
-		return $this->redirect($this->generateUrl('errorNotLogged'));
-	}		
+		return new JsonResponse(['data'=>$res]);
+	}
 }
 

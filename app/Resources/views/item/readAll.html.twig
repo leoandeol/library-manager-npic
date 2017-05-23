@@ -3,7 +3,7 @@
 
 {% block body %}
 <nav class="menu-list">
-  <form class="menu-list-search" id="sortForm" action="/item/list" method="post">
+  <form class="menu-list-search sortingForm" action="/item/list" method="post">
 	<div class="menu-list-element">
       <input class="InputAddOn-field" type="text" name="Search">
 	</div>
@@ -69,7 +69,7 @@
     </div>	
 	
 	{% for item in items %}
-		<div class="row" id={{item.code}}>
+		<div class="row toSelect" id={{item.code}}>
 			<div class="cell">
 				{{item.title}}
 			</div>
@@ -95,7 +95,7 @@
 				{{ item.total_unit }}
 			</div>
 			<div class="cell">
-				<a href="/item/book/{{item.code}}"><button>Book</button></a>
+				<button value={{item.code}} class="bookingButton">Book</button>
 			</div>
 		</div>
 	{% endfor %}
@@ -103,10 +103,10 @@
 </div>
 
 {% if page>1 %}
-	<button class="InputAddOn-item" type="submit">Previous</button>
+	<button value={{page-1}} id="prev" class="InputAddOn-item sortingButton">Previous</button>
 {% endif %}
 {% if page<page_max %}
-	<button class="InputAddOn-item" type="submit">Next</button>
+	<button value={{page+1}} id="next" class="InputAddOn-item sortingButton">Next</button>
 {% endif %}
 
 

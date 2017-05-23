@@ -93,7 +93,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/account", name="account")
+     * @Route("/user/account", name="account", options={"expose"=true})
      */
     public function accountAction(Request $request)
     {
@@ -108,7 +108,7 @@ class UserController extends Controller
     }
 	
 	/**
-     * @Route("/user/bookings", name="bookings")
+     * @Route("/user/bookings", name="bookings", options={"expose"=true})
      */
 	function checkBookingsAction(Request $request){
 		$session = $request->getSession();
@@ -141,11 +141,12 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/changedpass", name="changedpass")
+     * @Route("/user/changedpass", name="changedpass", options={"expose"=true})
      */
     public function ChangedPassAction(Request $request)
     {
         $session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			
 			$curpass = $request->request->get('curpass');
@@ -156,27 +157,23 @@ class UserController extends Controller
 			
 			if(hash('sha256', $curpass) == $session->get('user')->getPassword()){
 				if($newpass == $newpassbis){
-					if($session->get('isAdmin')){
-						$this->getDoctrine()->getManager()->getRepository('AppBundle:Librarian')->changePassword($newpass,$session->get('user')->getUsername());
-					}else{
-						$this->getDoctrine()->getManager()->getRepository('AppBundle:Member')->changePassword($newpass,$session->get('user')->getCode());
+					$new = hash('sha256',$newpass);
+					if(($user = $em->getRepository('AppBundle:Member')->find($session->get('user')->getCode())) == NULL){
+						$user = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
 					}
-					$changed = true;
+					$user->setPassword($new);
+					$em->flush();
+					$res = "Success";
+				}else{
+					$res = "The given passwords are not matching.";
 				}
-				else{
-					return $this->redirect($this->generateUrl('errorPasswordNotmatching'));
-				}
+			}else{
+				$res = "The current password given is wrong.";
 			}
-			else{
-				return $this->redirect($this->generateUrl('errorWrongPassword'));
-			}			
-			if($changed){
-				return $this->render('user/changedpass.html.twig', [
-					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-				]);
-			}
+		}else{
+			$res = "You must login to do this.";
 		}
-		return $this->redirect($this->generateUrl('errorNotLogged'));
+		return new JsonResponse(array('data'=>$res));
     }
 	
 	/**
@@ -371,6 +368,7 @@ class UserController extends Controller
 					$new_member->setFaculty($em->getRepository('AppBundle:Faculty')->find($request->request->get('fac')));
 					$new_member->setEntryDate(date("Y-m-d"));
 					$new_member->setPassword($passwordHashed);
+					$new_member->setCurrentBorrowedBooksNb(0);
 					$new_member->setDisable(0);
 					
 					$position = $request->request->get('position');

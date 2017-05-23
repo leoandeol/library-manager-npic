@@ -2,16 +2,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
 <nav class="menu-list">
-  <form class="menu-list-search" id="sortForm" action="/item/list" method="post">
-    <div class="InputAddOn">
+  <form class="menu-list-search" action="/item/list" method="post">
+	<div class="menu-list-element">
       <input class="InputAddOn-field" type="text" name="Search">
 	</div>
-
 	<div class="menu-list-element">
 		Category : <select name="category">
-		<option value='' selected>-</option>
+		<option value='' selected>All</option>
 		{% for c in categories %}
 		<option value="{{c.id}}">{{c.subject}}</option>
 		{% endfor %}
@@ -19,7 +17,7 @@
 	</div>
 	<div class="menu-list-element">
 		Type : <select name="type">
-		<option value='' selected>-</option>
+		<option value='' selected>All</option>
 		{% for t in types %}
 		<option value="{{t.id}}">{{t.name}}</option>
 		{% endfor %}
@@ -27,7 +25,7 @@
 	</div>
 	<div class="menu-list-element">
 		Language : <select name="language">
-		<option value='' selected>-</option>
+		<option value='' selected>All</option>
 		{% for l in languages %}
 		<option value="{{l.id}}">{{l.getLangName()}}</option>
 		{%endfor%}
@@ -49,7 +47,7 @@
     <div class="item-info">Category : {{ item.getCategory().getSubject() }}</div>
     <div class="item-info">Disponibility : {{ item.getBookable() }}</div>
   </div>
-  <a href="/item/book/{{ item.getCode() }}"><button class="InputAddOn-item" type="submit">Book</button></a>
+  <button value={{item.getCode()}} class="InputAddOn-item bookingButton">Book</button>
 	{% if app.session.get('isAdmin') %}
 	
 	<h1>Details for admin</h1>
