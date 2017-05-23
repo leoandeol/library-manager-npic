@@ -75,6 +75,18 @@ class ItemRepository extends EntityRepository{
 			"
 		)->getResult();
 	}
+	
+	public function updateNoteByCode($code){
+		$query = $this->getEntityManager()->createQuery(
+		"UPDATE AppBundle:Item it SET it.note = 
+			(SELECT AVG(no.note)
+			FROM AppBundle:Note no
+			WHERE no.item = $code)
+		WHERE it.code = $code
+		"
+		);
+		$query->execute();
+	}
 }
 
 ?>

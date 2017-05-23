@@ -12,6 +12,7 @@ use AppBundle\Entity\Type;
 use AppBundle\Entity\Transaction;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Category;
+use AppBundle\Entity\Note;
 
 class ItemController extends Controller
 {
@@ -239,6 +240,72 @@ class ItemController extends Controller
 			$res = 'You must loggin to do this.';
 		}
 		return new JsonResponse(['data'=>$res]);
+	}
+	
+	/**
+	 * @Route("/item/note", name="noteItem", options={"expose"=true})
+	 */
+	public function noteItemAction(Request $request){
+		$em = $this->getDoctrine()->getManager();
+		$session = $request->getSession();
+		$user = $session->get('user');
+		$itemCode = $request->request->get('itemCode');
+		$item = $em->getRepository('AppBundle:Item')->find($itemCode);
+		$user = $em->getRepository('AppBundle:Member')->find($user->getCode());
+		$note = $request->request->get('note');
+		
+		if($session->get('connected')){
+			if(!$session->get('isAdmin')){
+				if(($oldNote = $em->getRepository('AppBundle:Note')->findBy(
+					array('item'=>$itemCode,'member'=>$user->getCode())
+				)) == NULL){
+					$new_note = new Note();
+					$new_note->setMember($user);
+					$new_note->setItem($item);
+					$new_note->setNote($note);
+					
+					$em->persist($new_note);
+					
+					$em->getRepository('AppBundle:Item')->updateNoteByCode($itemCode);
+					$em->flush();
+					
+					$res = 'Success';
+				}else{
+					$oldNote[0]->setNote($note);
+					$em->getRepository('AppBundle:Item')->updateNoteByCode($itemCode);
+					$em->flush();
+					
+					$res = 'Success';
+				}
+			}else{
+				$res = 'Administrators are not allowed to do this.';
+			}
+		}else{
+			$res = 'You must loggin to do this.';
+		}
+		return new JsonResponse(['data'=>$res]);
+	}
+	
+	/**
+	 * @Route("/item/getnote", name="getNoteItem", options={"expose"=true})
+	 */
+	public function getNoteItemAction(Request $request){
+		$em = $this->getDoctrine()->getManager();
+		$session = $request->getSession();
+		$user = $session->get('user');
+		$itemCode = $request->request->get('itemCode');
+		$item = $em->getRepository('AppBundle:Item')->find($itemCode);
+		$user = $em->getRepository('AppBundle:Member')->find($user->getCode());
+		
+		if(($note = $em->getRepository('AppBundle:Note')->findBy(
+		array('item'=>$itemCode,'member'=>$user->getCode())
+		)) == NULL){
+			$res = -1;
+		}else{
+			$res = $note[0]->getNote();
+		}
+		
+		return new JsonResponse(array('data'=>$res));
 	}
 }
 
