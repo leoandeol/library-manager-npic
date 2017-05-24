@@ -7,7 +7,11 @@ $(document).ready(function(){
 		$(this).css("backgroundColor","");
 	});
 	
-	$('.table').on('click','.toSelect',function(){
+	$('.table').on('click','.toSelectItem',function(){
 		window.location=Routing.generate('readitem', {'id': this.id});
+	});
+	
+	$('.table').on('click','.toSelectUser',function(){
+		window.location=Routing.generate('general_infos', {'id': this.id});
 	});
 });

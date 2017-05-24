@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<article class="article-text-block" >
+  <h1>Add new administrator</h1>
+  <form action="/admin/added_admin" method="post" class="big-form" onsubmit="return checkForm(this)">
+    <div class="InputAddOn">
+      <div class="InputAddOn-item" for="fname">First Name :</div>
+      <input required type="text" id="fname" name="fname" onchange="testName(this)" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="username">Username :</div>
+      <input required type="text" id="username" name="username" onchange="testCode(this)" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="lname">Last name :</div>
+      <input required type="text" id="lname" name="lname" onchange="testName(this)" class="InputAddOn-field" />
+    </div><div class="InputAddOn">
+      <div class="InputAddOn-item" for="gender">Gender :</div>
+      <div class="InputAddOn-field InputAddOn-field-radio">Male : <input type="radio" id="gender" name="gender" value="M"/>Female : <input type="radio" id="gender" name="gender" value="F" /></div>
+    </div>
+	
+	<div class="InputAddOn">
+      <div class="InputAddOn-item" for="city">City :</div>
+      <input required type="text" id="city" name="city" onchange="testCity(this)" class="InputAddOn-field" />
+    </div>
+	<div class="InputAddOn">
+      <div class="InputAddOn-item" for="phone">Phone :</div>
+      <input required type="text" id="phone" name="phone" class="InputAddOn-field" />
+    </div>
+	<div class="InputAddOn">
+      <div class="InputAddOn-item" for="street">Street :</div>
+      <input required type="text" id="street" name="street" class="InputAddOn-field" />
+    </div>
+	<div class="InputAddOn">
+      <div class="InputAddOn-item" for="email">Email :</div>
+      <input required type="text" id="email" onchange="testMail(this)" name="email" class="InputAddOn-field" />
+	</div>
+	<div class="InputAddOn">
+      <div class="InputAddOn-item" for="pcode">Postal code :</div>
+      <input required type="text" onchange="testPostCode(this)" id="pcode" name="pcode" class="InputAddOn-field" />
+    </div>	
+	<div class="InputAddOn">
+      <div class="InputAddOn-item" for="password">Password :</div>
+      <input required type="text" id="password" name="password" class="InputAddOn-field" />
+    </div>
+	
+    <div class="InputAddOn submit-login">
+      <button type="submit" class="InputAddOn-item">Submit</button>
+    </div>
+	
+  </form>
+</article>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('js/dates.js') }}"></script>
+<script src="{{ asset('js/testForms.js') }}"></script>
+{% endblock %}

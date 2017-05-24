@@ -10,8 +10,9 @@
 // });
 
 // Tableau de memorisation des notes pour chaque liste
-var ArrListeEtoile = new Object();
-document.getElementsByTagName('body')[0].onload = getNote($('#itemCode').val());
+var ArrListeEtoile = new Array();
+var code = document.getElementById('itemCode').value;
+document.getElementsByTagName('body')[0].onload = getNote(code);
 
 function GestionHover(code,indice, nbEtoile){
 	for (i=1; i<= nbEtoile; i++)
@@ -63,6 +64,18 @@ function note(code,note,e){
 			if(response['data'] == 'Success'){
 				alert("Thank you for noting.");
 				ArrListeEtoile[code] = note;
+				for (i=1; i<= 5; i++){
+				var idoff = "staroff-" + i;
+				var idon = "staron-" + i;
+				if (note >= i){
+					document.getElementById(idoff).style.display ="none";
+					document.getElementById(idon).style.display ="block";
+				}
+				else{
+					document.getElementById(idoff).style.display ="block";
+					document.getElementById(idon).style.display ="none";
+				}
+			}
 			}else{
 				alert(response['data']);
 			}
@@ -78,21 +91,36 @@ function note(code,note,e){
 // GET NOTE OF AN ITEM
 
 function getNote(code){
-	$.ajax({
-		type	: "POST",
-		url		: Routing.generate('getNoteItem'),
-		data	: 
-		{
-			'itemCode' : code
-		},
-		dataType: "json",
-		success	: function(response){
-			ArrListeEtoile[code] = response['data'];
-		},
-		error	: function(jqXHR, textStatus, errorThrown){
-			alert(textStatus, errorThrown);
-		}
-	});
+	if(document.getElementById('isAdmin').value == false){
+		$.ajax({
+			type	: "POST",
+			url		: Routing.generate('getNoteItem'),
+			data	: 
+			{
+				'itemCode' : code
+			},
+			dataType: "json",
+			success	: function(response){
+
+				for (i=1; i<= 5; i++){
+					var idoff = "staroff-" + i;
+					var idon = "staron-" + i;
+					if (response['data'] >= i){
+						document.getElementById(idoff).style.display ="none";
+						document.getElementById(idon).style.display ="block";
+					}
+					else{
+						document.getElementById(idoff).style.display ="block";
+						document.getElementById(idon).style.display ="none";
+					}
+				}
+				ArrListeEtoile[code] = response['data'];
+			},
+			error	: function(jqXHR, textStatus, errorThrown){
+				alert(textStatus, errorThrown);
+			}
+		});
+	}
 }
 
 

@@ -265,13 +265,14 @@ class ItemController extends Controller
 					$new_note->setNote($note);
 					
 					$em->persist($new_note);
-					
+					$em->flush();
 					$em->getRepository('AppBundle:Item')->updateNoteByCode($itemCode);
 					$em->flush();
 					
 					$res = 'Success';
 				}else{
 					$oldNote[0]->setNote($note);
+					$em->flush();
 					$em->getRepository('AppBundle:Item')->updateNoteByCode($itemCode);
 					$em->flush();
 					

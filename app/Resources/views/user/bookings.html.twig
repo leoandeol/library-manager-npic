@@ -22,7 +22,7 @@
 	  </div>
     </div>
 	{% for transaction in bookings %}
-	<div class="row toSelect" id={{transaction.getItem().getCode()}}>
+	<div class="row toSelect toSelectItem" id={{transaction.getItem().getCode()}}>
 		<div class="cell">
 			{{transaction.getId()}}
 		</div>
