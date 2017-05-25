@@ -12,5 +12,17 @@ class TypeRepository extends EntityRepository{
 		)->getResult();
 	}
 	
+	public function getTypeNumber(){
+		return $this->getEntityManager()->createQuery(
+			"SELECT COUNT(ty.id) FROM AppBundle:Type ty"
+		)->getResult();
+	}
+	
+	public function getDisabledNumber(){
+		return $this->getEntityManager()->createQuery(
+			"SELECT SUM(ty.disable) FROM AppBundle:Type ty"
+		)->getResult();
+	}
+	
 }
 ?>

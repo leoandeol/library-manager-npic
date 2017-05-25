@@ -1,16 +1,5 @@
 /*jshint eqnull:true */
 $(document).ready(function(){
-	
-	function tableFunction(){
-		$("div[class^='row'").hover(function(){
-			$(this).css("backgroundColor","#5D95AC");
-		}, function(){
-			$(this).css("backgroundColor","");
-		});
-		$("div[class^='row'").click(function(){
-			window.location=Routing.generate('readitem', {'id': this.id});
-		});
-	}
 
 	// CONNEXION
 	$("#loginForm").submit(function(e){
@@ -22,7 +11,6 @@ $(document).ready(function(){
 			dataType: "json",
 			success	: function(response) {
 				if(response['data'] == 'Success'){
-					alert("Connected");
 					window.location = Routing.generate('home');
 				}else{
 					alert(response['data']);
@@ -68,8 +56,8 @@ $(document).ready(function(){
 			url 	: Routing.generate('bookitem',{'id':this.value}),
 			dataType: "json",
 			success : function(response){
-				if(response['data'] == 'Success'){
-					window.location = Routing.generate('bookings');
+				if(response['data']['msg'] == 'Success'){
+					window.location = Routing.generate('bookings',{'id':response['data']['code']});
 				}else{
 					alert(response['data']);
 				}
@@ -152,7 +140,7 @@ $(document).ready(function(){
 				$.each(response['items'],function(i,item){
 					// row to add
 					var row = document.createElement("div");	
-					row.setAttribute("class","row toSelect");
+					row.setAttribute("class","row toSelect toSelectItem");
 					row.setAttribute("id",item.code);
 					// row's divs
 					var title = document.createElement("div");
@@ -228,6 +216,229 @@ $(document).ready(function(){
 				if(response['page']<response['page_max']){
 					var next = document.createElement("button");
 					next.setAttribute("class","InputAddOn-item sortingButton");
+					next.setAttribute("id","next");
+					next.setAttribute("value",parseInt(response['page'],10)+1);
+					next.innerHTML = "Next";
+					article.append(next);
+				}
+			},
+			error	: function(jqXHR, textStatus, errorThrown){
+				alert('error');
+			}
+		});
+	}
+	
+	// MEMBER LIST
+	
+	article.on('click','.checkMemberButton',function(e){
+		checkAllMembers(this.value,e)
+	});
+	
+	function checkAllMembers(page,e){
+		e.preventDefault();
+		$.ajax({
+			type	: "POST",
+			url		: Routing.generate('checkalluser',{'page':page}),
+			datatype: "json",
+			success	: function(response){
+				var table = document.getElementById('table');
+				while(table.firstChild){
+					table.firstChild.remove();
+				}
+				var header = document.createElement("div");
+					header.setAttribute("class","header row");
+					
+				var code = document.createElement("div");
+				code.setAttribute("class","cell");
+				code.innerHTML = "Code";
+				
+				var fname = document.createElement("div");
+				fname.setAttribute("class","cell");
+				fname.innerHTML = "First name";
+				
+				var lname = document.createElement("div");
+				lname.setAttribute("class","cell");
+				lname.innerHTML = "Last name";
+				
+				var activity = document.createElement("div");
+				activity.setAttribute("class","cell");
+				activity.innerHTML = "Activity";
+				
+				
+				header.appendChild(code);
+				header.appendChild(fname);
+				header.appendChild(lname);
+				header.appendChild(activity);
+				table.appendChild(header);
+
+				$.each(response['members'],function(i,member){
+					// row to add
+					var row = document.createElement("div");	
+					row.setAttribute("class","row toSelect toSelectUser");
+					row.setAttribute("id",member.code);
+					// row's divs
+					var code = document.createElement("div");
+					code.setAttribute("class","cell");
+					code.innerHTML = member.code;
+					
+					var fname = document.createElement("div");
+					fname.setAttribute("class","cell");
+					fname.innerHTML = member.first_name;
+					
+					var lname = document.createElement("div");
+					lname.setAttribute("class","cell");
+					lname.innerHTML = member.last_name;
+					
+					var activity = document.createElement("div");
+					activity.setAttribute("class","cell");
+					if(member.disable == 0){
+						activity.innerHTML = "Active";
+					}else{
+						activity.innerHTML = "Inactive";
+					}
+					
+					var button = document.createElement("div");
+					button.setAttribute("class","cell");
+					var butt = document.createElement("button");
+					butt.setAttribute('value',member.code);
+					butt.setAttribute('class','checkBookingButton');
+					butt.innerHTML = "Check bookings";
+					
+					button.appendChild(butt);
+					row.appendChild(code);
+					row.appendChild(fname);
+					row.appendChild(lname);
+					row.appendChild(activity);
+					row.appendChild(button);
+					table.appendChild(row);
+				});
+				var article = $("article");
+				var prev = document.getElementById('prev');
+				var next = document.getElementById('next');
+				
+				if(prev != null){
+						article.find('#prev')[0].remove();
+				}
+				if(response['page']>1){
+					var prev = document.createElement("button");
+					prev.setAttribute("class","InputAddOn-item checkMemberButton");
+					prev.setAttribute("id","prev");
+					prev.setAttribute("value",response['page']-1);
+					prev.innerHTML = "Previous";
+					article.append(prev);
+				}
+				if(next != null){
+					article.find('#next')[0].remove();
+				}
+				if(response['page']<response['page_max']){
+					var next = document.createElement("button");
+					next.setAttribute("class","InputAddOn-item checkMemberButton");
+					next.setAttribute("id","next");
+					next.setAttribute("value",parseInt(response['page'],10)+1);
+					next.innerHTML = "Next";
+					article.append(next);
+				}
+			},
+			error	: function(jqXHR, textStatus, errorThrown){
+				alert('error');
+			}
+		});
+	}
+	
+	article.on('click','.checkLibButton',function(e){
+		checkAllLibs(this.value,e)
+	});
+	
+	function checkAllLibs(page,e){
+		e.preventDefault();
+		$.ajax({
+			type	: "POST",
+			url		: Routing.generate('checkalllibs',{'page':page}),
+			datatype: "json",
+			success	: function(response){
+				var table = document.getElementById('table');
+				while(table.firstChild){
+					table.firstChild.remove();
+				}
+				var header = document.createElement("div");
+					header.setAttribute("class","header row");
+					
+				var code = document.createElement("div");
+				code.setAttribute("class","cell");
+				code.innerHTML = "Username";
+				
+				var fname = document.createElement("div");
+				fname.setAttribute("class","cell");
+				fname.innerHTML = "First name";
+				
+				var lname = document.createElement("div");
+				lname.setAttribute("class","cell");
+				lname.innerHTML = "Last name";
+				
+				var activity = document.createElement("div");
+				activity.setAttribute("class","cell");
+				activity.innerHTML = "Activity";
+				
+				
+				header.appendChild(code);
+				header.appendChild(fname);
+				header.appendChild(lname);
+				header.appendChild(activity);
+				table.appendChild(header);
+
+				$.each(response['libs'],function(i,lib){
+					// row to add
+					var row = document.createElement("div");	
+					row.setAttribute("class","row toSelect toSelectUser");
+					row.setAttribute("id",lib.username);
+					// row's divs
+					var code = document.createElement("div");
+					code.setAttribute("class","cell");
+					code.innerHTML = lib.username;
+					
+					var fname = document.createElement("div");
+					fname.setAttribute("class","cell");
+					fname.innerHTML = lib.first_name;
+					
+					var lname = document.createElement("div");
+					lname.setAttribute("class","cell");
+					lname.innerHTML = lib.last_name;
+					
+					var activity = document.createElement("div");
+					activity.setAttribute("class","cell");
+					if(lib.disable == 0){
+						activity.innerHTML = "Active";
+					}else{
+						activity.innerHTML = "Inactive";
+					}
+					
+					row.appendChild(code);
+					row.appendChild(fname);
+					row.appendChild(lname);
+					row.appendChild(activity);
+					table.appendChild(row);
+				});
+				var article = $("article");
+				var prev = document.getElementById('prev');
+				var next = document.getElementById('next');
+				
+				if(prev != null){
+						article.find('#prev')[0].remove();
+				}
+				if(response['page']>1){
+					var prev = document.createElement("button");
+					prev.setAttribute("class","InputAddOn-item checklibButton");
+					prev.setAttribute("id","prev");
+					prev.setAttribute("value",response['page']-1);
+					prev.innerHTML = "Previous";
+					article.append(prev);
+				}
+				if(next != null){
+					article.find('#next')[0].remove();
+				}
+				if(response['page']<response['page_max']){
+					var next = document.createElement("button");
+					next.setAttribute("class","InputAddOn-item checklibButton");
 					next.setAttribute("id","next");
 					next.setAttribute("value",parseInt(response['page'],10)+1);
 					next.innerHTML = "Next";

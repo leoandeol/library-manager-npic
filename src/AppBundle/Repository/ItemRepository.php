@@ -87,6 +87,42 @@ class ItemRepository extends EntityRepository{
 		);
 		$query->execute();
 	}
+	
+	public function getItemNumber(){
+		return $this->getEntityManager()->createQuery(
+		"SELECT COUNT(it.code) FROM AppBundle:Item it"
+		)->getResult();
+	}
+	
+	public function getItemUnits(){
+		return $this->getEntityManager()->createQuery(
+		"SELECT SUM(it.total_unit) FROM AppBundle:Item it"
+		)->getResult();
+	}
+	
+	public function getBorrowedUnits(){
+		return $this->getEntityManager()->createQuery(
+		"SELECT SUM(it.borrowed_unit) FROM AppBundle:Item it"
+		)->getResult();
+	}
+	
+	public function getBookedUnits(){
+		return $this->getEntityManager()->createQuery(
+		"SELECT SUM(it.booked_unit) FROM AppBundle:Item it"
+		)->getResult();
+	}
+	
+	public function getLostUnits(){
+		return $this->getEntityManager()->createQuery(
+		"SELECT SUM(it.lost_unit) FROM AppBundle:Item it"
+		)->getResult();
+	}
+	
+	public function getDisabledUnits(){
+		return $this->getEntityManager()->createQuery(
+		"SELECT SUM(it.disable) FROM AppBundle:Item it"
+		)->getResult();
+	}
 }
 
 ?>

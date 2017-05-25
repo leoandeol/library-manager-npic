@@ -1,0 +1,43 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<article class="item-list">
+	<h1>Details of transaction</h1>
+	<input hidden value="{{app.session.get('isAdmin')}}" id='isAdmin'></input>
+	<div class="item-info-list">
+  
+		<div class="item-info">Transaction ID : {{ transaction.getId() }}</div>
+		<div class="item-info">Item Id :<a href="/item/read/{{ transaction.getItem().getCode() }}">{{ transaction.getItem().getCode() }}</a></div>
+		<div class="item-info">Member Id :<a href="/user/general_infos/{{ transaction.getMember().getCode() }}">{{ transaction.getMember().getCode() }}</a></div>
+		<div class="item-info">Borrow date : {{ transaction.getBorrowDate()|date('d-m-Y') }}</div>
+		<div class="item-info">To Return date : {{ transaction.getBorrowDate()|date_modify("+14 day")|date("d-m-Y") }}</div>
+		<div class="item-info">Fine cost per day : {{ transaction.getFineCostPerDay() }}</div>
+		<div class="item-info">State : {{ transaction.getState() }}</div>
+		{% if transaction.getNote() != '' %}
+			<div class="item-info">Comment : {{ transaction.getNote() }}</div>
+		{% endif %}
+		{% if app.session.get('isAdmin') %}
+			<form action="/admin/changeTransactionState/{{transaction.getId()}}" method="post" onsubmit="return testForm(this)" class="big-form">
+				<div class="menu-list-element">
+					Change state : 
+					<select name="state">
+						<option value="Lost">Lost</option>
+						<option value="Booked">Booked</option>
+						<option value="Borrowed">Borrowed</option>
+						<option value="Finished">Finished</option>
+					</select>
+				</div>
+				<div class="InputAddOn submit-login">
+					<button type="submit" id="submit" class="InputAddOn-item">Submit</button>
+				</div>
+		</form>
+		{% endif %}
+	</div>
+</article>
+{% endblock %}
+{% block javascripts %}
+<script src="{{ asset('js/tables.js') }}"></script>
+<script src="{{ asset('js/ajax.js') }}"></script>
+{% endblock %}

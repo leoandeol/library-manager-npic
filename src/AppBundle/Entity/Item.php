@@ -61,6 +61,11 @@ class Item{
 	/**
      * @ORM\Column(type="integer")
      */
+	private $booked_unit;
+	
+	/**
+     * @ORM\Column(type="integer")
+     */
 	private $lost_unit;
 	
 	/**
@@ -350,6 +355,30 @@ class Item{
         return $this->total_unit;
     }
 
+	/**
+     * Set bookedUnit
+     *
+     * @param integer $bookedUnit
+     *
+     * @return Item
+     */
+    public function setBookedUnit($bookedUnit)
+    {
+        $this->booked_unit = $bookedUnit;
+
+        return $this;
+    }
+
+    /**
+     * Get bookedUnit
+     *
+     * @return integer
+     */
+    public function getBookedUnit()
+    {
+        return $this->booked_unit;
+    }
+	
     /**
      * Set borrowedUnit
      *

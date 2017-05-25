@@ -77,6 +77,7 @@ class ItemController extends Controller
 					$new_item->setIsbn($isbn);		
 					$new_item->setTotalUnit(0);
 					$new_item->setBorrowedUnit(0);
+					$new_item->setBookedUnit(0);
 					$new_item->setCost($request->request->get('cost'));
 					$new_item->setDisable(0);
 					$new_item->setCategory($category);
@@ -197,7 +198,7 @@ class ItemController extends Controller
 				if($item->getDisable() == 0){
 					if($item->getTotalUnit() > 0){
 						if(!$session->get('isAdmin')){
-							$user = $session->get('user');
+							$user = $membRep->find($session->get('user')->getCode());
 							if($transRep->findByMemberAndItem($user->getCode(),$item->getCode()) == NULL){
 								if($item->isInStock()){
 									if($user->getCurrentBorrowedBooksNb() < 2){
@@ -209,12 +210,12 @@ class ItemController extends Controller
 										$new_transaction->setState('Booked');
 										
 										$user->setCurrentBorrowedBooksNb($user->getCurrentBorrowedBooksNb()+1);
-										$item->setBorrowedUnit($item->getBorrowedUnit()+1);
+										$item->setBookedUnit($item->getBookedUnit()+1);
 										
 										$em->persist($new_transaction);
 										$em->flush();
 										
-										$res = 'Success';
+										$res = array('msg'=>'Success','code'=>$user->getCode());
 									}else{
 										$res = 'You reached the limit of items you can borrow.';
 									}

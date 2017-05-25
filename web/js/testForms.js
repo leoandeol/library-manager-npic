@@ -105,7 +105,7 @@ function testNationalID(input){
 }
 
 function testPubYear(input){
-	var reg = new RegExp('^[0-9]{0-4}$');
+	var reg = new RegExp('^[0-9]{0,4}$');
 
 	if(reg.test(input.value)){
 		surligne(input,false);

@@ -22,7 +22,8 @@
 	  </div>
     </div>
 	{% for transaction in bookings %}
-	<div class="row toSelect toSelectItem" id={{transaction.getItem().getCode()}}>
+	<div class="row toSelect toSelectTrans" id={{transaction.getId()}}>
+		<option hidden id="memberCodeTransaction" value="{{transaction.getMember().getCode()}}"></option>
 		<div class="cell">
 			{{transaction.getId()}}
 		</div>
