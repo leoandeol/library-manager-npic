@@ -74,7 +74,7 @@ class ItemController extends Controller
 					$new_item->setPublicationYear($request->request->get('publication_year'));
 					$new_item->setLanguage($em->getRepository('AppBundle:Languages')->find($request->request->get('language')));
 					$new_item->setIsbn($isbn);		
-					$new_item->setTotalUnit(0);
+					$new_item->setTotalUnit($request->request->get('units'));
 					$new_item->setBorrowedUnit(0);
 					$new_item->setCost($request->request->get('cost'));
 					$new_item->setDisable(0);
