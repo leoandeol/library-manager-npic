@@ -93,7 +93,7 @@
     <fieldset id="student_form" disabled class="fieldset-50">
       <div class="InputAddOn">
 		<div class="InputAddOn-item">Major :</div>
-			<select required id="major" name="major" class="InputAddOn-field">
+			<select id="major" name="major" class="InputAddOn-field">
 			{% for m in majors %}
 				<option value='{{m.getId()}}'>{{m.getName()}}</option>
 			{% endfor %}
@@ -101,7 +101,7 @@
 	  </div>
 	  <div class="InputAddOn">
 		<div class="InputAddOn-item">Degree :</div>
-			<select required id="degree" name="degree" class="InputAddOn-field">
+			<select id="degree" name="degree" class="InputAddOn-field">
 			{% for d in degrees %}
 				<option value='{{d.getId()}}'>{{d.getName()}}</option>
 			{% endfor %}
@@ -109,7 +109,7 @@
 	  </div>
       <div class="InputAddOn">
 		<div class="InputAddOn-item">Year :</div>
-			<select required id="dyear" name="degree_year" class="InputAddOn-field">
+			<select id="dyear" name="degree_year" class="InputAddOn-field">
 			{% for y in degYears %}
 				<option value='{{y.getId()}}'>{{y.getYear()}}</option>
 			{% endfor %}
@@ -120,7 +120,7 @@
     <fieldset id="staff_form" disabled class="fieldset-50">
       <div class="InputAddOn">
 		<div class="InputAddOn-item">Function :</div>
-			<select required id="function" name="function" class="InputAddOn-field">
+			<select id="function" name="function" class="InputAddOn-field">
 			{% for f in functions %}
 				<option value='{{f.getId()}}'>{{f.getName()}}</option>
 			{% endfor %}
