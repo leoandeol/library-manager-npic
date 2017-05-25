@@ -94,6 +94,14 @@
 			<button type="submit" id="submit" class="InputAddOn-item">Add units</button>
 		</div>
 		</form>
+		<form action="/item/add_lost_units/{{item.getCode()}}" method="post" onsubmit="return testForm(this)" class="big-form">
+		<div class="InputAddOn">
+			<input type="number" id="amount" onchange="testAmount(this)" name="amount" class="InputAddOn-field">
+		</div>
+		<div class="InputAddOn submit-login">
+			<button type="submit" id="submit" class="InputAddOn-item">Add LOST units</button>
+		</div>
+		</form>
 	{% endif %}
 	
 </article>

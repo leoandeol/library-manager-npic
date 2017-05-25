@@ -182,6 +182,26 @@ class ItemController extends Controller
 		}
 		return $this->redirect($this->generateUrl('errorNotLogged'));
 	 }
+	 
+	 /**
+	 * @Route("/item/add_lost_units/{id}", name="add_lost_units", requirements={"id":"\d+"})
+	 */
+	 public function addLostUnitsAction(Request $request, $id){
+		$em = $this->getDoctrine()->getManager();
+		$session = $request->getSession();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				if(($item = $em->getRepository('AppBundle:Item')->find($id)) != NULL){
+					  $item->setLostUnit($item->getLostUnit()+$request->request->get('amount'));
+					$em->flush();
+					return $this->redirect($this->generateUrl('readitem',['id'=>$id]));
+				}
+				return $this->redirect($this->generateUrl('errorNotExistingItem'));	
+			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
+	 }
 
 	 /**
 	 * @Route("/item/book/{id}", name="bookitem", requirements={"id":"\d+"}, options={"expose"=true})
