@@ -19,12 +19,9 @@
       <div class="cell">
         Activity
       </div>
-      <div class="cell">
-        Details
-      </div>
     </div>
 	{% for member in members %}
-	<div class="row">
+	<div class="row toSelect toSelectUser" id={{member.code}}>
 		<div class="cell">
 			{{member.code}}
 		</div>
@@ -42,7 +39,7 @@
 			{% endif %}
 		</div>
 		<div class="cell">
-			<a href="/user/general_infos/{{member.code}}"><button>Details</button></a>
+			<a href="/user/bookings/{{member.code}}"><button>Check bookings</button></a>
 		</div>
 	</div>
 {% endfor %}
@@ -57,4 +54,8 @@
 
 
 </article>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('js/tables.js') }}"></script>
 {% endblock %}

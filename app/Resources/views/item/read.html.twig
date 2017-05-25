@@ -2,16 +2,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
 <nav class="menu-list">
-  <form class="menu-list-search" id="sortForm" action="/item/list" method="post">
-    <div class="InputAddOn">
+  <form class="menu-list-search" action="/item/list" method="post">
+	<div class="menu-list-element">
       <input class="InputAddOn-field" type="text" name="Search">
 	</div>
-
 	<div class="menu-list-element">
 		Category : <select name="category">
-		<option value='' selected>-</option>
+		<option value='' selected>All</option>
 		{% for c in categories %}
 		<option value="{{c.id}}">{{c.subject}}</option>
 		{% endfor %}
@@ -19,7 +17,7 @@
 	</div>
 	<div class="menu-list-element">
 		Type : <select name="type">
-		<option value='' selected>-</option>
+		<option value='' selected>All</option>
 		{% for t in types %}
 		<option value="{{t.id}}">{{t.name}}</option>
 		{% endfor %}
@@ -27,7 +25,7 @@
 	</div>
 	<div class="menu-list-element">
 		Language : <select name="language">
-		<option value='' selected>-</option>
+		<option value='' selected>All</option>
 		{% for l in languages %}
 		<option value="{{l.id}}">{{l.getLangName()}}</option>
 		{%endfor%}
@@ -41,6 +39,8 @@
 
 <article class="item-list">
   <h1>Details of item</h1>
+	<input hidden value="{{app.session.get('isAdmin')}}" id='isAdmin'></input>
+	<input hidden value="{{item.getCode()}}" id='itemCode'></input>
   <div class="item-info-list">
     <div class="item-info">Name : {{ item.getTitle() }}</div>
     <div class="item-info">Date of publication : {{ item.getPublicationYear() }}</div>
@@ -48,13 +48,30 @@
     <div class="item-info">Publisher : {{ item.getPublisher() }}</div>
     <div class="item-info">Category : {{ item.getCategory().getSubject() }}</div>
     <div class="item-info">Disponibility : {{ item.getBookable() }}</div>
+	{% if app.session.get('isAdmin') == false %}
+		<div class="item-info" onmouseout="GestionHover('{{item.getCode()}}',-1,5)">Note this item :
+			<ul class="listeEtoile" style="list-style-type : none;">
+				{% for i in range(1,5) %}
+					<li>
+						<a onclick="note('{{item.getCode()}}',{{i}},event)" onmouseover="GestionHover('{{item.getCode()}}',{{i}},5)">
+							<img id="staroff-{{i}}" src="{{ asset('img/staroff.gif') }}" border="0" title="{{i}}" style="border-width: 0px; display: block;">
+							<img id="staron-{{i}}" src="{{ asset('img/staron.gif') }}" border="0" title="{{i}}" style="border-width: 0px; display: none;">
+						</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	{% endif %}
   </div>
-  <a href="/item/book/{{ item.getCode() }}"><button class="InputAddOn-item" type="submit">Book</button></a>
+  <button value={{item.getCode()}} class="InputAddOn-item bookingButton">Book</button>
 	{% if app.session.get('isAdmin') %}
 	
 	<h1>Details for admin</h1>
 	<div class="item-info-list">
 	<div class="item-info">Total units : {{ item.getTotalUnit() }} </div>
+	<div class="item-info">Borrowed units : {{ item.getBorrowedUnit() }} </div>
+	<div class="item-info">Lost units : {{ item.getLostUnit() }} </div>
+	<div class="item-info">Cost : {{ item.getCost() }} $ </div>
 	</div>
 		{% if item.getDisable()==0 %}
 				<div class="item-info">Disabled : No </div>
@@ -82,8 +99,7 @@
 </article>
 {% endblock %}
 {% block javascripts %}
-<script>
-	
+<script>	
 	function testAmount(input){
 		var reg = new RegExp("^[1-9][0-9]*$");
 		if(reg.test(input.value)){
@@ -99,5 +115,6 @@
 		return testAmount(form.amount);
 	}
 </script>
+<script src="{{ asset('js/note.js') }}"></script>
 <script src="{{ asset('js/ajax.js') }}"></script>
 {% endblock %}

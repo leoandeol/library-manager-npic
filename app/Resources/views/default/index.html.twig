@@ -21,7 +21,7 @@
 		</div>
       </div>
       {% for top in tops %}
-      <div class="row">
+      <div class="row toSelect toSelectItem" id={{top.code}}>
 		<div class="cell">
 		  {{ top.title }}
 		</div>
@@ -35,12 +35,13 @@
       {% endfor %}
     </div>
   </div>
-  <!-- superflu<div class="news-item">
+  
+  <div class="news-item">
     <div class="intro-table">
-      <span>Last 5 books added</span>
-		</div>
-		<div class="table">
-		  <div class="row header">
+      <span>Most borrowed books</span>
+    </div>
+    <div class="table">
+      <div class="header row">
 		<div class="cell">
 		  Title
 		</div>
@@ -50,49 +51,18 @@
 		<div class="cell">
 		  Category
 		</div>
-      </div>
-      {% for last in lasts %}
-      <div class="row" id={{last.code}}>
-		<div class="cell">
-		  {{ last.title }}
-		</div>
-		<div class="cell">
-		  {{ last.author }}
-		</div>
-		<div class="cell">
-		  {{ last.subject }}
-		</div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>-->
-  <div class="news-item">
-    <div class="intro-table">
-      <span>Most borrowed books</span>
-    </div>
-    <div class="table">
-      <div class="header row">
-	<div class="cell">
-	  Title
-	</div>
-	<div class="cell">
-	  Author
-	</div>
-	<div class="cell">
-	  Category
-	</div>
-      </div>
+	  </div>
       {% for pop in pops %}
-      <div class="row" id={{pop.code}}>
-	<div class="cell">
-	  {{ pop.title }}
-	</div>
-	<div class="cell">
-	  {{ pop.author }}
-	</div>
-	<div class="cell">
-	  {{ pop.subject }}
-	</div>
+      <div class="row toSelect toSelectItem" id={{pop.code}}>
+		<div class="cell">
+		  {{ pop.title }}
+		</div>
+		<div class="cell">
+		  {{ pop.author }}
+		</div>
+		<div class="cell">
+		  {{ pop.subject }}
+		</div>
       </div>
       {% endfor %}
     </div>

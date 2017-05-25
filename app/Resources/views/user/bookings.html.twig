@@ -3,7 +3,7 @@
 
 {% block body %}
 
-<div class="tableBookings">
+<div class="tableBookings table">
     <div class="row header">
       <div class="cell">
         Transaction ID
@@ -21,24 +21,28 @@
 		Fine to pay
 	  </div>
     </div>
-	{% for item in bookings %}
-	<div class="row">
+	{% for transaction in bookings %}
+	<div class="row toSelect toSelectItem" id={{transaction.getItem().getCode()}}>
 		<div class="cell">
-			{{item.getId()}}
+			{{transaction.getId()}}
 		</div>
 		<div class="cell">
-			{{item.getItem().getTitle()}}
+			{{transaction.getItem().getTitle()}}
 		</div>
 		<div class="cell">
-			{{item.getBorrowDate()|date('d-m-Y')}}
+			{{transaction.getBorrowDate()|date('d-m-Y')}}
 		</div>
 		<div class="cell">
-			{{item.getBorrowDate()|date_modify("+14 day")|date("d-m-Y") }}
+			{{transaction.getBorrowDate()|date_modify("+14 day")|date("d-m-Y") }}
 		</div>
 		<div class="cell">
-			{{item.getFineCostPerDay()}} USD
+			{{transaction.getFineCostPerDay()}} USD
 		</div>
 	</div>
 {% endfor %}
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="{{ asset('js/tables.js') }}"></script>
 {% endblock %}

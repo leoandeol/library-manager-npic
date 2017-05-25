@@ -19,12 +19,9 @@
       <div class="cell">
         Activity
       </div>
-      <div class="cell">
-        Details
-      </div>
     </div>
 	{% for lib in libs %}
-	<div class="row">
+	<div class="row toSelect toSelectUser" id={{lib.username}}>
 		<div class="cell">
 			{{lib.username}}
 		</div>
@@ -41,9 +38,6 @@
 				<p>Inactive</p>
 			{% endif %}
 		</div>
-		<div class="cell">
-			<a href="/user/general_infos/{{lib.username}}"><button>Details</button></a>
-		</div>
 	</div>
 {% endfor %}
 </div>
@@ -57,4 +51,9 @@
 
 
 </article>
+{% endblock %}
+
+
+{% block javascripts %}
+<script src="{{ asset('js/tables.js') }}"></script>
 {% endblock %}

@@ -596,6 +596,6 @@ class Item{
 	 * @return boolean
 	 */
 	function isInStock(){
-		return getTotalUnit() > getBorrowedUnit()+getLostUnit();
+		return $this->getTotalUnit() > $this->getBorrowedUnit()+$this->getLostUnit();
 	}
 }

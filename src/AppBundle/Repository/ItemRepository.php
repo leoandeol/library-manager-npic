@@ -13,7 +13,7 @@ class ItemRepository extends EntityRepository{
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			JOIN AppBundle:Languages la WITH it.language = la.id
-			WHERE it.note IS NOT NULL
+			WHERE it.note IS NOT NULL AND it.disable=0
 			ORDER BY it.note DESC"
 		)->setMaxResults(5)->getResult();
 	}
@@ -25,6 +25,7 @@ class ItemRepository extends EntityRepository{
 			FROM AppBundle:Item it
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			JOIN AppBundle:Languages la WITH it.language = la.id
+			WHERE it.disable=0
 			ORDER BY it.add_date DESC");
 			$query->setMaxResults(5);
 			return $query->getResult();
@@ -38,6 +39,7 @@ class ItemRepository extends EntityRepository{
 			JOIN AppBundle:Item it WITH tr.item = it.code
 			JOIN AppBundle:Languages la WITH it.language = la.id
 			JOIN AppBundle:Category ca WITH it.category = ca.id
+			WHERE it.disable=0
 			GROUP BY tr.item
 			");
 			$query->setMaxResults(5);
@@ -53,6 +55,7 @@ class ItemRepository extends EntityRepository{
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			JOIN AppBundle:Languages la WITH it.language = la.id
 			WHERE ca.id lIKE '%$cat%' AND ty.id LIKE '%$type%' AND la.id LIKE '%$lang%' AND it.title LIKE '%$search%'
+			AND it.disable=0
 			"
 		);
 		$query->setFirstResult($current);
@@ -68,8 +71,21 @@ class ItemRepository extends EntityRepository{
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			JOIN AppBundle:Languages la WITH it.language = la.id
 			WHERE ca.id lIKE '%$cat%' AND ty.id LIKE '%$type%' AND la.id LIKE '%$lang%' AND it.title LIKE '%$search%'
+			AND it.disable=0
 			"
 		)->getResult();
+	}
+	
+	public function updateNoteByCode($code){
+		$query = $this->getEntityManager()->createQuery(
+		"UPDATE AppBundle:Item it SET it.note = 
+			(SELECT AVG(no.note)
+			FROM AppBundle:Note no
+			WHERE no.item = $code)
+		WHERE it.code = $code
+		"
+		);
+		$query->execute();
 	}
 }
 

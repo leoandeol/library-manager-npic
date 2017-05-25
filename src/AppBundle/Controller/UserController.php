@@ -93,7 +93,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/account", name="account")
+     * @Route("/user/account", name="account", options={"expose"=true})
      */
     public function accountAction(Request $request)
     {
@@ -108,20 +108,17 @@ class UserController extends Controller
     }
 	
 	/**
-     * @Route("/user/bookings", name="bookings")
+     * @Route("/user/bookings/{id}", name="bookings", options={"expose"=true})
      */
-	function checkBookingsAction(Request $request){
+	function checkBookingsAction(Request $request, $id){
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
-			if(!$session->get('isAdmin')){
-				$bookings = $em->getRepository('AppBundle:Transaction')->findByMember($session->get('user')->getCode());
-				return $this->render('user/bookings.html.twig', [
-				'bookings' => $bookings,
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-				]);
-			}
-			return $this->redirect($this->generateUrl('errorNotAdmin'));
+			$bookings = $em->getRepository('AppBundle:Transaction')->findByMember($id);
+			return $this->render('user/bookings.html.twig', [
+			'bookings' => $bookings,
+			'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+			]);
 		}
 		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
@@ -141,11 +138,12 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/changedpass", name="changedpass")
+     * @Route("/user/changedpass", name="changedpass", options={"expose"=true})
      */
     public function ChangedPassAction(Request $request)
     {
         $session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			
 			$curpass = $request->request->get('curpass');
@@ -156,27 +154,23 @@ class UserController extends Controller
 			
 			if(hash('sha256', $curpass) == $session->get('user')->getPassword()){
 				if($newpass == $newpassbis){
-					if($session->get('isAdmin')){
-						$this->getDoctrine()->getManager()->getRepository('AppBundle:Librarian')->changePassword($newpass,$session->get('user')->getUsername());
-					}else{
-						$this->getDoctrine()->getManager()->getRepository('AppBundle:Member')->changePassword($newpass,$session->get('user')->getCode());
+					$new = hash('sha256',$newpass);
+					if(($user = $em->getRepository('AppBundle:Member')->find($session->get('user')->getCode())) == NULL){
+						$user = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
 					}
-					$changed = true;
+					$user->setPassword($new);
+					$em->flush();
+					$res = "Success";
+				}else{
+					$res = "The given passwords are not matching.";
 				}
-				else{
-					return $this->redirect($this->generateUrl('errorPasswordNotmatching'));
-				}
+			}else{
+				$res = "The current password given is wrong.";
 			}
-			else{
-				return $this->redirect($this->generateUrl('errorWrongPassword'));
-			}			
-			if($changed){
-				return $this->render('user/changedpass.html.twig', [
-					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-				]);
-			}
+		}else{
+			$res = "You must login to do this.";
 		}
-		return $this->redirect($this->generateUrl('errorNotLogged'));
+		return new JsonResponse(array('data'=>$res));
     }
 	
 	/**
@@ -254,7 +248,7 @@ class UserController extends Controller
 	}
 	
 	/**
-     * @Route("/user/general_infos/{id}", name="general_infos")
+     * @Route("/user/general_infos/{id}", name="general_infos", options={"expose"=true})
      */
 	public function CheckGeneralInfosAction(Request $request, $id){
 		
@@ -287,7 +281,7 @@ class UserController extends Controller
 	}
 	
 	/**
-     * @Route("/admin/general_infos/{id}", name="library_general_infos",requirements={"id": "\d+"})
+     * @Route("/admin/general_infos/", name="library_general_infos")
      */
 	public function CheckGeneralLibraryInfosAction(Request $request){
 		
@@ -297,7 +291,6 @@ class UserController extends Controller
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				return $this->render('admin/general_infos.html.twig', [
-				'user' => $session->get('user'),
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
@@ -305,6 +298,24 @@ class UserController extends Controller
 		}
 		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
+	
+	/**
+     * @Route("/admin/add_admin/", name="add_admin")
+     */
+    public function AddAdminAction(Request $request)
+    {		
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				return $this->render('admin/add_admin.html.twig',[
+				    'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+				]);
+			}
+			return $this->redirect($this->generateUrl('home'));
+		}
+		return $this->redirect($this->generateUrl('login'));
+    }
 
 	/**
      * @Route("/admin/add_user/", name="add_user")
@@ -371,6 +382,7 @@ class UserController extends Controller
 					$new_member->setFaculty($em->getRepository('AppBundle:Faculty')->find($request->request->get('fac')));
 					$new_member->setEntryDate(date("Y-m-d"));
 					$new_member->setPassword($passwordHashed);
+					$new_member->setCurrentBorrowedBooksNb(0);
 					$new_member->setDisable(0);
 					
 					$position = $request->request->get('position');
@@ -404,6 +416,58 @@ class UserController extends Controller
 					$em->flush();
 					
 					return $this->redirect($this->generateUrl('checkalluser'));
+				}
+				return $this->redirect($this->generateUrl('errorAlreadyExistingUser'));
+			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
+    }
+	
+	/**
+     * @Route("/admin/added_admin", name="added_admin")
+     */
+    public function AddedAdminAction(Request $request)
+    {		
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		$lib_rep = $em->getRepository('AppBundle:Librarian');
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				if(($lib_rep->find($request->request->get('username'))) == NULL){
+					
+					$password = $request->request->get('password');
+					$passwordHashed = hash('sha256', $password);
+					
+					$new_librarian = new Librarian();
+					$new_librarian->setUsername($request->request->get('username'));
+					$new_librarian->setFirstName($request->request->get('fname'));
+					$new_librarian->setLastName($request->request->get('lname'));
+					$new_librarian->setGender($request->request->get('gender'));
+					$new_librarian->setEmail($request->request->get('email'));
+					$new_librarian->setTel($request->request->get('phone'));
+					$new_librarian->setHireDate(date("Y-m-d"));
+					$new_librarian->setPassword($passwordHashed);
+					$new_librarian->setDisable(0);
+					
+					if(($address_id = $em->getRepository('AppBundle:Address')->getAddressId(
+					$request->request->get('city'),
+					$request->request->get('pcode'),
+					$request->request->get('street'))) != NULL){
+						$new_librarian->setAddress($em->getRepository('AppBundle:Address')->find($address_id[0]["id"]));
+					}else{					
+						$new_address = new Address();
+						$new_address->setCity($request->request->get('city'));
+						$new_address->setPostalCode($request->request->get('pcode'));
+						$new_address->setStreet($request->request->get('street'));
+						$new_librarian->setAddress($new_address);
+						$em->persist($new_address);
+					}
+					
+					$em->persist($new_librarian);
+					$em->flush();
+					
+					return $this->redirect($this->generateUrl('checkalllib'));
 				}
 				return $this->redirect($this->generateUrl('errorAlreadyExistingUser'));
 			}

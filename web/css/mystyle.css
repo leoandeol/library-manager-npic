@@ -384,6 +384,12 @@ h1 {
 	margin: 0 auto;
 }
 
+.listeEtoile {
+	display: flex;
+	flex-direction :row;
+}
+
+
 .intro-table>span {
     margin:10px auto;
     text-align:auto;

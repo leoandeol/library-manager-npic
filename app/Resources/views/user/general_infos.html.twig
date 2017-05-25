@@ -106,26 +106,36 @@
 		</div>
 	{% endif %}
 	{% if isAdmin %}
-		{% if user.getDisable()==0 %}
-			<div class="InputAddOn">	
-				<a href="/admin/disable_user/
-				{% if isMember %}
-					{{user.getCode()}}
+		{% if isMember == false %}
+			{% if user.getUsername() != app.session.get('user').getUsername() %}
+				{% if user.getDisable()==0 %}
+					<div class="InputAddOn">	
+						<a href="/admin/disable_user/
+							{{user.getUsername()}}
+						"><button class="InputAddOn-item">Disable</button></a>
+					</div>	
 				{% else %}
-					{{user.getUsername()}}
+					<div class="InputAddOn">	
+						<a href="/admin/reactivate_user/
+							{{user.getUsername()}}
+						"><button class="InputAddOn-item">Reactivate</button></a>
+					</div>
 				{% endif %}
-				"><button class="InputAddOn-item">Disable</button></a>
-			</div>
+			{% endif %}
 		{% else %}
-			<div class="InputAddOn">	
-				<a href="/admin/reactivate_user/
-				{% if isMember %}
-					{{user.getCode()}}
-				{% else %}
-					{{user.getUsername()}}
-				{% endif %}
-				"><button class="InputAddOn-item">Reactivate</button></a>
-			</div>
+			{% if user.getDisable()==0 %}
+				<div class="InputAddOn">	
+					<a href="/admin/disable_user/
+						{{user.getCode()}}
+					"><button class="InputAddOn-item">Disable</button></a>
+				</div>	
+			{% else %}
+				<div class="InputAddOn">	
+					<a href="/admin/reactivate_user/
+						{{user.getCode()}}
+					"><button class="InputAddOn-item">Reactivate</button></a>
+				</div>
+			{% endif %}
 		{% endif %}
 	{% endif %}
 </article>

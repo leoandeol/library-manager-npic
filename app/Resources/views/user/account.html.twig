@@ -13,7 +13,7 @@
   </div>  
 {% if app.session.get('isAdmin') == false %}
   <div class="InputAddOn">
-    <a href="/user/bookings"><button class="InputAddOn-item">Check my bookings</button></a>
+    <a href="/user/bookings/{{app.session.get('user').getCode()}}"><button class="InputAddOn-item">Check my bookings</button></a>
 	</div>
 {% endif %}
 	<div class="InputAddOn">
