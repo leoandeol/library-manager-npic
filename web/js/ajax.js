@@ -510,7 +510,7 @@ $(document).ready(function(){
 					
 					var lname = document.createElement("div");
 					lname.setAttribute("class","cell");
-					lname.innerHTML = log['logDate'].split('T')[0];
+					lname.innerHTML = log['logDate'].split('T')[0]	;
 					
 					var activity = document.createElement("div");
 					activity.setAttribute("class","cell");
