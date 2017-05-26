@@ -18,22 +18,18 @@ class Logs{
 	/**
      * @var Librarian
 	 *
-	 * @ORM\OneToOne(targetEntity="Librarian")
+	 * @ORM\ManyToOne(targetEntity="Librarian")
 	 * @ORM\JoinColumn(name="librarian_username", referencedColumnName="username", onDelete="CASCADE")
      */
 	private $lib;
 	/**
      * @ORM\Column(type="date")
      */
-	private $login_date;
+	private $date;
 	/**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string",length=512)
      */
-	private $logout_date;
-	/**
-     * @ORM\Column(type="string",length=64)
-     */
-	private $note;
+	private $action;
 
 	public function __construct()
 	{
@@ -144,5 +140,53 @@ class Logs{
     public function getNote()
     {
         return $this->note;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return Logs
+     */
+    public function setLogDate($date)
+    {
+        $this->date = new \DateTime($date);
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getLogDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Set action
+     *
+     * @param string $action
+     *
+     * @return Logs
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    /**
+     * Get action
+     *
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
     }
 }

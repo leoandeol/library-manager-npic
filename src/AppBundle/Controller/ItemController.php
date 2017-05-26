@@ -87,6 +87,14 @@ class ItemController extends Controller
 					$new_item->setBookable($bookable);
 					$new_item->setAddDate(date("Y-m-d"));
 					
+					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+					$new_log = new Logs();
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$code = $new_item->getCode();
+					$new_log->setAction("Added item $code");
+					$em->persist($new_log);
+					
 					$em->persist($new_item);
 					$em->flush();
 					return $this->redirect($this->generateUrl('itemlist'));
@@ -174,6 +182,14 @@ class ItemController extends Controller
 					
 					$item = $em->getRepository('AppBundle:item')->find($id);
 					$item->setTotalUnit($item->getTotalUnit()+$request->request->get('amount'));
+					
+					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+					$new_log = new Logs();
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$amount = $new_units->getAmount();
+					$new_log->setAction("Added $amount units to the item $id");
+					$em->persist($new_log);
 					$em->flush();
 					return $this->redirect($this->generateUrl('readitem',['id'=>$id]));
 				}
@@ -205,7 +221,6 @@ class ItemController extends Controller
 										$new_transaction = new Transaction();
 										$new_transaction->setMember($membRep->find($user->getCode()));
 										$new_transaction->setItem($item);
-										$new_transaction->setBorrowdate(new \DateTime(date('Y-m-d')));
 										$new_transaction->setFineCostPerDay(0);
 										$new_transaction->setState('Booked');
 										

@@ -6,6 +6,7 @@ use AppBundle\Entity\Student;
 use AppBundle\Entity\Staff;
 use AppBundle\Entity\Librarian;
 use AppBundle\Entity\Address;
+use AppBundle\Entity\Logs;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -263,6 +264,13 @@ class AdminController extends Controller
 						$new_member->setAddress($new_address);
 						$em->persist($new_address);
 					}
+					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+					$new_log = new Logs();
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$code = $new_member->getCode();
+					$new_log->setAction("Added new member $code");
+					$em->persist($new_log);
 					
 					$em->persist($new_member);
 					$em->flush();
@@ -315,6 +323,13 @@ class AdminController extends Controller
 						$new_librarian->setAddress($new_address);
 						$em->persist($new_address);
 					}
+					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+					$new_log = new Logs();
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$code = $new_librarian->getUsername();
+					$new_log->setAction("Added new librarian $code");
+					$em->persist($new_log);
 					
 					$em->persist($new_librarian);
 					$em->flush();
@@ -351,11 +366,23 @@ class AdminController extends Controller
 						$user->setDisable(1);
 						$user->setDisableReason($request->request->get('reason'));
 						$user->setDisabledate(date("Y-m-d"));
+						$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+						$new_log = new Logs();
+						$new_log->setLib($lib);
+						$new_log->setLogDate(date('Y-m-d'));
+						$new_log->setAction("Disabled member $code");
+						$em->persist($new_log);
 						$em->flush();
 						return $this->redirect($this->generateUrl('checkalluser'));
 					}
 				}else if(($user = $em->getRepository('AppBundle:Librarian')->find($code)) != NULL){
 					$user->setDisable(1);
+					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+					$new_log = new Logs();
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$new_log->setAction("Disabled librarian $code");
+					$em->persist($new_log);
 					$em->flush();
 					return $this->redirect($this->generateUrl('checkalllib'));
 				}else{
@@ -377,10 +404,22 @@ class AdminController extends Controller
 			if($session->get('isAdmin')){
 				if(($user = $em->getRepository('AppBundle:Member')->find($code)) != NULL){
 					$user->setDisable(0);
+					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+					$new_log = new Logs();
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$new_log->setAction("Reactivated member $code");
+					$em->persist($new_log);
 					$em->flush();
 					return $this->redirect($this->generateUrl('checkalluser'));
 				}else if(($user = $em->getRepository('AppBundle:Librarian')->find($code)) != NULL){
 					$user->setDisable(0);
+					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+					$new_log = new Logs();
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$new_log->setAction("Reactivated librarian $code");
+					$em->persist($new_log);
 					$em->flush();
 					return $this->redirect($this->generateUrl('checkalllib'));
 				}else{
@@ -402,6 +441,12 @@ class AdminController extends Controller
 			if($session->get('isAdmin')){
 				if(($item = $em->getRepository('AppBundle:Item')->find($code)) != NULL){
 					$item->setDisable(1);
+					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+					$new_log = new Logs();
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$new_log->setAction("Disabled item $code");
+					$em->persist($new_log);
 					$em->flush();
 					return $this->redirect($this->generateUrl('itemlist'));
 				}else{
@@ -423,6 +468,12 @@ class AdminController extends Controller
 			if($session->get('isAdmin')){
 				if(($item = $em->getRepository('AppBundle:Item')->find($code)) != NULL){
 					$item->setDisable(0);
+					$new_log = new Logs();
+					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$new_log->setAction("Reactivated item $code");
+					$em->persist($new_log);
 					$em->flush();
 					return $this->redirect($this->generateUrl('itemlist'));
 				}else{
@@ -455,7 +506,8 @@ class AdminController extends Controller
 						$item->setLostUnit($item->getLostUnit()+1);
 					}else if($state == "Borrowed"){
 						if($oldState == "Booked"){
-							$item->setBookedUnit($item->getBookedUnit()-1);
+							$item->setBookedUnit($item->getBookedUnit()-1);	
+							$trans->setBorrowdate(new \DateTime(date('Y-m-d')));
 						}else if($oldState == "Lost"){
 							$item->setLostUnit($item->getLostUnit()-1);
 						}
@@ -477,6 +529,13 @@ class AdminController extends Controller
 						}
 					}
 					$trans->setState($state);
+					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+					$new_log = new Logs();
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$action = "Changed state of transaction $id from $oldState to $state";
+					$new_log->setAction($action);
+					$em->persist($new_log);
 					$em->flush();
 					return $this->redirect($this->generateUrl('bookings',['id' => $trans->getMember()->getCode()]));
 				}else{
@@ -486,6 +545,14 @@ class AdminController extends Controller
 			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
 		return $this->redirect($this->generateUrl('errorNotLogged'));
+	}
+	
+	/**
+     * @Route("/admin/checkLogs", name="checkLogs", options={"expose"=true})
+     */
+	public function checkLogsAction(Request $request){
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
 	}
 }
 

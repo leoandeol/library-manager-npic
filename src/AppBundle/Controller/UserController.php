@@ -6,6 +6,7 @@ use AppBundle\Entity\Student;
 use AppBundle\Entity\Staff;
 use AppBundle\Entity\Librarian;
 use AppBundle\Entity\Address;
+use AppBundle\Entity\Logs;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,9 +37,9 @@ class UserController extends Controller
 		
 		$username = $_POST['username'];
 		$password = $_POST['password'];
-		
-		$librarian_repository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Librarian");
-		$member_repository = $this->getDoctrine()->getManager()->getRepository("AppBundle:Member");
+		$em =  $this->getDoctrine()->getManager();
+		$librarian_repository = $em->getRepository("AppBundle:Librarian");
+		$member_repository = $em->getRepository("AppBundle:Member");
 		
 		$session = $request->getSession();
 		
@@ -52,6 +53,12 @@ class UserController extends Controller
 						$session->set('user',$user);
 						$session->set('isAdmin',true);
 						$session->set('connected',true);
+						$new_log = new Logs();
+						$new_log->setLib($user);
+						$new_log->setLogDate(date('Y-m-d'));
+						$new_log->setAction('Connexion');
+						$em->persist($new_log);
+						$em->flush();
 						$res = "Success";
 					}else{
 						$res = "This user is disabled";
@@ -84,7 +91,18 @@ class UserController extends Controller
     public function logoffAction(Request $request)
     {
 		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
+			$user = $session->get('user');
+			if($session->get('isAdmin')){
+				$lib = $em->getRepository('AppBundle:Librarian')->find($user->getUsername());
+				$new_log = new Logs();
+				$new_log->setLib($lib);
+				$new_log->setLogDate(date('Y-m-d'));
+				$new_log->setAction('Disconnexion');
+				$em->persist($new_log);
+				$em->flush();
+			}
 			$session->invalidate();
 			// replace this example code with whatever you need
 			return $this->redirect('/..');
