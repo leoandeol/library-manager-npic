@@ -1,0 +1,56 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<article class="item-list">
+
+<div class="table" id="table">
+    <div class="row header">
+      <div class="cell">
+        Log ID
+      </div>
+      <div class="cell">
+        Librarian ID
+      </div>
+      <div class="cell">
+        Date of the action
+      </div>
+      <div class="cell">
+        Action
+      </div>
+    </div>
+	{% for log in logs %}
+	<div class="row toSelect toSelectLog" id={{log.getId()}}>
+		<div class="cell">
+			{{log.getId()}}
+		</div>
+		<div class="cell">
+			{{log.getLib().getUsername()}}
+		</div>
+		<div class="cell">
+			{{log.getLogDate()|date('d-m-Y')}}
+		</div>
+		<div class="cell">
+			{{log.getAction()}}
+		</div>
+	</div>
+{% endfor %}
+</div>
+
+{% if page>1 %}
+	<button id="prev" value="{{page-1}}" class="InputAddOn-item checkLogsButton" type="submit">Previous</button>
+{% endif %}
+{% if page<page_max %}
+	<button id="next" value="{{page+1}}" class="InputAddOn-item checkLogsButton" type="submit">Next</button>
+{% endif %}
+
+
+</article>
+{% endblock %}
+
+
+{% block javascripts %}
+<script src="{{ asset('js/ajax.js') }}"></script>
+<script src="{{ asset('js/tables.js') }}"></script>
+{% endblock %}

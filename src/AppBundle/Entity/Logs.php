@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\LogsRepository")
  * @ORM\Table(name="logs")
  */
 class Logs{
@@ -25,7 +25,7 @@ class Logs{
 	/**
      * @ORM\Column(type="date")
      */
-	private $date;
+	private $logDate;
 	/**
      * @ORM\Column(type="string",length=512)
      */
@@ -70,80 +70,9 @@ class Logs{
         return $this->lib;
     }
 
-    /**
-     * Set loginDate
-     *
-     * @param \DateTime $loginDate
-     *
-     * @return Logs
-     */
-    public function setLoginDate($loginDate)
-    {
-        $this->login_date = $loginDate;
-
-        return $this;
-    }
 
     /**
-     * Get loginDate
-     *
-     * @return \DateTime
-     */
-    public function getLoginDate()
-    {
-        return $this->login_date;
-    }
-
-    /**
-     * Set logoutDate
-     *
-     * @param \DateTime $logoutDate
-     *
-     * @return Logs
-     */
-    public function setLogoutDate($logoutDate)
-    {
-        $this->logout_date = $logoutDate;
-
-        return $this;
-    }
-
-    /**
-     * Get logoutDate
-     *
-     * @return \DateTime
-     */
-    public function getLogoutDate()
-    {
-        return $this->logout_date;
-    }
-
-    /**
-     * Set note
-     *
-     * @param string $note
-     *
-     * @return Logs
-     */
-    public function setNote($note)
-    {
-        $this->note = $note;
-
-        return $this;
-    }
-
-    /**
-     * Get note
-     *
-     * @return string
-     */
-    public function getNote()
-    {
-        return $this->note;
-    }
-
-    /**
-     * Set date
+     * Set logDate
      *
      * @param \DateTime $date
      *
@@ -151,19 +80,19 @@ class Logs{
      */
     public function setLogDate($date)
     {
-        $this->date = new \DateTime($date);
+        $this->logDate = new \DateTime($date);
 
         return $this;
     }
 
     /**
-     * Get date
+     * Get logDate
      *
      * @return \DateTime
      */
     public function getLogDate()
     {
-        return $this->date;
+        return $this->logDate;
     }
 
     /**

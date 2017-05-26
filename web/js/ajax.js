@@ -353,7 +353,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		$.ajax({
 			type	: "POST",
-			url		: Routing.generate('checkalllibs',{'page':page}),
+			url		: Routing.generate('checkalllib',{'page':page}),
 			datatype: "json",
 			success	: function(response){
 				var table = document.getElementById('table');
@@ -439,6 +439,110 @@ $(document).ready(function(){
 				if(response['page']<response['page_max']){
 					var next = document.createElement("button");
 					next.setAttribute("class","InputAddOn-item checklibButton");
+					next.setAttribute("id","next");
+					next.setAttribute("value",parseInt(response['page'],10)+1);
+					next.innerHTML = "Next";
+					article.append(next);
+				}
+			},
+			error	: function(jqXHR, textStatus, errorThrown){
+				alert('error');
+			}
+		});
+	}
+	
+	// CHECK LOGS
+	
+	article.on('click','.checkLogsButton',function(e){
+		checkLogs(this.value,e)
+	});
+	
+	function checkLogs(page,e){
+		e.preventDefault();
+		$.ajax({
+			type	: "POST",
+			url		: Routing.generate('checkLogs',{'page':page}),
+			datatype: "json",
+			success	: function(response){
+				var table = document.getElementById('table');
+				while(table.firstChild){
+					table.firstChild.remove();
+				}
+				var header = document.createElement("div");
+					header.setAttribute("class","header row");
+					
+				var code = document.createElement("div");
+				code.setAttribute("class","cell");
+				code.innerHTML = "Log ID";
+				
+				var fname = document.createElement("div");
+				fname.setAttribute("class","cell");
+				fname.innerHTML = "Librarian ID";
+				
+				var lname = document.createElement("div");
+				lname.setAttribute("class","cell");
+				lname.innerHTML = "Date of the action";
+				
+				var activity = document.createElement("div");
+				activity.setAttribute("class","cell");
+				activity.innerHTML = "Action";
+				
+				
+				header.appendChild(code);
+				header.appendChild(fname);
+				header.appendChild(lname);
+				header.appendChild(activity);
+				table.appendChild(header);
+
+				$.each(JSON.parse(response['logs']),function(i,log){
+					// row to add
+					var row = document.createElement("div");	
+					row.setAttribute("class","row toSelect toSelectLog");
+					row.setAttribute("id",log['id']);
+					// row's divs
+					var code = document.createElement("div");
+					code.setAttribute("class","cell");
+					code.innerHTML = log['id'];
+					
+					var fname = document.createElement("div");
+					fname.setAttribute("class","cell");
+					fname.innerHTML = log['lib']['username'];
+					
+					var lname = document.createElement("div");
+					lname.setAttribute("class","cell");
+					lname.innerHTML = log['logDate'].split('T')[0];
+					
+					var activity = document.createElement("div");
+					activity.setAttribute("class","cell");
+					activity.innerHTML = log['action'];
+					
+					row.appendChild(code);
+					row.appendChild(fname);
+					row.appendChild(lname);
+					row.appendChild(activity);
+					table.appendChild(row);
+				});
+				var article = $("article");
+				var prev = document.getElementById('prev');
+				var next = document.getElementById('next');
+				
+				if(prev != null){
+						article.find('#prev')[0].remove();
+				}
+				if(response['page']>1){
+					var prev = document.createElement("button");
+					prev.setAttribute("class","InputAddOn-item checkLogsButton");
+					prev.setAttribute("id","prev");
+					prev.setAttribute("value",response['page']-1);
+					prev.innerHTML = "Previous";
+					article.append(prev);
+				}
+				if(next != null){
+					article.find('#next')[0].remove();
+				}
+				if(response['page']<response['page_max']){
+					var next = document.createElement("button");
+					next.setAttribute("class","InputAddOn-item checkLogsButton");
 					next.setAttribute("id","next");
 					next.setAttribute("value",parseInt(response['page'],10)+1);
 					next.innerHTML = "Next";

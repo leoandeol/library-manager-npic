@@ -13,6 +13,7 @@ use AppBundle\Entity\Transaction;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Note;
+use AppBundle\Entity\Logs;
 
 class ItemController extends Controller
 {

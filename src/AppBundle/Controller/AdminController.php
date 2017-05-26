@@ -548,11 +548,46 @@ class AdminController extends Controller
 	}
 	
 	/**
-     * @Route("/admin/checkLogs", name="checkLogs", options={"expose"=true})
+     * @Route("/admin/checkLogs/{page}", name="checkLogs", requirements={"page": "\d+"}, options={"expose"=true})
      */
-	public function checkLogsAction(Request $request){
+	public function checkLogsAction(Request $request,$page = 1){
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+			
+				$logs_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Logs');
+				$total = $logs_rep->getLogsNumber();
+				
+				$log_per_page = 20;
+				$nb_max_pages = ceil($total[0][1] / $log_per_page);
+				$current = ($page * $log_per_page) - $log_per_page;
+				
+				$logs = $logs_rep->getAllLogs($current,$log_per_page);
+				
+				$serializer = $this->get('serializer');
+				$logsJson = $serializer->serialize($logs,'json');
+				
+				
+				if($request->isXmlHttpRequest()){
+					$data = array(
+						'page_max' => $nb_max_pages,
+						'logs' => $logsJson,
+						'page' => $page,
+					);
+					return new JsonResponse($data);
+				}else{
+					$data = array(
+						'page_max' => $nb_max_pages,
+						'logs' => $logs,
+						'page' => $page,
+					);
+					return $this->render('admin/checkalllogs.html.twig',$data);
+				}
+			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 }
 
