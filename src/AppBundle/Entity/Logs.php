@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\LogsRepository")
  * @ORM\Table(name="logs")
  */
 class Logs{
@@ -18,22 +18,18 @@ class Logs{
 	/**
      * @var Librarian
 	 *
-	 * @ORM\OneToOne(targetEntity="Librarian")
+	 * @ORM\ManyToOne(targetEntity="Librarian")
 	 * @ORM\JoinColumn(name="librarian_username", referencedColumnName="username", onDelete="CASCADE")
      */
 	private $lib;
 	/**
      * @ORM\Column(type="date")
      */
-	private $login_date;
+	private $logDate;
 	/**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="string",length=512)
      */
-	private $logout_date;
-	/**
-     * @ORM\Column(type="string",length=64)
-     */
-	private $note;
+	private $action;
 
 	public function __construct()
 	{
@@ -74,75 +70,52 @@ class Logs{
         return $this->lib;
     }
 
+
     /**
-     * Set loginDate
+     * Set logDate
      *
-     * @param \DateTime $loginDate
+     * @param \DateTime $date
      *
      * @return Logs
      */
-    public function setLoginDate($loginDate)
+    public function setLogDate($date)
     {
-        $this->login_date = $loginDate;
+        $this->logDate = new \DateTime($date);
 
         return $this;
     }
 
     /**
-     * Get loginDate
+     * Get logDate
      *
      * @return \DateTime
      */
-    public function getLoginDate()
+    public function getLogDate()
     {
-        return $this->login_date;
+        return $this->logDate;
     }
 
     /**
-     * Set logoutDate
+     * Set action
      *
-     * @param \DateTime $logoutDate
+     * @param string $action
      *
      * @return Logs
      */
-    public function setLogoutDate($logoutDate)
+    public function setAction($action)
     {
-        $this->logout_date = $logoutDate;
+        $this->action = $action;
 
         return $this;
     }
 
     /**
-     * Get logoutDate
-     *
-     * @return \DateTime
-     */
-    public function getLogoutDate()
-    {
-        return $this->logout_date;
-    }
-
-    /**
-     * Set note
-     *
-     * @param string $note
-     *
-     * @return Logs
-     */
-    public function setNote($note)
-    {
-        $this->note = $note;
-
-        return $this;
-    }
-
-    /**
-     * Get note
+     * Get action
      *
      * @return string
      */
-    public function getNote()
+    public function getAction()
     {
-        return $this->note;
+        return $this->action;
     }
 }

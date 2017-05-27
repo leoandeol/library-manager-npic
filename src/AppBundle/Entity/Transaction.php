@@ -30,7 +30,7 @@ class Transaction{
      */
 	private $item;
 	/**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date",nullable=true)
      */
 	private $borrow_date;
 	/**

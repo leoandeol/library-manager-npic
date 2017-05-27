@@ -3,8 +3,118 @@
 
 {% block body %}
 <article class="article-text-block">
-  <h2>General infos</h2>
-  <div class="InputAddOn">	
+  <div class="InputAddOn">
+	<div class="table" id="table">
+		<div class="header row">
+			<div class="cell">
+				General informations
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of items
+			</div>
+			<div class="cell">
+				{{itemNumber[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of units
+			</div>
+			<div class="cell">
+				{{itemUnits[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of booked items
+			</div>
+			<div class="cell">
+				{{bookItemNumb[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of borrowed items
+			</div>
+			<div class="cell">
+				{{bItemNumber[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of lost items
+			</div>
+			<div class="cell">
+				{{lItemNumber[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of disabled items
+			</div>
+			<div class="cell">
+				{{dItemNumber[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of members
+			</div>
+			<div class="cell">
+				{{membNumber[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of disabled members
+			</div>
+			<div class="cell">
+				{{dMembNumber[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of librarians
+			</div>
+			<div class="cell">
+				{{libNumber[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of disabled librarians
+			</div>
+			<div class="cell">
+				{{dLibNumb[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of categories
+			</div>
+			<div class="cell">
+				{{categNumb[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of disabled categories
+			</div>
+			<div class="cell">
+				{{dCategNumb[0][1]}}
+			</div>
+		</div>
+		<div class="row">
+			<div class="cell">
+				Number of types
+			</div>
+			<div class="cell">
+				{{typeNumber[0][1]}}
+			</div>
+		</div>
+	</div>
   </div>
 </article>
 {% endblock %}

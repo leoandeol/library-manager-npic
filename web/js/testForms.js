@@ -91,8 +91,20 @@ function testNationalID(input){
 }
 
 function testPubYear(input){
+<<<<<<< HEAD
+	var reg = new RegExp('^[0-9]{0,4}$');
+
+	if(reg.test(input.value)){
+		surligne(input,false);
+		return true;
+	}else{
+		surligne(input,true);
+		return false;
+	}
+=======
     var reg = new RegExp('^[0-9]{0-4}$');
     return true;
+>>>>>>> 0c7c306f750df74d502773290c4dd683886e398b
 }
 
 function testPostCode(input){

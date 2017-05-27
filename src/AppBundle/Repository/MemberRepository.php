@@ -59,6 +59,12 @@ class MemberRepository extends EntityRepository{
 			"
 		)->getResult();
 	}
+	
+	public function getDisabledNumber(){
+		return $this->getEntityManager()->createQuery(
+		"SELECT SUM(me.disable) FROM AppBundle:Member me"
+		)->getResult();
+	}
 }
 
 ?>

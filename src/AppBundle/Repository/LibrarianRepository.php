@@ -24,6 +24,12 @@ class LibrarianRepository extends EntityRepository{
 			)->getResult();
 	}
 	
+	public function getDisabledNumber(){
+		return $this->getEntityManager()->createQuery(
+			"SELECT SUM(li.disable) FROM AppBundle:Librarian li"
+		)->getResult();
+	}
+	
 	public function getAllLibrarians($current,$lib_per_page){
 		$query = $this->getEntityManager()->createQuery(
 			'SELECT lib.username, lib.first_name, lib.last_name, lib.disable

@@ -19,10 +19,5 @@
 	<div class="InputAddOn">
     <a href="/user/changepass"><button class="InputAddOn-item">Change my password</button></a>
   </div>
-{% if app.session.get('isAdmin') %}
-  <div class="InputAddOn">	
-    <a href="/admin/controlpanel"><button class="InputAddOn-item">Admin panel</button></a>
-  </div>
-{% endif %}
 </article>
 {% endblock %}

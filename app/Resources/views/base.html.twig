@@ -24,6 +24,9 @@
 	{% if app.session.get('connected') == 'true' %}
 	<div class="top-menu-element"><a href="/user/account"><span>Account</span></a></div>
 	<div class="top-menu-element"><a href="/user/logout"><span>Log out</span></a></div>
+		{% if app.session.get('isAdmin') %}
+			<div class="top-menu-element"><a href="/admin/controlpanel"><span>Admin panel</span></a></div>
+		{% endif %}
 	{% else %}
 	<div class="top-menu-element"><a href="/user/login"><span>Log in</span></a></div>
 	{% endif %}
