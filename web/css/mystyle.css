@@ -88,6 +88,10 @@ a:hover,a:focus {
     width:50px;
 }
 
+.top-menu-flag>a {
+    margin:auto;
+}
+
 .top-menu-flag>a>img {
     height:20px;
     width:30px;
@@ -142,7 +146,7 @@ footer>p {
 }
 
 .menu-list-element {
-    display:flex;
+    /*display:flex*/;
     border-bottom:1px solid lightgrey;
     padding:5px;
     text-align:center;
@@ -255,7 +259,7 @@ h1 {
 
 .news-item {
     display:flex;
-    flex:1;
+    flex:1%;
     border:1px solid black;
     flex-direction:column;
     margin:20px;
@@ -366,7 +370,7 @@ h1 {
     }
 }
 /** to remove probably**/
-.news-item:nth-of-type(odd) .row {
+.news-item:nth-of-type(odd) .row:nth-of-type(odd) {
     background: #2980b9;
 }
 

@@ -8,7 +8,7 @@
       <input class="InputAddOn-field" type="text" name="Search">
 	</div>
 	<div class="menu-list-element">
-		Category : <select name="category">
+		Category : <br /><select name="category">
 		<option value='' selected>All</option>
 		{% for c in categories %}
 		<option value="{{c.id}}">{{c.subject}}</option>
@@ -16,7 +16,7 @@
 		</select>
 	</div>
 	<div class="menu-list-element">
-		Type : <select name="type">
+		Type : <br/><select name="type">
 		<option value='' selected>All</option>
 		{% for t in types %}
 		<option value="{{t.id}}">{{t.name}}</option>
@@ -24,7 +24,7 @@
 		</select>
 	</div>
 	<div class="menu-list-element">
-		Language : <select name="language">
+		Language : <br/><select name="language">
 		<option value='' selected>All</option>
 		{% for l in languages %}
 		<option value="{{l.id}}">{{l.getLangName()}}</option>
