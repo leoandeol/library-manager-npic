@@ -17,7 +17,7 @@ $(document).ready(function(){
 	
 	$('.table').on('click','.toSelectTrans',function(){
 		window.location=Routing.generate('bookingDetail', {'id': this.id, 'code':$('#memberCodeTransaction').val()});
-	});
+	});	
 	
 	$('.table').on('click','.checkBookingButton',function(e){
 		e.stopPropagation()

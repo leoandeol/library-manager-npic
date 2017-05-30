@@ -30,6 +30,20 @@ class Transaction{
      */
 	private $item;
 	/**
+     * @var lib_for_borrow
+	 *
+	 * @ORM\ManyToOne(targetEntity="Librarian")
+	 * @ORM\JoinColumn(name="lib_for_borrow",nullable=true, referencedColumnName="username", onDelete="CASCADE")
+     */
+	private $lib_for_borrow;
+	/**
+     * @var lib_for_return
+	 *
+	 * @ORM\ManyToOne(targetEntity="Librarian")
+	 * @ORM\JoinColumn(name="lib_for_return",nullable=true, referencedColumnName="username", onDelete="CASCADE")
+     */
+	private $lib_for_return;
+	/**
      * @ORM\Column(type="date",nullable=true)
      */
 	private $borrow_date;
@@ -231,5 +245,53 @@ class Transaction{
     public function getNote()
     {
         return $this->note;
+    }
+
+    /**
+     * Set libForBorrow
+     *
+     * @param \AppBundle\Entity\Librarian $libForBorrow
+     *
+     * @return Transaction
+     */
+    public function setLibForBorrow(\AppBundle\Entity\Librarian $libForBorrow = null)
+    {
+        $this->lib_for_borrow = $libForBorrow;
+
+        return $this;
+    }
+
+    /**
+     * Get libForBorrow
+     *
+     * @return \AppBundle\Entity\Librarian
+     */
+    public function getLibForBorrow()
+    {
+        return $this->lib_for_borrow;
+    }
+
+    /**
+     * Set libForReturn
+     *
+     * @param \AppBundle\Entity\Librarian $libForReturn
+     *
+     * @return Transaction
+     */
+    public function setLibForReturn(\AppBundle\Entity\Librarian $libForReturn = null)
+    {
+        $this->lib_for_return = $libForReturn;
+
+        return $this;
+    }
+
+    /**
+     * Get libForReturn
+     *
+     * @return \AppBundle\Entity\Librarian
+     */
+    public function getLibForReturn()
+    {
+        return $this->lib_for_return;
     }
 }

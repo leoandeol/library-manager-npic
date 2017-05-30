@@ -493,6 +493,7 @@ class AdminController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
+				$admin = $session->get('user');
 				if(($trans = $em->getRepository('AppBundle:Transaction')->find($id)) != NULL){
 					$state = $request->request->get('state');
 					$oldState = $trans->getState();
@@ -506,6 +507,7 @@ class AdminController extends Controller
 						$item->setLostUnit($item->getLostUnit()+1);
 					}else if($state == "Borrowed"){
 						if($oldState == "Booked"){
+							$trans->setLibForBorrow($admin);
 							$item->setBookedUnit($item->getBookedUnit()-1);	
 							$trans->setBorrowdate(new \DateTime(date('Y-m-d')));
 						}else if($oldState == "Lost"){
@@ -522,8 +524,10 @@ class AdminController extends Controller
 					}else if($state == "Ended"){
 						if($oldState == "Borrowed"){
 							$item->setBorrowedUnit($item->getBorrowedUnit()-1);
+							$trans->setLibForReturn($admin);
 						}else if($oldState == "Lost"){
 							$item->setLostUnit($item->getLostUnit()-1);
+							$trans->setLibForReturn($admin);
 						}else if($oldState == "Booked"){
 							$item->setBookedUnit($item->getBookedUnit()-1);
 						}
