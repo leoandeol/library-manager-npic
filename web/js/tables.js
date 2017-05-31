@@ -12,7 +12,7 @@ $(document).ready(function(){
 	});
 	
 	$('.table').on('click','.toSelectUser',function(){
-		window.location=Routing.generate('general_infos', {'id': this.id});
+		window.location=Routing.generate('account', {'code': this.id});
 	});
 	
 	$('.table').on('click','.toSelectTrans',function(){

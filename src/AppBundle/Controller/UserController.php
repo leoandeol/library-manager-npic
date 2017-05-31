@@ -129,9 +129,9 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/account", name="account", options={"expose"=true})
+     * @Route("/user/account/{code}", name="account", options={"expose"=true})
      */
-    public function accountAction(Request $request)
+    public function accountAction(Request $request, $code)
     {
 		$em = $this->getDoctrine()->getManager();
 		$session = $request->getSession();
@@ -139,43 +139,66 @@ class UserController extends Controller
 		$lib_rep = $em->getRepository('AppBundle:Librarian');
 		
 		if($session->get('connected')){
+			$canReadForm = false;
 			if($session->get('isAdmin')){
-				$user = $lib_rep->find($session->get('user')->getUsername());
-				$id = 'Lib-'.$user->getUsername();
-				$form = $this->createFormBuilder($user)
-					->add('avatar_path', FileType::class,array('label' => 'Change your picture','data_class' => null))
-					->add('save', SubmitType::class,array('label' => 'Save'));
+				if(($user = $lib_rep->find($code)) != NULL ){
+					$isMember = false;
+					if($code == $session->get('user')->getUsername()){
+						$id = 'Lib-'.$user->getUsername();
+						$form = $this->createFormBuilder($user)
+							->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null))
+							->add('save', SubmitType::class,array('label' => 'Save',
+															'attr'=> array('class'=>'InputAddOn-item'),
+															));
+						$canReadForm = true;									
+					}
+				}else{
+					$isMember = true;
+					$user = $memb_rep->find($code);
+				}
 			}else{
-				$user = $memb_rep->find($session->get('user')->getCode());
-				$id = 'Member-'.$user->getCode();
-				$form = $this->createFormBuilder($user)
-					->add('avatar_path', FileType::class,array('label' => 'Change your picture','data_class' => null))
-					->add('save', SubmitType::class,array('label' => 'Save'));
+				if(($user = $lib_rep->find($code)) != NULL ){
+					return $this->redirect($this->generateUrl('home'));
+				}else{
+					$isMember = true;
+					if($code == $session->get('user')->getCode()){
+						$id = 'Member-'.$user->getCode();
+						$form = $this->createFormBuilder($user)
+							->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null))
+							->add('save', SubmitType::class,array('label' => 'Save',
+																  'attr'=> array('class'=>'InputAddOn submit-login'),
+																));
+						$canReadForm = true;
+					}
+				}
 			}
 			
-			$form = $form->getForm();
-			
-			$form->handleRequest($request);
-			
-			if($form->isSubmitted() && $form->isValid()){
-				$fileUploader = new FileUploader();
-				$fileName = $fileUploader->upload($form['avatar_path']->getData(),$this->getParameter('avatar_directory'),$id);
-				$user->setAvatarPath($fileName);
-				$session->get('user')->setAvatarPath($fileName);
-				$em->persist($user);
-				$em->flush();
+			if($canReadForm){
+				$form = $form->getForm();
+				$form->handleRequest($request);
+				$data = ['form' => $form->createView()];
+				if($form->isSubmitted() && $form->isValid()){
+					$fileUploader = new FileUploader();
+					$fileName = $fileUploader->upload($form['avatar_path']->getData(),$this->getParameter('avatar_directory'),$id);
+					$user->setAvatarPath($fileName);
+					$session->get('user')->setAvatarPath($fileName);
+					$em->persist($user);
+					$em->flush();
 
-				$avatar = $fileName;
+					$avatar = $fileName;
+				}else{
+					$avatar = $user->getAvatarPath();
+				}
 			}else{
-				$avatar = $session->get('user')->getAvatarPath();
+				$avatar = $user->getAvatarPath();
 			}
 			
-			return $this->render('user/account.html.twig', [
-				'avatar'=> $avatar,
-				'form' => $form->createView(),
-				'isAdmin' => $session->get('isAdmin'),
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-			]);
+			$data['user'] = $user;
+			$data['avatar'] = $avatar;
+			$data['isAdmin'] = $session->get('isAdmin');
+			$data['isMember']= $isMember;
+			
+			return $this->render('user/account.html.twig', ['data' =>$data]);
 		}
 		return $this->redirect($this->generateUrl('errorNotLogged'));
     }

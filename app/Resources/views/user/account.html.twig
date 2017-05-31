@@ -4,21 +4,25 @@
 {% block body %}
 <article class="article-text-block">
   <div class="profil-picture">
-	<img src="{{ asset('uploads/avatars/' ~  avatar) }}"  width="280px;" height="280px;"/>
-	{{ form_start(form) }}
-	{{ form_widget(form) }}
-	{{ form_end(form) }}
+	<img src="{{ asset('uploads/avatars/' ~  data['avatar']) }}"  width="280px;" height="280px;"/>
+	{% if attribute(data, "form") is defined %}
+		{{ form_start(data['form']) }}
+		{{ form_widget(data['form']) }}
+		{{ form_end(data['form']) }}
+	{% endif %}
   </div>
   <div class="InputAddOn">
-    <a href="/user/general_infos/{% if app.session.get('isAdmin') %}
-	{{ app.session.get('user').getUsername() }}
-	{% else %}
-	{{ app.session.get('user').getCode() }}
-	{% endif %}"><button class="InputAddOn-item">General informations</button></a>
+    <a href="/user/general_infos/
+		{% if data['isMember'] %}
+			{{ data['user'].getCode() }}
+		{% else %}
+			{{ data['user'].getUsername() }}
+		{% endif %}
+	"><button class="InputAddOn-item">General informations</button></a>
   </div>  
 {% if app.session.get('isAdmin') == false %}
   <div class="InputAddOn">
-    <a href="/user/bookings/{{app.session.get('user').getCode()}}"><button class="InputAddOn-item">Check my bookings</button></a>
+    <a href="/user/bookings/{{data['user'].getCode()}}"><button class="InputAddOn-item">Check my bookings</button></a>
 	</div>
 {% endif %}
 	<div class="InputAddOn">
