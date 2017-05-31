@@ -7,6 +7,7 @@ use AppBundle\Entity\Staff;
 use AppBundle\Entity\Librarian;
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Logs;
+use AppBundle\Entity\UserLogs;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,7 +57,7 @@ class UserController extends Controller
 						$new_log = new Logs();
 						$new_log->setLib($user);
 						$new_log->setLogDate(date('Y-m-d'));
-						$new_log->setAction('Connexion');
+						$new_log->setAction('Connection');
 						$em->persist($new_log);
 						$em->flush();
 						$res = "Success";
@@ -71,6 +72,12 @@ class UserController extends Controller
 		else{
 			if(hash('sha256', $password) == $user->getPassword()){	
 				if($user->getDisable() == 0){
+					$user_log = new UserLogs();
+					$user_log->setMember($user);
+					$user_log->setLogDate(date('Y-m-d'));
+					$user_log->setAction('Connection');
+					$em->persist($user_log);
+					$em->flush();
 					$session->set('user',$user);
 					$session->set('isadmin',false);
 					$session->set('connected',true);
@@ -99,8 +106,16 @@ class UserController extends Controller
 				$new_log = new Logs();
 				$new_log->setLib($lib);
 				$new_log->setLogDate(date('Y-m-d'));
-				$new_log->setAction('Disconnexion');
+				$new_log->setAction('Disconnection');
 				$em->persist($new_log);
+				$em->flush();
+			}else{
+				$member = $em->getRepository('AppBundle:Member')->find($user->getCode());
+				$user_log = new UserLogs();
+				$user_log->setMember($member);
+				$user_log->setLogDate(date('Y-m-d'));
+				$user_log->setAction('Disconnection');
+				$em->persist($user_log);
 				$em->flush();
 			}
 			$session->invalidate();

@@ -43,7 +43,7 @@ class AdminController extends Controller
 				$member_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Member');
 				$total = $member_rep->getNumberOfMembers();
 				
-				$mem_per_page = 20;
+				$mem_per_page = 16;
 				$nb_max_pages = ceil($total[0][1] / $mem_per_page);
 				$current = ($page * $mem_per_page) - $mem_per_page;
 				
@@ -77,7 +77,7 @@ class AdminController extends Controller
 				$lib_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Librarian');
 				$total = $lib_rep->getNumberOfLibrarians();
 				
-				$lib_per_page = 20;
+				$lib_per_page = 16;
 				$nb_max_pages = ceil($total[0][1] / $lib_per_page);
 				$current = ($page * $lib_per_page) - $lib_per_page;
 				
@@ -493,7 +493,7 @@ class AdminController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
-				$admin = $session->get('user');
+				$admin = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
 				if(($trans = $em->getRepository('AppBundle:Transaction')->find($id)) != NULL){
 					$state = $request->request->get('state');
 					$oldState = $trans->getState();
@@ -559,22 +559,55 @@ class AdminController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
-			
+				if($request->request->get('ID') == null){
+					$id = '';
+				}else{
+					$id   = $request->request->get('ID');
+				}
+				if($request->request->get('who') == null){
+					$who = '';
+				}else{
+					$who  = $request->request->get('who');
+				}
+				if($request->request->get('what') == null){
+					$what = '';
+				}else{
+					$what  = $request->request->get('what');
+				}
+				if($request->request->get('day') == null){
+					if($request->request->get('month') == null){
+						if($request->request->get('year') == null){
+							$from = date("Y-m-d");
+						}
+					}
+				}else{
+					$year = $request->request->get('year');
+					$month  = $request->request->get('month');
+					$day  = $request->request->get('day');
+					$from = $year.'-'.$month.'-'.$day;
+				}
 				$logs_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Logs');
-				$total = $logs_rep->getLogsNumber();
 				
-				$log_per_page = 20;
-				$nb_max_pages = ceil($total[0][1] / $log_per_page);
+				
+				$totalToSum = $logs_rep->getLogsNumber($id,$who,$what,$from);
+				if($who == ""){
+					$total = $totalToSum[0]['total']+$totalToSum[1]['total'];	
+				}else{
+					$total = $totalToSum[0]['total'];
+				}				
+				$log_per_page = 16;
+				$nb_max_pages = ceil($total / $log_per_page);
 				$current = ($page * $log_per_page) - $log_per_page;
 				
-				$logs = $logs_rep->getAllLogs($current,$log_per_page);
-				
+				$logs = $logs_rep->getAllLogs($current,$log_per_page,$id,$who,$what,$from);
+
 				$serializer = $this->get('serializer');
 				$logsJson = $serializer->serialize($logs,'json');
 				
 				
 				if($request->isXmlHttpRequest()){
 					$data = array(
+						'from' => $from,
 						'page_max' => $nb_max_pages,
 						'logs' => $logsJson,
 						'page' => $page,
@@ -582,6 +615,7 @@ class AdminController extends Controller
 					return new JsonResponse($data);
 				}else{
 					$data = array(
+						'from' => $from,
 						'page_max' => $nb_max_pages,
 						'logs' => $logs,
 						'page' => $page,

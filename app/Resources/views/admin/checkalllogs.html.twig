@@ -3,6 +3,66 @@
 
 {% block body %}
 
+<nav class="menu-list">
+  <form class="menu-list-search logsForm" action="/admin/checkLogs" method="post">
+	<div class="menu-list-element">
+      <input class="InputAddOn-field" type="text" name="ID">
+	</div>
+	<div class="menu-list-element">
+		Who : <br />
+		<select name="who">
+			<option value="" selected>All</option>
+			<option value="member">Members</option>
+			<option value="librarian">Librarians</option>
+		</select>
+	</div>
+	<div class="menu-list-element">
+		What : <br/>
+		<select name="what">
+			<option value="" selected>All</option>
+			<option value="Connection">Connection</option>
+			<option value="Disconnection">Disconnection</option>
+			<option value="state">Changing state</option>
+			<option value="Disabled">disable</option>
+			<option value="Reactivated">reactivate</option>
+			<option value="Added">Add units</option>
+		</select>
+	</div>
+    <div class="InputAddOn-item" for="dob">From :</div>
+	
+	<div class="InputAddOn">
+	  <div class="InputAddOn-item"for="day">Day:</div>
+        <select class="InputAddOn-field" id="day" name="day">
+        </select>
+	</div>	
+	<div class="InputAddOn">
+      <div class="InputAddOn-item" for="month">Month:</div>
+        <select class="InputAddOn-field" id="month" name="month">
+          <option selected>01</option>
+          <option>02</option>
+          <option>03</option>
+          <option>04</option>
+          <option>05</option>
+          <option>06</option>
+          <option>07</option>
+          <option>08</option>
+          <option>09</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+        </select>
+	</div>	
+	<div class="InputAddOn">
+		<div class="InputAddOn-item" for="year">Year:</div>
+        <select class="InputAddOn-field" id="year" name="year">
+        </select>
+	</div>
+	<div class="menu-list-element">
+      <button class="InputAddOn-item" type="submit">Search</button>
+	</div>
+  </form>
+</nav>
+
 <article class="item-list">
 
 <div class="table" id="table">
@@ -11,7 +71,7 @@
         Log ID
       </div>
       <div class="cell">
-        Librarian ID
+        User ID
       </div>
       <div class="cell">
         Date of the action
@@ -21,20 +81,24 @@
       </div>
     </div>
 	{% for log in logs %}
-	<div class="row toSelect toSelectLog" id={{log.getId()}}>
-		<div class="cell">
-			{{log.getId()}}
+		<div class="row toSelect toSelectLog" id={{log["id"]}}>
+			<div class="cell">
+				{{log["id"]}}
+			</div>
+			<div class="cell">
+				{% if attribute(log, "librarian_username") is defined %}
+					{{log["librarian_username"]}}
+				{% else %}
+					{{log["member_code"]}}
+				{% endif %}
+			</div>
+			<div class="cell">
+				{{log["log_date"]}}
+			</div>
+			<div class="cell">
+				{{log["action"]}}
+			</div>
 		</div>
-		<div class="cell">
-			{{log.getLib().getUsername()}}
-		</div>
-		<div class="cell">
-			{{log.getLogDate()|date('d-m-Y')}}
-		</div>
-		<div class="cell">
-			{{log.getAction()}}
-		</div>
-	</div>
 {% endfor %}
 </div>
 
@@ -51,6 +115,7 @@
 
 
 {% block javascripts %}
+<script src="{{ asset('js/dates.js') }}"></script>
 <script src="{{ asset('js/ajax.js') }}"></script>
 <script src="{{ asset('js/tables.js') }}"></script>
 {% endblock %}

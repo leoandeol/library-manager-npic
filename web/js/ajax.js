@@ -453,17 +453,27 @@ $(document).ready(function(){
 	
 	// CHECK LOGS
 	
-	article.on('click','.checkLogsButton',function(e){
-		checkLogs(this.value,e)
+	$('.logsForm').submit(function(e){
+		var data = $(this).serialize();
+		console.log(data);
+		checkLogs(1,e,data);
 	});
 	
-	function checkLogs(page,e){
+	article.on('click','.checkLogsButton',function(e){
+		var data = $('.logsForm').serialize();
+		checkLogs(this.value,e,data);
+	});	
+	
+	function checkLogs(page,e,datas){
 		e.preventDefault();
 		$.ajax({
 			type	: "POST",
 			url		: Routing.generate('checkLogs',{'page':page}),
+			data	: datas,
 			datatype: "json",
 			success	: function(response){
+				console.log(response['from']);
+				console.log(JSON.parse(response['logs']));
 				var table = document.getElementById('table');
 				while(table.firstChild){
 					table.firstChild.remove();
@@ -477,7 +487,7 @@ $(document).ready(function(){
 				
 				var fname = document.createElement("div");
 				fname.setAttribute("class","cell");
-				fname.innerHTML = "Librarian ID";
+				fname.innerHTML = "User ID";
 				
 				var lname = document.createElement("div");
 				lname.setAttribute("class","cell");
@@ -506,11 +516,14 @@ $(document).ready(function(){
 					
 					var fname = document.createElement("div");
 					fname.setAttribute("class","cell");
-					fname.innerHTML = log['lib']['username'];
-					
+					if(!("librarian_username" in log)){
+						fname.innerHTML = log['member_code'];
+					}else{
+						fname.innerHTML = log['librarian_username'];
+					}
 					var lname = document.createElement("div");
 					lname.setAttribute("class","cell");
-					lname.innerHTML = log['logDate'].split('T')[0]	;
+					lname.innerHTML = log['log_date'];
 					
 					var activity = document.createElement("div");
 					activity.setAttribute("class","cell");
