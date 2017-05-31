@@ -83,8 +83,8 @@ public function setLocaleAction(Request $request, $language = null)
     public function CheckStateOfTransactionsAction(Request $request,$password)
     {
     if($password == "20041808"){
-    $this->get('my.mailer')->sendMessage("leo.andeol@gmail.com","Yo le bg","where is dina ??? ANSWER §!!!!!!");
-        return new Response('OK');
+    		 //TODO
+	return new Response('OK');
 	}
 	else {
 	return new Response('Access Denied');	
