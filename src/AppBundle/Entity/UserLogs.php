@@ -18,7 +18,7 @@ class UserLogs{
 	/**
      * @var Member
 	 *
-	 * @ORM\OneToOne(targetEntity="member")
+	 * @ORM\ManyToOne(targetEntity="member")
 	 * @ORM\JoinColumn(name="member_code", referencedColumnName="code", onDelete="CASCADE")
      */
 	private $member;

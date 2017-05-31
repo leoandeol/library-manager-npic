@@ -3,7 +3,12 @@
 
 {% block body %}
 <article class="article-text-block">
-  <h1>My account</h1>
+  <div class="profil-picture">
+	<img src="{{ asset('uploads/avatars/' ~  avatar) }}"  width="280px;" height="280px;"/>
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	{{ form_end(form) }}
+  </div>
   <div class="InputAddOn">
     <a href="/user/general_infos/{% if app.session.get('isAdmin') %}
 	{{ app.session.get('user').getUsername() }}

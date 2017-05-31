@@ -8,9 +8,12 @@ use AppBundle\Entity\Librarian;
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Logs;
 use AppBundle\Entity\UserLogs;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Service\FileUploader;
 use Symfony\Component\Validator\Constraints\DateTime; 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -130,9 +133,46 @@ class UserController extends Controller
      */
     public function accountAction(Request $request)
     {
+		$em = $this->getDoctrine()->getManager();
 		$session = $request->getSession();
+		$memb_rep = $em->getRepository('AppBundle:Member');
+		$lib_rep = $em->getRepository('AppBundle:Librarian');
+		
 		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				$user = $lib_rep->find($session->get('user')->getUsername());
+				$id = 'Lib-'.$user->getUsername();
+				$form = $this->createFormBuilder($user)
+					->add('avatar_path', FileType::class,array('label' => 'Change your picture','data_class' => null))
+					->add('save', SubmitType::class,array('label' => 'Save'));
+			}else{
+				$user = $memb_rep->find($session->get('user')->getCode());
+				$id = 'Member-'.$user->getCode();
+				$form = $this->createFormBuilder($user)
+					->add('avatar_path', FileType::class,array('label' => 'Change your picture','data_class' => null))
+					->add('save', SubmitType::class,array('label' => 'Save'));
+			}
+			
+			$form = $form->getForm();
+			
+			$form->handleRequest($request);
+			
+			if($form->isSubmitted() && $form->isValid()){
+				$fileUploader = new FileUploader();
+				$fileName = $fileUploader->upload($form['avatar_path']->getData(),$this->getParameter('avatar_directory'),$id);
+				$user->setAvatarPath($fileName);
+				$session->get('user')->setAvatarPath($fileName);
+				$em->persist($user);
+				$em->flush();
+
+				$avatar = $fileName;
+			}else{
+				$avatar = $session->get('user')->getAvatarPath();
+			}
+			
 			return $this->render('user/account.html.twig', [
+				'avatar'=> $avatar,
+				'form' => $form->createView(),
 				'isAdmin' => $session->get('isAdmin'),
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -14,6 +15,17 @@ class Librarian{
      * @ORM\Id
      */
 	private $username;	
+	/**
+	 * @ORM\Column(type="string")
+	 * 
+	 * @Assert\Image(
+     *     minWidth = 200,
+     *     maxWidth = 1000,
+     *     minHeight = 200,
+     *     maxHeight = 1000
+     * )
+     */
+	private $avatar_path;
 	/**
      * @ORM\Column(type="string",length=25)
      */
@@ -325,5 +337,29 @@ class Librarian{
     public function getAddress()
     {
         return $this->address;
+    }
+
+    /**
+     * Set avatarPath
+     *
+     * @param string $avatarPath
+     *
+     * @return Librarian
+     */
+    public function setAvatarPath($avatarPath)
+    {
+        $this->avatar_path = $avatarPath;
+
+        return $this;
+    }
+
+    /**
+     * Get avatarPath
+     *
+     * @return string
+     */
+    public function getAvatarPath()
+    {
+        return $this->avatar_path;
     }
 }

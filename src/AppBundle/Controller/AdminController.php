@@ -219,8 +219,9 @@ class AdminController extends Controller
 					$passwordHashed = hash('sha256', $password);
 					
 					$dobDataBase = $dob['year'].'-'.$dob['month'].'-'.$dob['day'];
-										
+					
 					$new_member = new Member();
+					$new_member->setAvatarPath('default_avatar.png');
 					$new_member->setCode($request->request->get('code'));
 					$new_member->setFirstName($request->request->get('fname'));
 					$new_member->setLastName($request->request->get('lname'));
@@ -300,6 +301,7 @@ class AdminController extends Controller
 					$passwordHashed = hash('sha256', $password);
 					
 					$new_librarian = new Librarian();
+					$new_librarian->setAvatarPath('default_avatar.png');
 					$new_librarian->setUsername($request->request->get('username'));
 					$new_librarian->setFirstName($request->request->get('fname'));
 					$new_librarian->setLastName($request->request->get('lname'));
