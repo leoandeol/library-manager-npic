@@ -188,30 +188,6 @@ class Item{
     }
 
     /**
-     * Set shortTitle
-     *
-     * @param string $shortTitle
-     *
-     * @return Item
-     */
-    public function setShortTitle($shortTitle)
-    {
-        $this->short_title = $shortTitle;
-
-        return $this;
-    }
-
-    /**
-     * Get shortTitle
-     *
-     * @return string
-     */
-    public function getShortTitle()
-    {
-        return $this->short_title;
-    }
-
-    /**
      * Set author
      *
      * @param string $author
@@ -497,30 +473,6 @@ class Item{
     public function getTyppe()
     {
         return $this->type;
-    }
-
-    /**
-     * Set categoryId
-     *
-     * @param integer $categoryId
-     *
-     * @return Item
-     */
-    public function setCategoryId($categoryId)
-    {
-        $this->category_id = $categoryId;
-
-        return $this;
-    }
-
-    /**
-     * Get categoryId
-     *
-     * @return integer
-     */
-    public function getCategoryId()
-    {
-        return $this->category_id;
     }
 
     /**

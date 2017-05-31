@@ -160,13 +160,14 @@ class UserController extends Controller
 				if(($user = $lib_rep->find($code)) != NULL ){
 					return $this->redirect($this->generateUrl('home'));
 				}else{
+					$user = $memb_rep->find($code);
 					$isMember = true;
 					if($code == $session->get('user')->getCode()){
 						$id = 'Member-'.$user->getCode();
 						$form = $this->createFormBuilder($user)
 							->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null))
 							->add('save', SubmitType::class,array('label' => 'Save',
-																  'attr'=> array('class'=>'InputAddOn submit-login'),
+																  'attr'=> array('class'=>'InputAddOn-item'),
 																));
 						$canReadForm = true;
 					}

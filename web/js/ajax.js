@@ -1,5 +1,17 @@
 /*jshint eqnull:true */
 $(document).ready(function(){
+	
+	function addDays(startDate,numberOfDays)
+	{
+		var returnDate = new Date(
+								startDate.getFullYear(),
+								startDate.getMonth(),
+								startDate.getDate()+numberOfDays,
+								startDate.getHours(),
+								startDate.getMinutes(),
+								startDate.getSeconds());
+		return returnDate;
+	}
 
 	// CONNEXION
 	$("#loginForm").submit(function(e){
@@ -427,7 +439,7 @@ $(document).ready(function(){
 				}
 				if(response['page']>1){
 					var prev = document.createElement("button");
-					prev.setAttribute("class","InputAddOn-item checklibButton");
+					prev.setAttribute("class","InputAddOn-item checkLibButton");
 					prev.setAttribute("id","prev");
 					prev.setAttribute("value",response['page']-1);
 					prev.innerHTML = "Previous";
@@ -438,7 +450,7 @@ $(document).ready(function(){
 				}
 				if(response['page']<response['page_max']){
 					var next = document.createElement("button");
-					next.setAttribute("class","InputAddOn-item checklibButton");
+					next.setAttribute("class","InputAddOn-item checkLibButton");
 					next.setAttribute("id","next");
 					next.setAttribute("value",parseInt(response['page'],10)+1);
 					next.innerHTML = "Next";
@@ -469,11 +481,8 @@ $(document).ready(function(){
 		$.ajax({
 			type	: "POST",
 			url		: Routing.generate('checkLogs',{'page':page}),
-			data	: datas,
 			datatype: "json",
 			success	: function(response){
-				console.log(response['from']);
-				console.log(JSON.parse(response['logs']));
 				var table = document.getElementById('table');
 				while(table.firstChild){
 					table.firstChild.remove();
@@ -556,6 +565,143 @@ $(document).ready(function(){
 				if(response['page']<response['page_max']){
 					var next = document.createElement("button");
 					next.setAttribute("class","InputAddOn-item checkLogsButton");
+					next.setAttribute("id","next");
+					next.setAttribute("value",parseInt(response['page'],10)+1);
+					next.innerHTML = "Next";
+					article.append(next);
+				}
+			},
+			error	: function(jqXHR, textStatus, errorThrown){
+				alert('error');
+			}
+		});
+	}
+	
+	// CHECK BOOKINGS
+	
+	$('.bookingsForm').submit(function(e){
+		var data = $(this).serialize();
+		checkBookings(1,e,data);
+	});
+	
+	article.on('click','.checkBookingsButton',function(e){
+		var data = $('.logsForm').serialize();
+		checkBookings(this.value,e,data);
+	});	
+	
+	function checkBookings(page,e,datas){
+		e.preventDefault();
+		$.ajax({
+			type	: "POST",
+			url		: Routing.generate('checkBookings',{'page':page}),
+			data	: datas,
+			datatype: "json",
+			success	: function(response){
+				var table = document.getElementById('table');
+				while(table.firstChild){
+					table.firstChild.remove();
+				}
+				var header = document.createElement("div");
+					header.setAttribute("class","header row");
+					
+				var code = document.createElement("div");
+				code.setAttribute("class","cell");
+				code.innerHTML = "Transaction ID";
+				
+				var fname = document.createElement("div");
+				fname.setAttribute("class","cell");
+				fname.innerHTML = "Member code";
+				
+				var lname = document.createElement("div");
+				lname.setAttribute("class","cell");
+				lname.innerHTML = "Item title";
+				
+				var bdate = document.createElement("div");
+				bdate.setAttribute("class","cell");
+				bdate.innerHTML = "Borrow date";
+				
+				var rdate = document.createElement("div");
+				rdate.setAttribute("class","cell");
+				rdate.innerHTML = "Date to return";
+				
+				var activity = document.createElement("div");
+				activity.setAttribute("class","cell");
+				activity.innerHTML = "State";
+				
+				
+				header.appendChild(code);
+				header.appendChild(fname);
+				header.appendChild(lname);
+				header.appendChild(bdate);
+				header.appendChild(rdate);
+				header.appendChild(activity);
+				table.appendChild(header);
+				
+				$.each(JSON.parse(response['trans']),function(i,tr){
+					// row to add
+					var row = document.createElement("div");	
+					row.setAttribute("class","row toSelect toSelectTrans");
+					row.setAttribute("id",tr.id);
+					// row's divs
+					var code = document.createElement("div");
+					code.setAttribute("class","cell");
+					code.innerHTML = tr.id;
+					
+					var fname = document.createElement("div");
+					fname.setAttribute("class","cell");
+					fname.innerHTML = tr.member.code;
+
+					var lname = document.createElement("div");
+					lname.setAttribute("class","cell");
+					lname.innerHTML = tr.item.title;
+					
+					var bdate = document.createElement("div");
+					bdate.setAttribute("class","cell");
+					sBDate = tr.borrowDate.split('T')[0];
+					ssBDate = sBDate.split('-');
+					okBDate = ssBDate[2]+'-'+ssBDate[1]+'-'+ssBDate[0];
+					bdate.innerHTML = okBDate;
+
+					var rdate = document.createElement("div");
+					rdate.setAttribute("class","cell");
+					sRDate = tr.toReturnDate.split('T')[0];
+					ssRDate = sRDate.split('-');
+					okRDate = ssRDate[2]+'-'+ssRDate[1]+'-'+ssRDate[0];
+					rdate.innerHTML = okRDate;
+					
+					var activity = document.createElement("div");
+					activity.setAttribute("class","cell");
+					activity.innerHTML = tr.state;
+					
+					row.appendChild(code);
+					row.appendChild(fname);
+					row.appendChild(lname);
+					row.appendChild(bdate);
+					row.appendChild(rdate);
+					row.appendChild(activity);
+					table.appendChild(row);
+				});
+				var article = $("article");
+				var prev = document.getElementById('prev');
+				var next = document.getElementById('next');
+				
+				if(prev != null){
+						article.find('#prev')[0].remove();
+				}
+				if(response['page']>1){
+					var prev = document.createElement("button");
+					prev.setAttribute("class","InputAddOn-item checkBookingsButton");
+					prev.setAttribute("id","prev");
+					prev.setAttribute("value",response['page']-1);
+					prev.innerHTML = "Previous";
+					article.append(prev);
+				}
+				if(next != null){
+					article.find('#next')[0].remove();
+				}
+				if(response['page']<response['page_max']){
+					var next = document.createElement("button");
+					next.setAttribute("class","InputAddOn-item checkBookingsButton");
 					next.setAttribute("id","next");
 					next.setAttribute("value",parseInt(response['page'],10)+1);
 					next.innerHTML = "Next";
