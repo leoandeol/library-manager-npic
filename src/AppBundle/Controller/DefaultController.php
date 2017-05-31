@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -75,4 +76,21 @@ public function setLocaleAction(Request $request, $language = null)
  
     return $this->redirect($url);;
 }
+
+    /**
+     * @Route("/highwaytonowhere/{password}", name="checktransactions")
+     */
+    public function CheckStateOfTransactionsAction(Request $request,$password)
+    {
+    if($password == "20041808"){
+    $this->get('my.mailer')->sendMessage("leo.andeol@gmail.com","Yo le bg","where is dina ??? ANSWER §!!!!!!");
+        return new Response('OK');
+	}
+	else {
+	return new Response('Access Denied');	
+}
+    }
+
+
+
 }

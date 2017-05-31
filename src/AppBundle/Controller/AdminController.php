@@ -274,6 +274,9 @@ class AdminController extends Controller
 					
 					$em->persist($new_member);
 					$em->flush();
+
+					
+    					$this->get('my.mailer')->sendTemplateMessage($request->request->get('email'),"NPIC Library registration completed","email/registration.html.twig",array('username' => $request->request->get('code'), 'password' => $password);	
 					
 					return $this->redirect($this->generateUrl('checkalluser'));
 				}

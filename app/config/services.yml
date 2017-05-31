@@ -13,3 +13,6 @@ services:
         arguments: ["%kernel.default_locale%"]
     acme.js_vars:
         class: stdClass
+    my.mailer:
+        class: AppBundle\Listener\MailService
+        arguments: ["@mailer","@templating"]
