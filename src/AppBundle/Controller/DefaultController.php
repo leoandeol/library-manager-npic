@@ -84,6 +84,10 @@ public function setLocaleAction(Request $request, $language = null)
     {
     if($password == "20041808"){
     		 //TODO
+
+		 // librarians
+		 $librarians = $this->getDoctrine()->getManager()->getRepository("AppBundle:Librarian")->findAll();
+		 $members = $this->getDoctrine()->getManager()->getRepository("AppBundle:Member")->findAll();
 	return new Response('OK');
 	}
 	else {
