@@ -15,12 +15,12 @@ class DefaultController extends Controller
     public function homeAction(Request $request)
     {
         $locale = $this->get('translator')->getLocale();
-	//var_dump($locale);
-	$rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
-	$top = $rep->findTop5PopularBooks();
-	$last = $rep->findLast5BooksAdded();
-	$pop = $rep->find5MostPopularBooks();
-	// replace this example code with whatever you need
+        //var_dump($locale);
+        $rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
+        $top = $rep->findTop5PopularBooks();
+        $last = $rep->findLast5BooksAdded();
+        $pop = $rep->find5MostPopularBooks();
+        // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
 			"tops" => $top,
 			"lasts" => $last,
@@ -51,50 +51,49 @@ class DefaultController extends Controller
         ]);
     }
 
-/**
- * Change the locale for the current user
- *
- * @param String $language
- * @return array
- *
- * @Route("/setlocale/{language}", name="setlocale")
- */
-public function setLocaleAction(Request $request, $language = null)
-{
-    if($language != null)
-    {
-        // On enregistre la langue en session
-        $this->get('session')->set('_locale', $language);
+	/**
+	 * Change the locale for the current user
+	 *
+	 * @param String $language
+	 * @return array
+	 *
+	 * @Route("/setlocale/{language}", name="setlocale")
+	 */
+	public function setLocaleAction(Request $request, $language = null)
+	{
+		if($language != null)
+		{
+			// On enregistre la langue en session
+			$this->get('session')->set('_locale', $language);
+		}
+	 
+		// on tente de rediriger vers la page d'origine
+		$url = $request->headers->get('referer');
+		if(empty($url))
+		{
+			$url = $this->generateUrl('home');
+		}
+	 
+		return $this->redirect($url);;
 	}
- 
-    // on tente de rediriger vers la page d'origine
-    $url = $request->headers->get('referer');
-    if(empty($url))
-    {
-        $url = $this->generateUrl('home');
-    }
- 
-    return $this->redirect($url);;
-}
 
     /**
      * @Route("/highwaytonowhere/{password}", name="checktransactions")
      */
     public function CheckStateOfTransactionsAction(Request $request,$password)
     {
-    if($password == "20041808"){
-    		 //TODO
-
-		 // librarians
-		 $librarians = $this->getDoctrine()->getManager()->getRepository("AppBundle:Librarian")->findAll();
-		 $members = $this->getDoctrine()->getManager()->getRepository("AppBundle:Member")->findAll();
-	return new Response('OK');
-	}
-	else {
-	return new Response('Access Denied');	
-}
+        if($password == "20041808"){
+            //TODO
+			
+            // librarians
+            $librarians = $this->getDoctrine()->getManager()->getRepository("AppBundle:Librarian")->findAll();
+            $members = $this->getDoctrine()->getManager()->getRepository("AppBundle:Member")->findAll();
+            return new Response('OK');
+        }
+        else {
+            return new Response('Access Denied');	
+        }
     }
-
 
 
 }

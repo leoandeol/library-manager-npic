@@ -4,32 +4,27 @@
 {% block body %}
 
 <nav class="menu-list">
-  <form class="menu-list-search logsForm" action="/admin/checkLogs" method="post">
+  <form class="menu-list-search bookingsForm" action="/admin/checkBookings" method="post">
 	<div class="menu-list-element">
-      <input class="InputAddOn-field" type="text" name="ID">
+      <input class="InputAddOn-field" placeholder="Transaction ID" type="text" name="t_id">
 	</div>
 	<div class="menu-list-element">
-		Who : <br />
-		<select name="who">
+      <input class="InputAddOn-field" placeholder="Member Code" type="text" name="m_code">
+	</div>
+	<div class="menu-list-element">
+      <input class="InputAddOn-field" placeholder="Item title" type="text" name="i_title">
+	</div>
+	<div class="menu-list-element">
+		State : <br/>
+		<select name="state">
 			<option value="" selected>All</option>
-			<option value="member">Members</option>
-			<option value="librarian">Librarians</option>
+			<option value="Booked">Booked</option>
+			<option value="Borrowed">Borrowed</option>
+			<option value="Lost">Lost</option>
+			<option value="Finished">Finished</option>
 		</select>
 	</div>
-	<div class="menu-list-element">
-		What : <br/>
-		<select name="what">
-			<option value="" selected>All</option>
-			<option value="Connection">Connection</option>
-			<option value="Disconnection">Disconnection</option>
-			<option value="state">Changing state</option>
-			<option value="Disabled">disable</option>
-			<option value="Reactivated">reactivate</option>
-			<option value="Added">Add units</option>
-		</select>
-	</div>
-    <div class="InputAddOn-item" for="dob">From :</div>
-	
+    <div class="InputAddOn-item" for="from">Borrow date :</div>
 	<div class="InputAddOn">
 	  <div class="InputAddOn-item"for="day">Day:</div>
         <select class="InputAddOn-field" id="day" name="day">
@@ -65,40 +60,49 @@
 
 <article class="item-list">
 
-<div class="table" id="table">
+<div class="tableBookings table" id="table">
     <div class="row header">
       <div class="cell">
-        Log ID
+        Transaction ID
       </div>
       <div class="cell">
-        User ID
+        Member code
+      </div>
+	  <div class="cell">
+        Item title
       </div>
       <div class="cell">
-        Date of the action
+        Borrow date
       </div>
       <div class="cell">
-        Action
-      </div>
+        Date to return
+      </div>		
+	  <div class="cell">
+		State
+	  </div>
     </div>
-	{% for log in logs %}
-		<div class="row toSelect toSelectLog" id={{log["id"]}}>
-			<div class="cell">
-				{{log["id"]}}
-			</div>
-			<div class="cell">
-				{% if attribute(log, "librarian_username") is defined %}
-					{{log["librarian_username"]}}
-				{% else %}
-					{{log["member_code"]}}
-				{% endif %}
-			</div>
-			<div class="cell">
-				{{log["log_date"]}}
-			</div>
-			<div class="cell">
-				{{log["action"]}}
-			</div>
+	{% for transaction in trans %}
+	<div class="row toSelect toSelectTrans" id={{transaction.getId()}}>
+		<option hidden id="memberCodeTransaction" value="{{transaction.getMember().getCode()}}"></option>
+		<div class="cell">
+			{{transaction.getId()}}
 		</div>
+		<div class="cell">
+			{{transaction.getMember().getCode()}}
+		</div>
+		<div class="cell">
+			{{transaction.getItem().getTitle()}}
+		</div>
+		<div class="cell">
+			{{transaction.getBorrowDate()|date('d-m-Y')}}
+		</div>
+		<div class="cell">
+			{{transaction.getToReturnDate()|date("d-m-Y") }}
+		</div>
+		<div class="cell">
+			{{transaction.getState()}}
+		</div>
+	</div>
 {% endfor %}
 </div>
 

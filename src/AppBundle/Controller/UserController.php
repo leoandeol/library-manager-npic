@@ -7,9 +7,13 @@ use AppBundle\Entity\Staff;
 use AppBundle\Entity\Librarian;
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Logs;
+use AppBundle\Entity\UserLogs;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Service\FileUploader;
 use Symfony\Component\Validator\Constraints\DateTime; 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -56,7 +60,7 @@ class UserController extends Controller
 						$new_log = new Logs();
 						$new_log->setLib($user);
 						$new_log->setLogDate(date('Y-m-d'));
-						$new_log->setAction('Connexion');
+						$new_log->setAction('Connection');
 						$em->persist($new_log);
 						$em->flush();
 						$res = "Success";
@@ -71,6 +75,12 @@ class UserController extends Controller
 		else{
 			if(hash('sha256', $password) == $user->getPassword()){	
 				if($user->getDisable() == 0){
+					$user_log = new UserLogs();
+					$user_log->setMember($user);
+					$user_log->setLogDate(date('Y-m-d'));
+					$user_log->setAction('Connection');
+					$em->persist($user_log);
+					$em->flush();
 					$session->set('user',$user);
 					$session->set('isadmin',false);
 					$session->set('connected',true);
@@ -99,8 +109,16 @@ class UserController extends Controller
 				$new_log = new Logs();
 				$new_log->setLib($lib);
 				$new_log->setLogDate(date('Y-m-d'));
-				$new_log->setAction('Disconnexion');
+				$new_log->setAction('Disconnection');
 				$em->persist($new_log);
+				$em->flush();
+			}else{
+				$member = $em->getRepository('AppBundle:Member')->find($user->getCode());
+				$user_log = new UserLogs();
+				$user_log->setMember($member);
+				$user_log->setLogDate(date('Y-m-d'));
+				$user_log->setAction('Disconnection');
+				$em->persist($user_log);
 				$em->flush();
 			}
 			$session->invalidate();
@@ -111,16 +129,77 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/account", name="account", options={"expose"=true})
+     * @Route("/user/account/{code}", name="account", options={"expose"=true})
      */
-    public function accountAction(Request $request)
+    public function accountAction(Request $request, $code)
     {
+		$em = $this->getDoctrine()->getManager();
 		$session = $request->getSession();
+		$memb_rep = $em->getRepository('AppBundle:Member');
+		$lib_rep = $em->getRepository('AppBundle:Librarian');
+		
 		if($session->get('connected')){
-			return $this->render('user/account.html.twig', [
-				'isAdmin' => $session->get('isAdmin'),
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-			]);
+			$canReadForm = false;
+			if($session->get('isAdmin')){
+				if(($user = $lib_rep->find($code)) != NULL ){
+					$isMember = false;
+					if($code == $session->get('user')->getUsername()){
+						$id = 'Lib-'.$user->getUsername();
+						$form = $this->createFormBuilder($user)
+							->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null))
+							->add('save', SubmitType::class,array('label' => 'Save',
+															'attr'=> array('class'=>'InputAddOn-item'),
+															));
+						$canReadForm = true;									
+					}
+				}else{
+					$isMember = true;
+					$user = $memb_rep->find($code);
+				}
+			}else{
+				if(($user = $lib_rep->find($code)) != NULL ){
+					return $this->redirect($this->generateUrl('home'));
+				}else{
+					$user = $memb_rep->find($code);
+					$isMember = true;
+					if($code == $session->get('user')->getCode()){
+						$id = 'Member-'.$user->getCode();
+						$form = $this->createFormBuilder($user)
+							->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null))
+							->add('save', SubmitType::class,array('label' => 'Save',
+																  'attr'=> array('class'=>'InputAddOn-item'),
+																));
+						$canReadForm = true;
+					}
+				}
+			}
+			
+			if($canReadForm){
+				$form = $form->getForm();
+				$form->handleRequest($request);
+				$data = ['form' => $form->createView()];
+				if($form->isSubmitted() && $form->isValid()){
+					$fileUploader = new FileUploader();
+					$fileName = $fileUploader->upload($form['avatar_path']->getData(),$this->getParameter('avatar_directory'),$id);
+					$user->setAvatarPath($fileName);
+					$session->get('user')->setAvatarPath($fileName);
+					$em->persist($user);
+					$em->flush();
+
+					$avatar = $fileName;
+				}else{
+					$avatar = $user->getAvatarPath();
+				}
+			}else{
+				$avatar = $user->getAvatarPath();
+			}
+			
+			$data['user'] = $user;
+			$data['avatar'] = $avatar;
+			$data['isAdmin'] = $session->get('isAdmin');
+			$data['isMember']= $isMember;
+			
+			return $this->render('user/account.html.twig', ['data' =>$data]);
 		}
 		return $this->redirect($this->generateUrl('errorNotLogged'));
     }

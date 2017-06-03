@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -153,6 +154,20 @@ class Member{
      * @ORM\Column(type="integer")
      */
 	private $current_borrowed_books_nb;
+	
+	/**
+	 *
+	 * @ORM\Column{type="string")
+	 * 
+	 * @Assert\Image(
+     *     minWidth = 200,
+     *     maxWidth = 1000,
+     *     minHeight = 200,
+     *     maxHeight = 1000
+     * )
+     */
+	private $avatar_path;
+	
 	
 	public function __construct()
 	{
@@ -757,5 +772,29 @@ class Member{
     public function getCurrentBorrowedBooksNb()
     {
         return $this->current_borrowed_books_nb;
+    }
+
+    /**
+     * Set avatarPath
+     *
+     * @param string $avatarPath
+     *
+     * @return Member
+     */
+    public function setAvatarPath($avatarPath)
+    {
+        $this->avatar_path = $avatarPath;
+
+        return $this;
+    }
+
+    /**
+     * Get avatarPath
+     *
+     * @return string
+     */
+    public function getAvatarPath()
+    {
+        return $this->avatar_path;
     }
 }

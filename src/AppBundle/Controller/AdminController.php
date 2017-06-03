@@ -43,7 +43,7 @@ class AdminController extends Controller
 				$member_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Member');
 				$total = $member_rep->getNumberOfMembers();
 				
-				$mem_per_page = 20;
+				$mem_per_page = 16;
 				$nb_max_pages = ceil($total[0][1] / $mem_per_page);
 				$current = ($page * $mem_per_page) - $mem_per_page;
 				
@@ -77,13 +77,13 @@ class AdminController extends Controller
 				$lib_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Librarian');
 				$total = $lib_rep->getNumberOfLibrarians();
 				
-				$lib_per_page = 20;
+				$lib_per_page = 16;
 				$nb_max_pages = ceil($total[0][1] / $lib_per_page);
 				$current = ($page * $lib_per_page) - $lib_per_page;
 				
 				$librarians = $lib_rep->getAllLibrarians($current,$lib_per_page);
 				
-					$data = array(
+				$data = array(
 					'page_max' => $nb_max_pages,
 					'libs' => $librarians,
 					'page' => $page,
@@ -219,8 +219,9 @@ class AdminController extends Controller
 					$passwordHashed = hash('sha256', $password);
 					
 					$dobDataBase = $dob['year'].'-'.$dob['month'].'-'.$dob['day'];
-										
+					
 					$new_member = new Member();
+					$new_member->setAvatarPath('default_avatar.png');
 					$new_member->setCode($request->request->get('code'));
 					$new_member->setFirstName($request->request->get('fname'));
 					$new_member->setLastName($request->request->get('lname'));
@@ -303,6 +304,7 @@ class AdminController extends Controller
 					$passwordHashed = hash('sha256', $password);
 					
 					$new_librarian = new Librarian();
+					$new_librarian->setAvatarPath('default_avatar.png');
 					$new_librarian->setUsername($request->request->get('username'));
 					$new_librarian->setFirstName($request->request->get('fname'));
 					$new_librarian->setLastName($request->request->get('lname'));
@@ -496,7 +498,7 @@ class AdminController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
-				$admin = $session->get('user');
+				$admin = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
 				if(($trans = $em->getRepository('AppBundle:Transaction')->find($id)) != NULL){
 					$state = $request->request->get('state');
 					$oldState = $trans->getState();
@@ -512,7 +514,10 @@ class AdminController extends Controller
 						if($oldState == "Booked"){
 							$trans->setLibForBorrow($admin);
 							$item->setBookedUnit($item->getBookedUnit()-1);	
-							$trans->setBorrowdate(new \DateTime(date('Y-m-d')));
+							$trans->setBorrowDate(new \DateTime(date('Y-m-d')));
+							$toReturnDate = new \DateTime(date('Y-m-d'));
+							$toReturnDate = $toReturnDate->format('Y-m-d');
+							$trans->setToReturnDate(date('Y-m-d', strtotime($toReturnDate. ' + 14 days')));
 						}else if($oldState == "Lost"){
 							$item->setLostUnit($item->getLostUnit()-1);
 						}
@@ -555,6 +560,78 @@ class AdminController extends Controller
 	}
 	
 	/**
+     * @Route("/admin/checkBookings/{page}", name="checkBookings", requirements={"page": "\d+"}, options={"expose"=true})
+     */
+	public function checkBookingsAction(Request $request,$page = 1){
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				if($request->request->get('m_code') == null){
+					$m_code = '';
+				}else{
+					$m_code = $request->request->get('m_code');
+				}
+				if($request->request->get('t_id') == null){
+					$t_id = '';
+				}else{
+					$t_id = $request->request->get('t_id');
+				}
+				if($request->request->get('i_title') == null){
+					$i_title = '';
+				}else{
+					$i_title = $request->request->get('i_title');
+				}
+				if($request->request->get('state') == null){
+					$state = '';
+				}else{
+					$state = $request->request->get('state');
+				}
+				if($request->request->get('day') == null){
+					if($request->request->get('month') == null){
+						if($request->request->get('year') == null){
+							$borrow_date = date("2000-01-01");
+						}
+					}
+				}else{
+					$year = $request->request->get('year');
+					$month  = $request->request->get('month');
+					$day  = $request->request->get('day');
+					$borrow_date = $year.'-'.$month.'-'.$day;
+				}
+				$trans_rep = $em->getRepository('AppBundle:Transaction');
+				
+				$total = $trans_rep->getNumber($t_id,$m_code,$i_title,$borrow_date,$state);
+				$trans_per_page = 16;
+				$nb_max_pages = ceil($total[0][1] / $trans_per_page);
+				$current = ($page * $trans_per_page) - $trans_per_page;
+				
+				$trans = $trans_rep->getAll($current,$trans_per_page,$t_id,$m_code,$i_title,$borrow_date,$state);			
+				$serializer = $this->get('serializer');
+				$transJson = $serializer->serialize($trans,'json');
+			
+				if($request->isXmlHttpRequest()){
+					$data = array(
+						'page_max' => $nb_max_pages,
+						'trans' => $transJson,
+						'page' => $page,
+					);
+					return new JsonResponse($data);
+				}else{
+					$data = array(
+						'page_max' => $nb_max_pages,
+						'trans' => $trans,
+						'page' => $page,
+					);
+					return $this->render('admin/checkBookings.html.twig',$data);
+				}
+			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
+	}
+		
+	/**
      * @Route("/admin/checkLogs/{page}", name="checkLogs", requirements={"page": "\d+"}, options={"expose"=true})
      */
 	public function checkLogsAction(Request $request,$page = 1){
@@ -562,16 +639,48 @@ class AdminController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
-			
+				if($request->request->get('ID') == null){
+					$id = '';
+				}else{
+					$id   = $request->request->get('ID');
+				}
+				if($request->request->get('who') == null){
+					$who = '';
+				}else{
+					$who  = $request->request->get('who');
+				}
+				if($request->request->get('what') == null){
+					$what = '';
+				}else{
+					$what  = $request->request->get('what');
+				}
+				if($request->request->get('day') == null){
+					if($request->request->get('month') == null){
+						if($request->request->get('year') == null){
+							$from = date("Y-m-d");
+						}
+					}
+				}else{
+					$year = $request->request->get('year');
+					$month  = $request->request->get('month');
+					$day  = $request->request->get('day');
+					$from = $year.'-'.$month.'-'.$day;
+				}
 				$logs_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Logs');
-				$total = $logs_rep->getLogsNumber();
 				
-				$log_per_page = 20;
-				$nb_max_pages = ceil($total[0][1] / $log_per_page);
+				
+				$totalToSum = $logs_rep->getLogsNumber($id,$who,$what,$from);
+				if($who == ""){
+					$total = $totalToSum[0]['total']+$totalToSum[1]['total'];	
+				}else{
+					$total = $totalToSum[0]['total'];
+				}				
+				$log_per_page = 16;
+				$nb_max_pages = ceil($total / $log_per_page);
 				$current = ($page * $log_per_page) - $log_per_page;
 				
-				$logs = $logs_rep->getAllLogs($current,$log_per_page);
-				
+				$logs = $logs_rep->getAllLogs($current,$log_per_page,$id,$who,$what,$from);
+
 				$serializer = $this->get('serializer');
 				$logsJson = $serializer->serialize($logs,'json');
 				

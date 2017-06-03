@@ -124,7 +124,7 @@ class ItemController extends Controller
 		$typ = $request->request->get('type');
 		$lang = $request->request->get('language');
 		
-		$item_per_page = 20;
+		$item_per_page = 15;
 		$total = $em->getRepository('AppBundle:Item')->findTotalByCategTypeLanguageSearch($cat,$typ,$lang,$search);
 		$nb_max_pages = ceil($total[0][1] / $item_per_page);
 		$current = ($page * $item_per_page) - $item_per_page;

@@ -25,7 +25,11 @@ function populateDays(month){
 	// inject the right number of new <option> elements into the day <select>
 	for(i = 1; i <= dayNum; i++) {
 		var option = document.createElement('option');
-		option.textContent = i;
+		if(i<10){
+			option.textContent = '0'+i;
+		}else{
+			option.textContent = i;
+		}
 		daySelect.appendChild(option);
 	}
 	

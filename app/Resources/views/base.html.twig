@@ -22,7 +22,12 @@
       </div>
       <nav class="top-menu">
 	{% if app.session.get('connected') == 'true' %}
-	<div class="top-menu-element"><a href="/user/account"><span>Account</span></a></div>
+	<div class="top-menu-element"><a href="/user/account/{%if app.getSession().get('isAdmin') %}
+	{{app.getSession().get('user').getUsername() }}
+	{% else %}
+	{{app.getSession().get('user').getCode() }}
+	{% endif %}
+	"><span>Account</span></a></div>
 	<div class="top-menu-element"><a href="/user/logout"><span>Log out</span></a></div>
 		{% if app.session.get('isAdmin') %}
 			<div class="top-menu-element"><a href="/admin/controlpanel"><span>Admin panel</span></a></div>

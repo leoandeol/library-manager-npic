@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %}	
 
 {% block body %}
 
@@ -7,102 +7,102 @@
 	{% if isMember==false %}
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Username:</div>
-			<p>{{user.getUsername()}}</p>
+			<input disabled value="{{user.getUsername()}}"/>
 		</div>
 	{% else %}
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Code:</div>
-			<p>{{user.getCode()}}</p>
+			<input disabled value="{{user.getCode()}}"/>
 		</div>
 	{% endif %}
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Firstname:</div>
-    	<p>{{user.getFirstName()}}</p>
+    	<input disabled value="{{user.getFirstName()}}"/>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Lastname:</div>
-    	<p>{{user.getLastName()}}</p>
+    	<input disabled value="{{user.getLastName()}}"/>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Email:</div>
-    	<p>{{user.getEmail()}}</p>
+    	<input disabled value="{{user.getEmail()}}"/>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Gender:</div>
-    	<p>{{user.getGender()}}</p>
+    	<input disabled value="{{user.getGender()}}"/>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >City:</div>
-    	<p>{{user.getAddress().getCity()}}</p>
+    	<input disabled value="{{user.getAddress().getCity()}}"/>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Postal code:</div>
-    	<p>{{user.getAddress().getPostalCode()}}</p>
+    	<input disabled value="{{user.getAddress().getPostalCode()}}"/>
 	</div>
 	<div class="InputAddOn">
 		<div class="InputAddOn-item" >Street:</div>
-    	<p>{{user.getAddress().getStreet()}}</p>
+    	<input disabled value="{{user.getAddress().getStreet()}}"/>
 	</div>
 	{% if isMember==false %}
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Tel:</div>
-			<p>{{user.getTel()}}</p>
+			<input disabled value="{{user.getTel()}}"/>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Hire date:</div>
-			<p>{{user.getHireDate()|date('Y-m-d')}}</p>
+			<input disabled value="{{user.getHireDate()|date('Y-m-d')}}"/>
 		</div>
 	{% else %}
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >National ID:</div>
-			<p>{{user.getNationalId()}}</p>
+			<input disabled value="{{user.getNationalId()}}"/>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Civil situation:</div>
-			<p>{{user.getCivilSituation()}}</p>
+			<input disabled value="{{user.getCivilSituation()}}"/>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Date of birth:</div>
-			<p>{{user.getDob()|date('Y-m-d')}}</p>
+			<input disabled value="{{user.getDob()|date('Y-m-d')}}"/>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Tel mobile:</div>
-			<p>{{user.getTelMobile()}}</p>
+			<input disabled value="{{user.getTelMobile()}}"/>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Tel home:</div>
-			<p>{{user.getTelHome()}}</p>
+			<input disabled value="{{user.getTelHome()}}"/>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Tel ref:</div>
-			<p>{{user.getTelRef()}}</p>
+			<input disabled value="{{user.getTelRef()}}"/>
 		</div>
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Entry date:</div>
-			<p>{{user.getEntryDate()|date('Y-m-d')}}</p>
+			<input disabled value="{{user.getEntryDate()|date('Y-m-d')}}"/>
 		</div>
 		{% if user.getStudent() %}
 			<div class="InputAddOn">
 				<div class="InputAddOn-item" >Major:</div>
-				<p>{{user.getMajor().getName()}}</p>
+				<input disabled value="{{user.getMajor().getName()}}"/>
 			</div>
 			<div class="InputAddOn">
 				<div class="InputAddOn-item" >Degree:</div>
-				<p>{{user.getDegree().getName()}}</p>
+				<input disabled value="{{user.getDegree().getName()}}"/>
 			</div>
 			<div class="InputAddOn">
 				<div class="InputAddOn-item" >Degree year:</div>
-				<p>{{user.getDegreeYear().getYear()}}</p>
+				<input disabled value="{{user.getDegreeYear().getYear()}}"/>
 			</div>
 		{% else %}
 			<div class="InputAddOn">
 				<div class="InputAddOn-item" >Function:</div>
-				<p>{{user.getFunction().getName()}}</p>
+				<input disabled value="{{user.getFunction().getName()}}"/>
 			</div>
 		{% endif %}
 		<div class="InputAddOn">
 			<div class="InputAddOn-item" >Faculty:</div>
-			<p>{{user.getFaculty().getName()}}</p>
+			<input disabled value="{{user.getFaculty().getName()}}"/>
 		</div>
 	{% endif %}
 	{% if isAdmin %}

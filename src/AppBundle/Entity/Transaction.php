@@ -52,6 +52,10 @@ class Transaction{
      */
 	private $return_date;
 	/**
+     * @ORM\Column(type="date",nullable=true)
+     */
+	private $to_return_date;
+	/**
      * @ORM\Column(type="integer")
      */
 	private $fine_cost_per_day;
@@ -293,5 +297,29 @@ class Transaction{
     public function getLibForReturn()
     {
         return $this->lib_for_return;
+    }
+
+    /**
+     * Set toReturnDate
+     *
+     * @param \DateTime $toReturnDate
+     *
+     * @return Transaction
+     */
+    public function setToReturnDate($toReturnDate)
+    {
+        $this->to_return_date = new \DateTime($toReturnDate);
+
+        return $this;
+    }
+
+    /**
+     * Get toReturnDate
+     *
+     * @return \DateTime
+     */
+    public function getToReturnDate()
+    {
+        return $this->to_return_date;
     }
 }

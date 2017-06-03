@@ -11,8 +11,34 @@
 		<div class="item-info">Transaction ID : {{ transaction.getId() }}</div>
 		<div class="item-info">Item Id :<a href="/item/read/{{ transaction.getItem().getCode() }}">{{ transaction.getItem().getCode() }}</a></div>
 		<div class="item-info">Member Id :<a href="/user/general_infos/{{ transaction.getMember().getCode() }}">{{ transaction.getMember().getCode() }}</a></div>
-		<div class="item-info">Borrow date : {{ transaction.getBorrowDate()|date('d-m-Y') }}</div>
-		<div class="item-info">To Return date : {{ transaction.getBorrowDate()|date_modify("+14 day")|date("d-m-Y") }}</div>
+		<div class="item-info">Borrow date : 
+			{% if transaction.getBorrowDate() == NULL %}
+			Not borrowed yet
+			{% else %}
+			{{transaction.getBorrowDate()|date('d-m-Y')}}
+			{% endif %}
+		</div>
+		<div class="item-info">To Return date :
+			{% if transaction.getToReturnDate() == NULL %}
+			Not borrowed yet
+			{% else %}
+			{{transaction.getToReturnDate()|date("d-m-Y") }}
+			{% endif %}
+		</div>
+		<div class="item-info">Librarian who processed the borrow : 
+			{% if transaction.getLibForBorrow() == NULL %}
+			Not borrowed yet
+			{% else %}
+			<a href="/user/general_infos/{{ transaction.getLibForBorrow().getUsername() }}">{{transaction.getLibForBorrow().getUsername() }}</a>
+			{% endif %}
+		</div>
+		<div class="item-info">Librarian who processed the return : 
+			{% if transaction.getLibForReturn() == NULL %}
+			Not gave back yet
+			{% else %}
+			<a href="/user/general_infos/{{ transaction.getLibForReturn().getUsername() }}">{{transaction.getLibForReturn().getUsername() }}</a>
+			{% endif %}
+		</div>
 		<div class="item-info">Fine cost per day : {{ transaction.getFineCostPerDay() }}</div>
 		<div class="item-info">State : {{ transaction.getState() }}</div>
 		{% if transaction.getNote() != '' %}

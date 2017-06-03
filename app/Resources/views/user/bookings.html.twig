@@ -31,10 +31,18 @@
 			{{transaction.getItem().getTitle()}}
 		</div>
 		<div class="cell">
+			{% if transaction.getBorrowDate() == NULL %}
+			Not borrowed yet
+			{% else %}
 			{{transaction.getBorrowDate()|date('d-m-Y')}}
+			{% endif %}
 		</div>
 		<div class="cell">
-			{{transaction.getBorrowDate()|date_modify("+14 day")|date("d-m-Y") }}
+			{% if transaction.getToReturnDate() == NULL %}
+			Not borrowed yet
+			{% else %}
+			{{transaction.getToReturnDate()|date("d-m-Y") }}
+			{% endif %}
 		</div>
 		<div class="cell">
 			{{transaction.getFineCostPerDay()}} USD

@@ -18,22 +18,18 @@ class UserLogs{
 	/**
      * @var Member
 	 *
-	 * @ORM\OneToOne(targetEntity="member")
+	 * @ORM\ManyToOne(targetEntity="member")
 	 * @ORM\JoinColumn(name="member_code", referencedColumnName="code", onDelete="CASCADE")
      */
 	private $member;
 	/**
      * @ORM\Column(type="date")
      */
-	private $login_date;
-	/**
-     * @ORM\Column(type="date")
-     */
-	private $logout_date;
+	private $log_date;
 	/**
      * @ORM\Column(type="string",length=64)
      */
-	private $note;
+	private $action;
 
 	public function __construct()
 	{
@@ -144,5 +140,77 @@ class UserLogs{
     public function getNote()
     {
         return $this->note;
+    }
+
+    /**
+     * Set logDate
+     *
+     * @param \DateTime $logDate
+     *
+     * @return UserLogs
+     */
+    public function setLogDate($logDate)
+    {
+        $this->log_date = new \DateTime($logDate);
+
+        return $this;
+    }
+
+    /**
+     * Get logDate
+     *
+     * @return \DateTime
+     */
+    public function getLogDate()
+    {
+        return $this->log_date;
+    }
+
+    /**
+     * Set action
+     *
+     * @param string $action
+     *
+     * @return UserLogs
+     */
+    public function setAction($action)
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    /**
+     * Get action
+     *
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    /**
+     * Set member
+     *
+     * @param \AppBundle\Entity\member $member
+     *
+     * @return UserLogs
+     */
+    public function setMember(\AppBundle\Entity\member $member = null)
+    {
+        $this->member = $member;
+
+        return $this;
+    }
+
+    /**
+     * Get member
+     *
+     * @return \AppBundle\Entity\member
+     */
+    public function getMember()
+    {
+        return $this->member;
     }
 }
