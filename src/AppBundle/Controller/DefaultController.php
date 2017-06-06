@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
@@ -14,11 +15,20 @@ class DefaultController extends Controller
     public function homeAction(Request $request)
     {
         $locale = $this->get('translator')->getLocale();
+<<<<<<< HEAD
 		$rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 		$top = $rep->findTop5PopularBooks();
 		$last = $rep->findLast5BooksAdded();
 		$pop = $rep->find5MostPopularBooks();
 	
+=======
+        //var_dump($locale);
+        $rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
+        $top = $rep->findTop5PopularBooks();
+        $last = $rep->findLast5BooksAdded();
+        $pop = $rep->find5MostPopularBooks();
+        // replace this example code with whatever you need
+>>>>>>> 9f661f1787e1645579631be58dfab9cf777d3121
         return $this->render('default/index.html.twig', [
 			"tops" => $top,
 			"lasts" => $last,
@@ -71,4 +81,24 @@ class DefaultController extends Controller
 	 
 		return $this->redirect($url);;
 	}
+
+    /**
+     * @Route("/highwaytonowhere/{password}", name="checktransactions")
+     */
+    public function CheckStateOfTransactionsAction(Request $request,$password)
+    {
+        if($password == "20041808"){
+            //TODO
+			
+            // librarians
+            $librarians = $this->getDoctrine()->getManager()->getRepository("AppBundle:Librarian")->findAll();
+            $members = $this->getDoctrine()->getManager()->getRepository("AppBundle:Member")->findAll();
+            return new Response('OK');
+        }
+        else {
+            return new Response('Access Denied');	
+        }
+    }
+
+
 }

@@ -15,3 +15,6 @@ services:
         class: stdClass
     fileUploader:
         class: AppBundle\Service\FileUploader
+    my.mailer:
+        class: AppBundle\Listener\MailService
+        arguments: ["@mailer","@templating"]
