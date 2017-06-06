@@ -13,5 +13,5 @@ services:
         arguments: ["%kernel.default_locale%"]
     acme.js_vars:
         class: stdClass
-    AppBundle\Service\FileUploader:
+    fileUploader:
         class: AppBundle\Service\FileUploader

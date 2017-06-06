@@ -16,9 +16,12 @@
       </div>
       <div class="cell">
         Date to return
-      </div>		
+      </div>
 	  <div class="cell">
-		Fine to pay
+        Return date
+      </div>
+	  <div class="cell">
+		State
 	  </div>
     </div>
 	{% for transaction in bookings %}
@@ -45,7 +48,14 @@
 			{% endif %}
 		</div>
 		<div class="cell">
-			{{transaction.getFineCostPerDay()}} USD
+			{% if transaction.getReturnDate() == NULL %}
+			Not gave back yet
+			{% else %}
+			{{transaction.getReturnDate()|date("d-m-Y") }}
+			{% endif %}
+		</div>
+		<div class="cell">
+			{{transaction.getState()}}
 		</div>
 	</div>
 {% endfor %}

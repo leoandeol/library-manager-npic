@@ -210,7 +210,13 @@ class ItemController extends Controller
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				if(($item = $em->getRepository('AppBundle:Item')->find($id)) != NULL){
-					  $item->setLostUnit($item->getLostUnit()+$request->request->get('amount'));
+					$item->setLostUnit($item->getLostUnit()+$request->request->get('amount'));
+					$new_log = new Logs();
+					$new_log->setLib($lib);
+					$new_log->setLogDate(date('Y-m-d'));
+					$amount = $request->request->get('amount');
+					$new_log->setAction("Added $amount lost units to the item $id");
+					$em->persist($new_log);
 					$em->flush();
 					return $this->redirect($this->generateUrl('readitem',['id'=>$id]));
 				}

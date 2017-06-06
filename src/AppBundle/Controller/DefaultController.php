@@ -14,12 +14,11 @@ class DefaultController extends Controller
     public function homeAction(Request $request)
     {
         $locale = $this->get('translator')->getLocale();
-	//var_dump($locale);
-	$rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
-	$top = $rep->findTop5PopularBooks();
-	$last = $rep->findLast5BooksAdded();
-	$pop = $rep->find5MostPopularBooks();
-	// replace this example code with whatever you need
+		$rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
+		$top = $rep->findTop5PopularBooks();
+		$last = $rep->findLast5BooksAdded();
+		$pop = $rep->find5MostPopularBooks();
+	
         return $this->render('default/index.html.twig', [
 			"tops" => $top,
 			"lasts" => $last,
@@ -33,10 +32,7 @@ class DefaultController extends Controller
      */
     public function howToAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('default/howto.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
+        return $this->render('default/howto.html.twig');
     }
 
     /**

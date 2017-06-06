@@ -1,4 +1,4 @@
-<?php 
+<?php 	
 
 namespace AppBundle\Service;
 
@@ -17,11 +17,6 @@ class FileUploader
         $file->move($targetDir, $fileName);
 
         return $fileName;
-    }
-
-    public function getTargetDir()
-    {
-        return $this->targetDir;
     }
 }
 

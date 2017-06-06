@@ -43,11 +43,11 @@ $(document).ready(function(){
 			data 	: $(this).serialize(),
 			dataType: "json",
 			success	: function(response){
-				if(response['data'] == 'Success'){
+				if(response['data']['res'] == 'Success'){
 					alert("Password changed successfully");
-					window.location = Routing.generate('account');
+					window.location = Routing.generate('account',{'code':response['data']['id']});
 				}else{
-					alert(response['data']);
+					alert(response['data']['res']);
 				}
 			},
 			error	: function(jqXHR, textStatus, errorThrown){

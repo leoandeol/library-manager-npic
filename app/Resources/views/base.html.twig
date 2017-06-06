@@ -22,18 +22,19 @@
       </div>
       <nav class="top-menu">
 	{% if app.session.get('connected') == 'true' %}
-	<div class="top-menu-element"><a href="/user/account/{%if app.getSession().get('isAdmin') %}
-	{{app.getSession().get('user').getUsername() }}
-	{% else %}
-	{{app.getSession().get('user').getCode() }}
-	{% endif %}
-	"><span>Account</span></a></div>
+	<div class="top-menu-element"><a href="/user/account/
+		{%if app.getSession().get('isAdmin') %}
+			{{app.getSession().get('user').getUsername() }}
+		{% else %}
+			{{app.getSession().get('user').getCode() }}
+		{% endif %}
+	"><span>{%trans%}Account{%endtrans%}</span></a></div>
 	<div class="top-menu-element"><a href="/user/logout"><span>Log out</span></a></div>
 		{% if app.session.get('isAdmin') %}
 			<div class="top-menu-element"><a href="/admin/controlpanel"><span>Admin panel</span></a></div>
 		{% endif %}
 	{% else %}
-	<div class="top-menu-element"><a href="/user/login"><span>Log in</span></a></div>
+		<div class="top-menu-element"><a href="/user/login"><span>Log in</span></a></div>
 	{% endif %}
 	<div class="top-menu-filler"></div>
 	<div class="top-menu-element"><a href="/"><span>{% trans %}Home{% endtrans %}</span></a></div>
@@ -55,19 +56,20 @@
     </footer>
     <script>
       /** InputAddOn width fix **/
-      var a = document.getElementsByClassName("InputAddOn-item");
-      var most = 0;
-      var i;
-      for(i = 0; i < a.length; i++){
+		var a = document.getElementsByClassName("InputAddOn-item");
+		var most = 0;
+		var i;
+		for(i = 0; i < a.length; i++){
 		     if(a[i].offsetWidth>most&&a[i].parentElement.childElementCount==2){
-	most=a[i].offsetWidth;
-	}
-	}
-	for(i = 0; i < a.length; i++){
-		       if(a[i].parentElement.childElementCount==2){
+				most=a[i].offsetWidth;
+			}
+		}	
+		for(i = 0; i < a.length; i++){
+		    if(a[i].parentElement.childElementCount==2){
 		       a[i].style.width=most+"px";
-		       }}
-		       </script>
+		     }
+		}
+	</script>
 	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 	<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
     <script src="{{ asset('js/jquery-3.2.0.min.js') }}"></script>

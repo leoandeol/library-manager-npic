@@ -216,7 +216,7 @@ class AdminController extends Controller
 					$dob['year'] = $request->request->get('year');
 					
 					$password = "NPIC".$dob['day'].$dob['month'].$dob['year'];
-					$passwordHashed = hash('sha256', $password);
+					$passwordHashed = hash('sha256', $password.$this->getParameter('nonce'));
 					
 					$dobDataBase = $dob['year'].'-'.$dob['month'].'-'.$dob['day'];
 					
@@ -298,7 +298,7 @@ class AdminController extends Controller
 				if(($lib_rep->find($request->request->get('username'))) == NULL){
 					
 					$password = $request->request->get('password');
-					$passwordHashed = hash('sha256', $password);
+					$passwordHashed = hash('sha256', $password.$this->getParameter('nonce'));
 					
 					$new_librarian = new Librarian();
 					$new_librarian->setAvatarPath('default_avatar.png');
@@ -499,7 +499,8 @@ class AdminController extends Controller
 				if(($trans = $em->getRepository('AppBundle:Transaction')->find($id)) != NULL){
 					$state = $request->request->get('state');
 					$oldState = $trans->getState();
-					$item  = $trans->getItem();
+					$item  = $em->getRepository('AppBundle:Item')->find($trans->getItem()->getCode());
+					$member = $em->getRepository('AppBundle:Member')->find($trans->getMember()->getCode());
 					if($state == "Lost"){
 						if($oldState == "Booked"){
 							$item->setBookedUnit($item->getBookedUnit()-1);
@@ -526,13 +527,14 @@ class AdminController extends Controller
 							$item->setLostUnit($item->getLostUnit()-1);
 						}
 						$item->setBookedUnit($item->getBookedUnit()+1);
-					}else if($state == "Ended"){
+					}else if($state == "Finished"){
 						if($oldState == "Borrowed"){
 							$item->setBorrowedUnit($item->getBorrowedUnit()-1);
+							$member->setCurrentBorrowedBooksNb($member->getCurentBorrowedBooksNb()-1);
+							$trans->setReturnDate(new \DateTime(date('Y-m-d')));
 							$trans->setLibForReturn($admin);
 						}else if($oldState == "Lost"){
 							$item->setLostUnit($item->getLostUnit()-1);
-							$trans->setLibForReturn($admin);
 						}else if($oldState == "Booked"){
 							$item->setBookedUnit($item->getBookedUnit()-1);
 						}
@@ -545,6 +547,8 @@ class AdminController extends Controller
 					$action = "Changed state of transaction $id from $oldState to $state";
 					$new_log->setAction($action);
 					$em->persist($new_log);
+					$em->persist($item);
+					$em->persist($member);
 					$em->flush();
 					return $this->redirect($this->generateUrl('bookings',['id' => $trans->getMember()->getCode()]));
 				}else{
@@ -703,5 +707,4 @@ class AdminController extends Controller
 		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 }
-
 ?>

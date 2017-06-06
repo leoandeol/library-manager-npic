@@ -369,10 +369,6 @@ h1 {
 	display: block;
     }
 }
-/** to remove probably**/
-.news-item:nth-of-type(odd) .row:nth-of-type(odd) {
-    background: #2980b9;
-}
 
 .intro-table {
     display:flex;
@@ -410,7 +406,7 @@ h1 {
 .row.header {
     font-weight: 900;
     color: #ffffff;
-    background: #ea6153;
+    background: #3ea6db;
 }
 .row.green {
     background: #27ae60;

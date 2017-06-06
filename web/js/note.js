@@ -65,17 +65,17 @@ function note(code,note,e){
 				alert("Thank you for noting.");
 				ArrListeEtoile[code] = note;
 				for (i=1; i<= 5; i++){
-				var idoff = "staroff-" + i;
-				var idon = "staron-" + i;
-				if (note >= i){
-					document.getElementById(idoff).style.display ="none";
-					document.getElementById(idon).style.display ="block";
+					var idoff = "staroff-" + i;
+					var idon = "staron-" + i;
+					if (note >= i){
+						document.getElementById(idoff).style.display ="none";
+						document.getElementById(idon).style.display ="block";
+					}
+					else{
+						document.getElementById(idoff).style.display ="block";
+						document.getElementById(idon).style.display ="none";
+					}
 				}
-				else{
-					document.getElementById(idoff).style.display ="block";
-					document.getElementById(idon).style.display ="none";
-				}
-			}
 			}else{
 				alert(response['data']);
 			}
