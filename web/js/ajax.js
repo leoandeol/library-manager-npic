@@ -32,27 +32,27 @@ $(document).ready(function(){
 		alert(textStatus, errorThrown);
 	    }
 	});
-    });
-    
-    // CHANGE PASS
-    $("#changePassForm").submit(function(e){
-	e.preventDefault();
-	$.ajax({
-	    type	: "POST",
-	    url 	: Routing.generate('changedpass'),
-	    data 	: $(this).serialize(),
-	    dataType: "json",
-	    success	: function(response){
-		if(response['data'] == 'Success'){
-		    alert("Password changed successfully");
-		    window.location = Routing.generate('account');
-		}else{
-		    alert(response['data']);
+	
+	// CHANGE PASS
+	$("#changePassForm").submit(function(e){
+	    e.preventDefault();
+	    $.ajax({
+		type	: "POST",
+		url 	: Routing.generate('changedpass'),
+		data 	: $(this).serialize(),
+		dataType: "json",
+		success	: function(response){
+		    if(response['data']['res'] == 'Success'){
+			alert("Password changed successfully");
+			window.location = Routing.generate('account',{'code':response['data']['id']});
+		    }else{
+			alert(response['data']['res']);
+		    }
+		},
+		error	: function(jqXHR, textStatus, errorThrown){
+		    alert(textStatus, errorThrown);
 		}
-	    },
-	    error	: function(jqXHR, textStatus, errorThrown){
-		alert(textStatus, errorThrown);
-	    }
+	    });
 	});
     });
     

@@ -25,6 +25,13 @@
 			{{transaction.getToReturnDate()|date("d-m-Y") }}
 			{% endif %}
 		</div>
+		<div class="item-info">Return date :
+			{% if transaction.getReturnDate() == NULL %}
+			Not gave back yet
+			{% else %}
+			{{transaction.getReturnDate()|date("d-m-Y") }}
+			{% endif %}
+		</div>
 		<div class="item-info">Librarian who processed the borrow : 
 			{% if transaction.getLibForBorrow() == NULL %}
 			Not borrowed yet

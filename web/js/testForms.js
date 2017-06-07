@@ -91,7 +91,6 @@ function testNationalID(input){
 }
 
 function testPubYear(input){
-<<<<<<< HEAD
 	var reg = new RegExp('^[0-9]{0,4}$');
 
 	if(reg.test(input.value)){
@@ -101,14 +100,10 @@ function testPubYear(input){
 		surligne(input,true);
 		return false;
 	}
-=======
-    var reg = new RegExp('^[0-9]{0-4}$');
-    return true;
->>>>>>> 0c7c306f750df74d502773290c4dd683886e398b
 }
 
 function testPostCode(input){
-    var reg = new RegExp('^[0-9]{5}$');
+    var reg = new RegExp('^[0-9]{5,}$');
 
     if(reg.test(input.value)){
 	surligne(input,false);
@@ -154,19 +149,16 @@ function checkFormItem(form){
 }
 
 function checkForm(form){
-    
-    var fNameOk = testName(form.fname);
-    var lNameOk = testName(form.lname);
+	
     var codeOk = testCode(form.code);
     var nationalIdOk = testNationalID(form.nid);
-    var cityOk = testCity(form.city);
     var pCodeOk = testPostCode(form.pcode);
     var emailOk = testMail(form.email);
     
-    if(fNameOk && lNameOk && codeOk && nationalIdOk && cityOk && pCodeOk && emailOk){
+    if(codeOk && nationalIdOk && pCodeOk && emailOk){
 	return true;
     }else{
-	alert("Please fill in all fields correctly");
+		alert("Please fill in all fields correctly");
 	return false;
     }
 }

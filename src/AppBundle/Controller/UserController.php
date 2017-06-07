@@ -36,33 +36,56 @@ class UserController extends Controller
      */
     public function loggedInAction(Request $request)
     {
-		//$username = $_POST['Username'];
-		//$password = $_POST['Password'];
 		
-		$username = $_POST['username'];
-		$password = $_POST['password'];
+		$username = $request->request->get('username');
+		$password = $request->request->get('password');
 		$em =  $this->getDoctrine()->getManager();
 		$librarian_repository = $em->getRepository("AppBundle:Librarian");
 		$member_repository = $em->getRepository("AppBundle:Member");
-		
 		$session = $request->getSession();
 		
-		if(($user = $member_repository->find($username)) == NULL){
-			if(($user = $librarian_repository->find($username)) == NULL){
-				$res = "This user doesn't exist";
+		if($session->get('Connected')){
+			$res = "You are already connected";
+		}else{
+			if(($user = $member_repository->find($username)) == NULL){
+				if(($user = $librarian_repository->find($username)) == NULL){
+					$res = "This user doesn't exist";
+				}
+				else{
+					$password = $password.$this->getParameter('nonce');
+					if(hash('sha256', $password) == $user->getPassword()){
+						if($user->getDisable() == 0){
+							$session->set('user',$user);
+							$session->set('isAdmin',true);
+							$session->set('connected',true);
+							$new_log = new Logs();
+							$new_log->setLib($user);
+							$new_log->setLogDate(date('Y-m-d'));
+							$new_log->setAction('Connection');
+							$em->persist($new_log);
+							$em->flush();
+							$res = "Success";
+						}else{
+							$res = "This user is disabled";
+						}
+					}else{
+						$res = "Wrong password given";
+					}
+				}
 			}
 			else{
+				$password = $password.$this->getParameter('nonce');
 				if(hash('sha256', $password) == $user->getPassword()){
 					if($user->getDisable() == 0){
-						$session->set('user',$user);
-						$session->set('isAdmin',true);
-						$session->set('connected',true);
-						$new_log = new Logs();
-						$new_log->setLib($user);
-						$new_log->setLogDate(date('Y-m-d'));
-						$new_log->setAction('Connection');
-						$em->persist($new_log);
+						$user_log = new UserLogs();
+						$user_log->setMember($user);
+						$user_log->setLogDate(date('Y-m-d'));
+						$user_log->setAction('Connection');
+						$em->persist($user_log);
 						$em->flush();
+						$session->set('user',$user);
+						$session->set('isadmin',false);
+						$session->set('connected',true);
 						$res = "Success";
 					}else{
 						$res = "This user is disabled";
@@ -71,28 +94,8 @@ class UserController extends Controller
 					$res = "Wrong password given";
 				}
 			}
+			return new JsonResponse(array('data' => $res));
 		}
-		else{
-			if(hash('sha256', $password) == $user->getPassword()){	
-				if($user->getDisable() == 0){
-					$user_log = new UserLogs();
-					$user_log->setMember($user);
-					$user_log->setLogDate(date('Y-m-d'));
-					$user_log->setAction('Connection');
-					$em->persist($user_log);
-					$em->flush();
-					$session->set('user',$user);
-					$session->set('isadmin',false);
-					$session->set('connected',true);
-					$res = "Success";
-				}else{
-					$res = "This user is disabled";
-				}
-			}else{
-				$res = "Wrong password given";
-			}
-		}
-		return new JsonResponse(array('data' => $res));
     }
 
     /**
@@ -179,7 +182,7 @@ class UserController extends Controller
 				$form->handleRequest($request);
 				$data = ['form' => $form->createView()];
 				if($form->isSubmitted() && $form->isValid()){
-					$fileUploader = new FileUploader();
+					$fileUploader = $this->get('fileUploader');
 					$fileName = $fileUploader->upload($form['avatar_path']->getData(),$this->getParameter('avatar_directory'),$id);
 					$user->setAvatarPath($fileName);
 					$session->get('user')->setAvatarPath($fileName);
@@ -231,7 +234,7 @@ class UserController extends Controller
 		return $this->redirect($this->generateUrl('errorNotLogged'));
 	}
 	
-		/**
+	/**
      * @Route("/user/booking/{id}-{code}", name="bookingDetail", options={"expose"=true})
      */
 	function checkBookingDetailAction(Request $request, $id, $code){
@@ -284,18 +287,22 @@ class UserController extends Controller
 			$curpass = $request->request->get('curpass');
 			$newpass = $request->request->get('newpass');
 			$newpassbis = $request->request->get('newpassbis');
-			
-			$changed = false;
-			
-			if(hash('sha256', $curpass) == $session->get('user')->getPassword()){
+			if($session->get('isAdmin')){
+				$user = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+				$id = $user->getUsername();
+			}else{
+				$user = $em->getRepository('AppBundle:Member')->find($session->get('user')->getCode());						
+				$id = $user->getCode();
+			}
+			$data = array();
+			if(hash('sha256', $curpass.$this->getParameter('nonce')) == $user->getPassword()){
 				if($newpass == $newpassbis){
-					$new = hash('sha256',$newpass);
-					if(($user = $em->getRepository('AppBundle:Member')->find($session->get('user')->getCode())) == NULL){
-						$user = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
-					}
+					$new = hash('sha256',$newpass.$this->getParameter('nonce'));
 					$user->setPassword($new);
+					$em->persist($user);
 					$em->flush();
 					$res = "Success";
+					$data['id'] = $id;
 				}else{
 					$res = "The given passwords are not matching.";
 				}
@@ -305,7 +312,8 @@ class UserController extends Controller
 		}else{
 			$res = "You must login to do this.";
 		}
-		return new JsonResponse(array('data'=>$res));
+		$data['res'] = $res;
+		return new JsonResponse(array('data' => $data));
     }
 	
 	/**

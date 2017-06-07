@@ -2,7 +2,7 @@
 
 {% block body %}
 <article class="article-large-block">
-<h1>insert most popular books, best rated books, last books in, and list of categories AND random pick</h1>
+<h1>Welcome to the NPIC's online Library</h1>
 <div class="news-block">
   <div class="news-item">
     <div class="intro-table">
@@ -17,7 +17,7 @@
 		  Author
 		</div>
 		<div class="cell">
-		  Category
+		  Note
 		</div>
       </div>
       {% for top in tops %}
@@ -29,7 +29,7 @@
 		  {{ top.author }}
 		</div>
 		<div class="cell">
-		  {{ top.subject }}
+		  {{ top.note }}
 		</div>
       </div>
       {% endfor %}

@@ -20,23 +20,32 @@ class TransactionRepository extends EntityRepository{
 	
 	public function findByMember($member_code){
 		return $this->getEntityManager()->createQuery(
-			"Select t from AppBundle:Transaction t where t.member = '$member_code' "
+			"Select t from AppBundle:Transaction t where t.member = '$member_code' and t.state = 'booked' or t.state = 'borrowed' "
 		)->getResult();
 	}
 	
 	public function getNumber($t_id,$m_code,$i_title,$borrow_date,$state){
-		return $this->getEntityManager()->createQuery("
+		$query = $this->getEntityManager()->createQuery("
 			SELECT COUNT(t) 
 			FROM AppBundle:Transaction t
 			JOIN AppBundle:Member m WITH t.member = m.code
 			JOIN AppBundle:Item i WITH t.item = i.code
-			WHERE m.code LIKE '%$m_code%'
-			AND t.id LIKE '%$t_id%'
-			AND i.title LIKE '%$i_title%'
-			AND t.state LIKE '%$state%'
-			AND t.borrow_date >= '$borrow_date'
+			WHERE m.code LIKE :m_code
+			AND t.id LIKE :t_id
+			AND i.title LIKE :i_title
+			AND t.state LIKE :state
+			AND t.borrow_date >= :borrow_date
 			"
-		)->getResult();
+		);
+		$query->setParameters(array(
+			'm_code' => "%$m_code%",
+			't_id'   => "%$t_id%",
+			'i_title'=> "%$i_title%",
+			'state'  => "%$state%",
+			'borrow_date' => "'".$borrow_date."'"
+		));
+		
+		return $query->getResult();
 	}
 	
 	public function getAll($current,$trans_per_page,$t_id,$m_code,$i_title,$borrow_date,$state){
