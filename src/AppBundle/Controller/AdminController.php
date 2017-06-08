@@ -115,6 +115,7 @@ class AdminController extends Controller
 				$librRep = $em->getRepository('AppBundle:Librarian');
 				$cateRep = $em->getRepository('AppBundle:Category');
 				$typeRep = $em->getRepository('AppBundle:Type');
+				$logsRep = $em->getRepository('AppBundle:Logs');
 				
 				$itemNumber   = $itemRep->getItemNumber();
 				$itemUnits    = $itemRep->getItemUnits();
@@ -130,6 +131,13 @@ class AdminController extends Controller
 				$dCategNumb   = $cateRep->getDisabledNumber();
 				$typeNumber   = $typeRep->getTypeNumber();
 				
+				$dateParsed   = split('-',date('Y-m-d'));
+				$thisMonth	  = $dateParsed[0].'-'.$dateParsed[1].'-01';
+				$thisYear	  = $dateParsed[1].'01-01';
+				$coDay		  = $logsRep->getCo(date('Y-m-d'));
+				$coMonth	  = $logsRep->getCo($thisMonth);
+				$coYear		  = $logsRep->getCo($thisYear);
+				
 				return $this->render('admin/general_infos.html.twig', [
 				'itemNumber'  => $itemNumber,
 				'itemUnits'   => $itemUnits,
@@ -144,6 +152,9 @@ class AdminController extends Controller
 				'categNumb'   => $categNumb,
 				'dCategNumb'  => $dCategNumb, 
 				'typeNumber'  => $typeNumber,
+				'coDay'		  => $coDay,
+				'coMonth'	  => $coMonth,
+				'coYear'	  => $coYear,
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}
@@ -590,19 +601,20 @@ class AdminController extends Controller
 				}else{
 					$state = $request->request->get('state');
 				}
-				if($request->request->get('day') == null){
-					if($request->request->get('month') == null){
-						if($request->request->get('year') == null){
-							$borrow_date = date("2000-01-01");
+				$year = $request->request->get('year');
+				$month  = $request->request->get('month');
+				$day  = $request->request->get('day');
+				if($day == null){
+					if($month == null){
+						if($year == null){	
+							$borrow_date = null;
 						}
 					}
 				}else{
-					$year = $request->request->get('year');
-					$month  = $request->request->get('month');
-					$day  = $request->request->get('day');
 					$borrow_date = $year.'-'.$month.'-'.$day;
 				}
 				$trans_rep = $em->getRepository('AppBundle:Transaction');
+				$days = array('day'=>$day,'month'=>$month,'year'=>$year);
 				
 				$total = $trans_rep->getNumber($t_id,$m_code,$i_title,$borrow_date,$state);
 				$trans_per_page = 16;
@@ -657,20 +669,19 @@ class AdminController extends Controller
 				}else{
 					$what  = $request->request->get('what');
 				}
-				if($request->request->get('day') == null){
-					if($request->request->get('month') == null){
-						if($request->request->get('year') == null){
-							$from = date("Y-m-d");
+				$year = $request->request->get('year');
+				$month  = $request->request->get('month');
+				$day  = $request->request->get('day');
+				if($day  == null){
+					if($month  == null){
+						if($year  == null){
+							$from =  date("2000-01-01");
 						}
 					}
 				}else{
-					$year = $request->request->get('year');
-					$month  = $request->request->get('month');
-					$day  = $request->request->get('day');
 					$from = $year.'-'.$month.'-'.$day;
 				}
 				$logs_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Logs');
-				
 				
 				$totalToSum = $logs_rep->getLogsNumber($id,$who,$what,$from);
 				if($who == ""){

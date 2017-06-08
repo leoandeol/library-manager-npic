@@ -24,7 +24,7 @@
 			<option value="Finished">Finished</option>
 		</select>
 	</div>
-    <div class="InputAddOn-item" for="from">Borrow date :</div>
+    <div class="InputAddOn-item" for="from">Borrow/Booked date :</div>
 	<div class="InputAddOn">
 	  <div class="InputAddOn-item"for="day">Day:</div>
         <select class="InputAddOn-field" id="day" name="day">
@@ -72,10 +72,10 @@
         Item title
       </div>
       <div class="cell">
-        Borrow date
+        Booked date
       </div>
       <div class="cell">
-        Date to return
+        Borrow date
       </div>		
 	  <div class="cell">
 		State
@@ -94,10 +94,14 @@
 			{{transaction.getItem().getTitle()}}
 		</div>
 		<div class="cell">
-			{{transaction.getBorrowDate()|date('d-m-Y')}}
+			{{ transaction.getBookedDate()|date('d-m-Y') }}
 		</div>
 		<div class="cell">
-			{{transaction.getToReturnDate()|date("d-m-Y") }}
+			{% if transaction.getBorrowDate() == null %}			
+				Not borrowed yet
+			{% else %}
+				{{transaction.getBorrowDate()|date('d-m-Y')}}
+			{% endif %}
 		</div>
 		<div class="cell">
 			{{transaction.getState()}}

@@ -250,6 +250,7 @@ class ItemController extends Controller
 										$new_transaction->setItem($item);
 										$new_transaction->setFineCostPerDay(0);
 										$new_transaction->setState('Booked');
+										$new_transaction->setBookedDate(date('Y-m-d'));
 										
 										$user->setCurrentBorrowedBooksNb($user->getCurrentBorrowedBooksNb()+1);
 										$item->setBookedUnit($item->getBookedUnit()+1);

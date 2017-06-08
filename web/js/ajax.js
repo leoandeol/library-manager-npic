@@ -467,7 +467,6 @@ $(document).ready(function(){
     
     $('.logsForm').submit(function(e){
 	var data = $(this).serialize();
-	console.log(data);
 	checkLogs(1,e,data);
     });
     
@@ -481,6 +480,7 @@ $(document).ready(function(){
 	$.ajax({
 	    type	: "POST",
 	    url		: Routing.generate('checkLogs',{'page':page}),
+		data	: datas,
 	    datatype: "json",
 	    success	: function(response){
 		var table = document.getElementById('table');
@@ -618,11 +618,11 @@ $(document).ready(function(){
 		
 		var bdate = document.createElement("div");
 		bdate.setAttribute("class","cell");
-		bdate.innerHTML = "Borrow date";
+		bdate.innerHTML = "Booked date";
 		
 		var rdate = document.createElement("div");
 		rdate.setAttribute("class","cell");
-		rdate.innerHTML = "Date to return";
+		rdate.innerHTML = "Borrow date";
 		
 		var activity = document.createElement("div");
 		activity.setAttribute("class","cell");
@@ -657,16 +657,20 @@ $(document).ready(function(){
 		    
 		    var bdate = document.createElement("div");
 		    bdate.setAttribute("class","cell");
-		    sBDate = tr.borrowDate.split('T')[0];
-		    ssBDate = sBDate.split('-');
-		    okBDate = ssBDate[2]+'-'+ssBDate[1]+'-'+ssBDate[0];
+			sBDate = tr.bookedDate.split('T')[0];
+			ssBDate = sBDate.split('-');
+			okBDate = ssBDate[2]+'-'+ssBDate[1]+'-'+ssBDate[0];
 		    bdate.innerHTML = okBDate;
 
 		    var rdate = document.createElement("div");
 		    rdate.setAttribute("class","cell");
-		    sRDate = tr.toReturnDate.split('T')[0];
-		    ssRDate = sRDate.split('-');
-		    okRDate = ssRDate[2]+'-'+ssRDate[1]+'-'+ssRDate[0];
+			if(tr.borrowDate == null){
+				okRDate = 'Not borrowed yet';
+			}else{
+				sRDate = tr.borrowDate.split('T')[0];
+				ssRDate = sRDate.split('-');
+				okRDate = ssRDate[2]+'-'+ssRDate[1]+'-'+ssRDate[0];
+			}
 		    rdate.innerHTML = okRDate;
 		    
 		    var activity = document.createElement("div");

@@ -46,6 +46,11 @@ class Transaction{
 	/**
      * @ORM\Column(type="date",nullable=true)
      */
+	private $booked_date;
+	/**
+	/**
+     * @ORM\Column(type="date",nullable=true)
+     */
 	private $borrow_date;
 	/**
      * @ORM\Column(type="date",nullable=true)
@@ -321,5 +326,29 @@ class Transaction{
     public function getToReturnDate()
     {
         return $this->to_return_date;
+    }
+
+    /**
+     * Set bookedDate
+     *
+     * @param \DateTime $bookedDate
+     *
+     * @return Transaction
+     */
+    public function setBookedDate($bookedDate)
+    {
+        $this->booked_date = new \DateTime($bookedDate);
+
+        return $this;
+    }
+
+    /**
+     * Get bookedDate
+     *
+     * @return \DateTime
+     */
+    public function getBookedDate()
+    {
+        return $this->booked_date;
     }
 }

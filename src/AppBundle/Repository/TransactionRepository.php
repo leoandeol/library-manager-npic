@@ -34,7 +34,7 @@ class TransactionRepository extends EntityRepository{
 			AND t.id LIKE :t_id
 			AND i.title LIKE :i_title
 			AND t.state LIKE :state
-			AND t.borrow_date >= :borrow_date
+			AND (t.borrow_date >= :borrow_date OR t.booked_date >= :borrow_date)
 			"
 		);
 		$query->setParameters(array(
@@ -58,7 +58,7 @@ class TransactionRepository extends EntityRepository{
 			AND t.id LIKE '%$t_id%'
 			AND i.title LIKE '%$i_title%'
 			AND t.state LIKE '%$state%'
-			AND t.borrow_date >= '$borrow_date'
+			AND (t.borrow_date >= '$borrow_date' OR t.booked_date >= '$borrow_date')
 			"
 		);
 		$query->setFirstResult($current);

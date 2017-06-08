@@ -7,6 +7,16 @@ use AppBundle\Entity\Logs;
 
 class LogsRepository extends EntityRepository{
 	
+	public function getCo($date){
+		return $this->getEntityManager()->createQuery(
+			"
+			SELECT COUNT(ul)
+			FROM AppBundle:UserLogs ul
+			WHERE ul.log_date >= '$date'
+			"
+		)->getResult();
+	}
+	
 	public function getLogsNumber($id,$who,$what,$from){
 		$em = $this->getEntityManager();
 		$conn = $em->getConnection();
