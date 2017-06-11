@@ -3,7 +3,57 @@
 
 {% block body %}
 
-<div class="tableBookings table">
+<nav class="menu-list">
+  <form class="menu-list-search MemberBookingsForm" action="/user/bookings/{{member_code}}" method="post">
+	<input hidden value="{{ member_code }}" name='member_code'>
+	<div class="menu-list-element">
+      <input class="InputAddOn-field" placeholder="Item title" type="text" name="title">
+	</div>
+	<div class="menu-list-element">
+		State : <br/>
+		<select name="state">
+			<option value="" selected>All</option>
+			<option value="Booked">Booked</option>
+			<option value="Borrowed">Borrowed</option>
+			<option value="Lost">Lost</option>
+			<option value="Finished">Finished</option>
+		</select>
+	</div>
+    <div class="InputAddOn-item" for="from">Borrow/Booked date :</div>
+	<div class="InputAddOn">
+	  <div class="InputAddOn-item"for="day">Day:</div>
+        <select class="InputAddOn-field" id="day" name="day">
+        </select>
+	</div>	
+	<div class="InputAddOn">
+      <div class="InputAddOn-item" for="month">Month:</div>
+        <select class="InputAddOn-field" id="month" name="month">
+          <option selected>01</option>
+          <option>02</option>
+          <option>03</option>
+          <option>04</option>
+          <option>05</option>
+          <option>06</option>
+          <option>07</option>
+          <option>08</option>
+          <option>09</option>
+          <option>10</option>
+          <option>11</option>
+          <option>12</option>
+        </select>
+	</div>	
+	<div class="InputAddOn">
+		<div class="InputAddOn-item" for="year">Year:</div>
+        <select class="InputAddOn-field" id="year" name="year">
+        </select>
+	</div>
+	<div class="menu-list-element">
+      <button class="InputAddOn-item" type="submit">Search</button>
+	</div>
+  </form>
+</nav>
+
+<div class="tableBookings table" id="table">
     <div class="row header">
       <div class="cell">
         Transaction ID
@@ -12,13 +62,10 @@
         Item title
       </div>
       <div class="cell">
-        Borrow date
+        Booked date
       </div>
       <div class="cell">
-        Date to return
-      </div>
-	  <div class="cell">
-        Return date
+        Borrow date
       </div>
 	  <div class="cell">
 		State
@@ -34,24 +81,13 @@
 			{{transaction.getItem().getTitle()}}
 		</div>
 		<div class="cell">
+			{{transaction.getBookedDate()|date('d-m-Y')}}
+		</div>
+		<div class="cell">
 			{% if transaction.getBorrowDate() == NULL %}
 			Not borrowed yet
 			{% else %}
-			{{transaction.getBorrowDate()|date('d-m-Y')}}
-			{% endif %}
-		</div>
-		<div class="cell">
-			{% if transaction.getToReturnDate() == NULL %}
-			Not borrowed yet
-			{% else %}
-			{{transaction.getToReturnDate()|date("d-m-Y") }}
-			{% endif %}
-		</div>
-		<div class="cell">
-			{% if transaction.getReturnDate() == NULL %}
-			Not gave back yet
-			{% else %}
-			{{transaction.getReturnDate()|date("d-m-Y") }}
+			{{transaction.getBorrowDate()|date("d-m-Y") }}
 			{% endif %}
 		</div>
 		<div class="cell">
@@ -60,8 +96,17 @@
 	</div>
 {% endfor %}
 </div>
+
+{% if page>1 %}
+	<button id="prev" value="{{page-1}}" class="InputAddOn-item checkMemberBookingsButton" type="submit">Previous</button>
+{% endif %}
+{% if page<page_max %}
+	<button id="next" value="{{page+1}}" class="InputAddOn-item checkMemberBookingsButton" type="submit">Next</button>
+{% endif %}
 {% endblock %}
 
 {% block javascripts %}
+<script src="{{ asset('js/ajax.js') }}"></script>
 <script src="{{ asset('js/tables.js') }}"></script>
+<script src="{{ asset('js/dates.js') }}"></script>
 {% endblock %}

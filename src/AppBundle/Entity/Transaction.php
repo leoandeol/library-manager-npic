@@ -65,6 +65,10 @@ class Transaction{
      */
 	private $fine_cost_per_day;
 	/**
+     * @ORM\Column(type="integer")
+     */
+	private $fine_to_pay;
+	/**
      * @ORM\Column(type="string",length=8)
      */
 	private $state;
@@ -208,6 +212,30 @@ class Transaction{
         return $this->fine_cost_per_day;
     }
 
+	/**
+     * Set fineToPay
+     *
+     * @param integer $fineToPay
+     *
+     * @return Transaction
+     */
+    public function setFineToPay($fineToPay)
+    {
+        $this->fine_to_pay = $fineToPay;
+
+        return $this;
+    }
+
+    /**
+     * Get fineToPay
+     *
+     * @return integer
+     */
+    public function getFineToPay()
+    {
+        return $this->fine_to_pay;
+    }
+	
     /**
      * Set state
      *

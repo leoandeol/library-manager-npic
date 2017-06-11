@@ -164,16 +164,17 @@ class AdminController extends Controller
 	}
 	
 	/**
-     * @Route("/admin/add_admin/", name="add_admin")
+     * @Route("/admin/add_admin/{mode}/{code}", name="add_admin")
      */
-    public function AddAdminAction(Request $request)
+    public function AddAdminAction(Request $request,$mode,$code = null)
     {		
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				return $this->render('admin/add_admin.html.twig',[
-				    'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+					'mode' => $mode,
+				    'code' => $code,
 				]);
 			}
 			return $this->redirect($this->generateUrl('home'));
@@ -182,9 +183,9 @@ class AdminController extends Controller
     }
 
 	/**
-     * @Route("/admin/add_user/", name="add_user")
+     * @Route("/admin/add_user/{mode}/{code}", name="add_user")
      */
-    public function AddUserAction(Request $request)
+    public function AddUserAction(Request $request,$mode, $code = null)
     {		
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
@@ -197,6 +198,8 @@ class AdminController extends Controller
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				return $this->render('admin/add_user.html.twig',[
+					'code' => $code,
+					'mode' => $mode,
 				    'functions' => $func,
 					'majors' => $maj,
 					'degrees' => $deg,
@@ -211,87 +214,114 @@ class AdminController extends Controller
     }
 	
 	/**
-     * @Route("/admin/added_user", name="added_user")
+     * @Route("/admin/added_user/{mode}/{id}", name="added_user")
      */
-    public function AddedUserAction(Request $request)
+    public function AddedUserAction(Request $request,$mode, $id = null)
     {		
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
 		$mem_rep = $em->getRepository('AppBundle:Member');
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
-				if(($mem_rep->find($request->request->get('code'))) == NULL){
 					
-					$dob['day'] = $request->request->get('day');
-					$dob['month'] = $request->request->get('month');
-					$dob['year'] = $request->request->get('year');
+				$dob['day'] = $request->request->get('day');
+				$dob['month'] = $request->request->get('month');
+				$dob['year'] = $request->request->get('year');
+				$dobDataBase = $dob['year'].'-'.$dob['month'].'-'.$dob['day'];
+				
+				$fname = $request->request->get('fname');
+				$lname = $request->request->get('lname');
+				$nid = $request->request->get('nid');
+				$gender = $request->request->get('gender');
+				$mail = $request->request->get('email');
+				$hphone = $request->request->get('home_phone');
+				$mphone = $request->request->get('mob_phone');
+				$rphone = $request->request->get('ref_phone');
+				$civsitu = $request->request->get('civsitu');
+				$fac = $request->request->get('fac');
+				$maj = $request->request->get('major');
+				$degree = $request->request->get('degree');
+				$degyear = $request->request->get('degree_year');
+				$func = $request->request->get('function');
+				$city = $request->request->get('city');
+				$pcode = $request->request->get('pcode');
+				$street = $request->request->get('street');
+				$position = $request->request->get('position');
+				
+				if($mode == 'add'){
+					
+					$code = $request->request->get('code');
+					$new_member = new Member();
 					
 					$password = "NPIC".$dob['day'].$dob['month'].$dob['year'];
 					$passwordHashed = hash('sha256', $password.$this->getParameter('nonce'));
 					
-					$dobDataBase = $dob['year'].'-'.$dob['month'].'-'.$dob['day'];
-					
-					$new_member = new Member();
-					$new_member->setAvatarPath('default_avatar.png');
-					$new_member->setCode($request->request->get('code'));
-					$new_member->setFirstName($request->request->get('fname'));
-					$new_member->setLastName($request->request->get('lname'));
-					$new_member->setGender($request->request->get('gender'));
-					$new_member->setNationalId($request->request->get('nid'));
-					$new_member->setDob(new \DateTime("$dobDataBase"));
-					$new_member->setEmail($request->request->get('email'));
-					$new_member->setTelHome($request->request->get('home_phone'));
-					$new_member->setTelMobile($request->request->get('mob_phone'));
-					$new_member->setTelRef($request->request->get('ref_phone'));
-					$new_member->setCivilSituation($request->request->get('civsitu'));
-					$new_member->setFaculty($em->getRepository('AppBundle:Faculty')->find($request->request->get('fac')));
-					$new_member->setEntryDate(date("Y-m-d"));
+					$new_member->setCode($code);
 					$new_member->setPassword($passwordHashed);
+					$new_member->setAvatarPath('default_avatar.png');
+					$new_member->setEntryDate(date("Y-m-d"));
 					$new_member->setCurrentBorrowedBooksNb(0);
 					$new_member->setDisable(0);
-					
-					$position = $request->request->get('position');
-					if($position == "student"){
-						$new_member->setStudent(true);
-						$new_member->setStaff(false);
-						$new_member->setMajor($em->getRepository('AppBundle:Major')->find($request->request->get('major')));
-						$new_member->setDegree($em->getRepository('AppBundle:Degree')->find($request->request->get('degree')));
-						$new_member->setDegreeYear($em->getRepository('AppBundle:DegreeYear')->find($request->request->get('degree_year')));
-					}else{
-						$new_member->setStaff(true);
-						$new_member->setStudent(false);
-						$new_member->setFunction($em->getRepository('AppBundle:StaffFunction')->find($request->request->get('function')));
-					}
-					
-					if(($address_id = $em->getRepository('AppBundle:Address')->getAddressId(
-					$request->request->get('city'),
-					$request->request->get('pcode'),
-					$request->request->get('street'))) != NULL){
-						$new_member->setAddress($em->getRepository('AppBundle:Address')->find($address_id[0]["id"]));
-					}else{					
-						$new_address = new Address();
-						$new_address->setCity($request->request->get('city'));
-						$new_address->setPostalCode($request->request->get('pcode'));
-						$new_address->setStreet($request->request->get('street'));
-						$new_member->setAddress($new_address);
-						$em->persist($new_address);
-					}
-					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
-					$new_log = new Logs();
-					$new_log->setLib($lib);
-					$new_log->setLogDate(date('Y-m-d'));
-					$code = $new_member->getCode();
-					$new_log->setAction("Added new member $code");
-					$em->persist($new_log);
-					
-					$em->persist($new_member);
-					$em->flush();
-
-    				$this->get('my.mailer')->sendTemplateMessage($request->request->get('email'),"NPIC Library registration completed","email/registration.html.twig",array('username' => $request->request->get('code'), 'password' => $password));	
-					
-					return $this->redirect($this->generateUrl('checkalluser'));
+					$action = "Added new member $code";
+				}else{
+					$new_member = $em->getRepository('AppBundle:Member')->find($id);
+					$action = "Updated member $id";
+					$code = $id;
 				}
-				return $this->redirect($this->generateUrl('errorAlreadyExistingUser'));
+				$new_member->setFirstName($fname);
+				$new_member->setLastName($lname);
+				$new_member->setGender($gender);
+				$new_member->setNationalId($nid);
+				$new_member->setDob(new \DateTime("$dobDataBase"));
+				$new_member->setEmail($mail);
+				$new_member->setTelHome($hphone);
+				$new_member->setTelMobile($mphone);
+				$new_member->setTelRef($rphone);
+				$new_member->setCivilSituation($civsitu);
+				$new_member->setFaculty($em->getRepository('AppBundle:Faculty')->find($fac));
+				
+				
+				if($position == "student"){
+					$new_member->setStudent(true);
+					$new_member->setStaff(false);
+					$new_member->setMajor($em->getRepository('AppBundle:Major')->find($major));
+					$new_member->setDegree($em->getRepository('AppBundle:Degree')->find($degree));
+					$new_member->setDegreeYear($em->getRepository('AppBundle:DegreeYear')->find($degyear));
+				}else{
+					$new_member->setStaff(true);
+					$new_member->setStudent(false);
+					$new_member->setFunction($em->getRepository('AppBundle:StaffFunction')->find($func));
+				}
+				
+				if(($address_id = $em->getRepository('AppBundle:Address')->getAddressId(
+				$city,
+				$pcode,
+				$street)) != NULL){
+					$new_member->setAddress($em->getRepository('AppBundle:Address')->find($address_id[0]["id"]));
+				}else{					
+					$new_address = new Address();
+					$new_address->setCity($city);
+					$new_address->setPostalCode($pcode);
+					$new_address->setStreet($street);
+					$new_member->setAddress($new_address);
+					$em->persist($new_address);
+				}
+				$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+				$new_log = new Logs();
+				$new_log->setLib($lib);
+				$new_log->setLogDate(date('Y-m-d'));
+				$new_log->setAction($action);
+				
+				$em->persist($new_log);
+				$em->persist($new_member);
+				$em->flush();
+
+				if($mode == 'add'){
+					$this->get('my.mailer')->sendTemplateMessage($request->request->get('email'),"NPIC Library registration completed","email/registration.html.twig",array('username' => $request->request->get('code'), 'password' => $password));	
+					return $this->redirect($this->generateUrl('checkalluser'));
+				}else{
+					return $this->redirect($this->generateUrl('account',['code' => $id]));
+				}
 			}
 			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
@@ -299,59 +329,78 @@ class AdminController extends Controller
     }
 	
 	/**
-     * @Route("/admin/added_admin", name="added_admin")
+     * @Route("/admin/added_admin/{mode}/{id}", name="added_admin")
      */
-    public function AddedAdminAction(Request $request)
+    public function AddedAdminAction(Request $request,$mode, $id = null)
     {		
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
 		$lib_rep = $em->getRepository('AppBundle:Librarian');
 		if($session->get('connected')){
-			if($session->get('isAdmin')){
-				if(($lib_rep->find($request->request->get('username'))) == NULL){
+			if($session->get('isAdmin')){					
+				
+				$fname = $request->request->get('fname');
+				$lname = $request->request->get('lname');
+				$gender = $request->request->get('gender');
+				$mail = $request->request->get('email');
+				$phone = $request->request->get('phone');
+				$city = $request->request->get('city');
+				$pcode = $request->request->get('pcode');
+				$street = $request->request->get('street');
+				
+				if($mode == 'add'){	
 					
+					$username = $request->request->get('username');
 					$password = $request->request->get('password');
 					$passwordHashed = hash('sha256', $password.$this->getParameter('nonce'));
 					
 					$new_librarian = new Librarian();
 					$new_librarian->setAvatarPath('default_avatar.png');
-					$new_librarian->setUsername($request->request->get('username'));
-					$new_librarian->setFirstName($request->request->get('fname'));
-					$new_librarian->setLastName($request->request->get('lname'));
-					$new_librarian->setGender($request->request->get('gender'));
-					$new_librarian->setEmail($request->request->get('email'));
-					$new_librarian->setTel($request->request->get('phone'));
 					$new_librarian->setHireDate(date("Y-m-d"));
 					$new_librarian->setPassword($passwordHashed);
 					$new_librarian->setDisable(0);
-					
-					if(($address_id = $em->getRepository('AppBundle:Address')->getAddressId(
-					$request->request->get('city'),
-					$request->request->get('pcode'),
-					$request->request->get('street'))) != NULL){
-						$new_librarian->setAddress($em->getRepository('AppBundle:Address')->find($address_id[0]["id"]));
-					}else{					
-						$new_address = new Address();
-						$new_address->setCity($request->request->get('city'));
-						$new_address->setPostalCode($request->request->get('pcode'));
-						$new_address->setStreet($request->request->get('street'));
-						$new_librarian->setAddress($new_address);
-						$em->persist($new_address);
-					}
-					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
-					$new_log = new Logs();
-					$new_log->setLib($lib);
-					$new_log->setLogDate(date('Y-m-d'));
-					$code = $new_librarian->getUsername();
-					$new_log->setAction("Added new librarian $code");
-					$em->persist($new_log);
-					
-					$em->persist($new_librarian);
-					$em->flush();
-					
-					return $this->redirect($this->generateUrl('checkalllib'));
+					$action = "Added new librarian $username";
+				}else{
+					$new_librarian = $lib_rep->find($id);
+					$action = "Updated librarian $id";
+					$username = $id;
 				}
-				return $this->redirect($this->generateUrl('errorAlreadyExistingUser'));
+				
+				$new_librarian->setUsername($username);
+				$new_librarian->setFirstName($fname);
+				$new_librarian->setLastName($lname);
+				$new_librarian->setGender($gender);
+				$new_librarian->setEmail($mail);
+				$new_librarian->setTel($phone);
+				
+				if(($address_id = $em->getRepository('AppBundle:Address')->getAddressId(
+				$city,
+				$pcode,
+				$street)) != NULL){
+					$new_librarian->setAddress($em->getRepository('AppBundle:Address')->find($address_id[0]["id"]));
+				}else{					
+					$new_address = new Address();
+					$new_address->setCity($city);
+					$new_address->setPostalCode($pcode);
+					$new_address->setStreet($street);
+					$new_librarian->setAddress($new_address);
+					$em->persist($new_address);
+				}
+				$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+				$new_log = new Logs();
+				$new_log->setLib($lib);
+				$new_log->setLogDate(date('Y-m-d'));
+				$new_log->setAction($action);
+				$em->persist($new_log);
+				
+				$em->persist($new_librarian);
+				$em->flush();
+				
+				if($mode == 'add'){
+					return $this->redirect($this->generateUrl('checkalllib'));
+				}else{
+					return $this->redirect($this->generateUrl('account',['code' => $username]));
+				}
 			}
 			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
@@ -543,7 +592,7 @@ class AdminController extends Controller
 					}else if($state == "Finished"){
 						if($oldState == "Borrowed"){
 							$item->setBorrowedUnit($item->getBorrowedUnit()-1);
-							$member->setCurrentBorrowedBooksNb($member->getCurentBorrowedBooksNb()-1);
+							$member->setCurrentBorrowedBooksNb($member->getCurrentBorrowedBooksNb()-1);
 							$trans->setReturnDate(new \DateTime(date('Y-m-d')));
 							$trans->setLibForReturn($admin);
 						}else if($oldState == "Lost"){
@@ -553,6 +602,7 @@ class AdminController extends Controller
 						}
 					}
 					$trans->setState($state);
+					$trans->setFineCostPerDay($request->request->get('fineCost'));
 					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
 					$new_log = new Logs();
 					$new_log->setLib($lib);

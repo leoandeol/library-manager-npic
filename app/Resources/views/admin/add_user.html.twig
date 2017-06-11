@@ -2,21 +2,33 @@
 
 {% block body %}
 <article class="article-text-block" >
-  <h1>Add new member</h1>
-  <form action="/admin/added_user" method="post" class="big-form" onsubmit="return checkForm(this)">
+  <h1>
+  {% if mode == 'add' %}
+	Add new member
+  {% else %}
+	Update member {{code}}
+  {% endif %}
+  </h1>
+  <form action="/admin/added_user/{{mode}}/{{code}}" method="post" class="big-form" onsubmit="return checkForm(this)">
     <div class="InputAddOn">
       <div class="InputAddOn-item" for="fname">First Name :</div>
       <input required type="text" id="fname" name="fname" class="InputAddOn-field" />
-    </div><div class="InputAddOn">
-      <div class="InputAddOn-item" for="code">Code :</div>
-      <input required type="text" id="code" name="code" onchange="testCode(this)" class="InputAddOn-field" />
-    </div><div class="InputAddOn">
+    </div>
+	{% if mode == 'add' %}
+		<div class="InputAddOn">
+		  <div class="InputAddOn-item" for="code">Code :</div>
+		  <input required type="text" id="code" name="code" onchange="testCode(this)" class="InputAddOn-field" />
+		</div>
+	{% endif %}
+	<div class="InputAddOn">
       <div class="InputAddOn-item" for="lname">Last name :</div>
       <input required type="text" id="lname" name="lname" class="InputAddOn-field" />
-    </div><div class="InputAddOn">
+    </div>
+	<div class="InputAddOn">
       <div class="InputAddOn-item" for="gender">Gender :</div>
       <div class="InputAddOn-field InputAddOn-field-radio">Male : <input type="radio" id="gender" name="gender" value="M"/>Female : <input type="radio" id="gender" name="gender" value="F" /></div>
-    </div><div class="InputAddOn">
+    </div>
+	<div class="InputAddOn">
       <div class="InputAddOn-item" for="nid">National ID :</div>
       <input required type="text" id="nid" name="nid" onchange="testNationalID(this)" class="InputAddOn-field" />
     </div>

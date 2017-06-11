@@ -21,8 +21,24 @@
 	"><button class="InputAddOn-item">General informations</button></a>
   </div>  
 {% if app.session.get('isAdmin') == false %}
-  <div class="InputAddOn">
-    <a href="/user/bookings/{{data['user'].getCode()}}"><button class="InputAddOn-item">Check my bookings</button></a>
+	<div class="InputAddOn">
+		<a href="/user/bookings/{{data['user'].getCode()}}"><button class="InputAddOn-item">Check my bookings</button></a>
+	</div>
+{% else %}
+	<div class="InputAddOn">
+		<a href="/admin/
+		{% if data['isMember'] %}
+			add_user
+		{% else %}
+			add_admin
+		{% endif %}
+		/update/
+		{% if data['isMember'] %}
+			{{ data['user'].getCode() }}
+		{% else %}
+			{{ data['user'].getUsername() }}
+		{% endif %}
+		"><button class="InputAddOn-item">Update informations</button></a>
 	</div>
 {% endif %}
 	<div class="InputAddOn">
