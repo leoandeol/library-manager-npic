@@ -147,7 +147,7 @@ class ItemController extends Controller
     }
 
 	 /**
-	 * @Route("/item/read/{id}", name="readitem", requirements={"id":"\d+"}, options={"expose"=true})
+	 * @Route("/item/read/{id}", name="readitem", options={"expose"=true})
 	 */
 	 public function readAction(Request $request, $id = -1){
 		$em = $this->getDoctrine()->getManager();
