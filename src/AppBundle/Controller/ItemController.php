@@ -19,9 +19,9 @@ class ItemController extends Controller
 {
 
     /**
-     * @Route("/item/create", name="additem")
+     * @Route("/item/create/{mode}/{code}", name="additem")
      */
-    public function CreateAction(Request $request)
+    public function CreateAction(Request $request,$mode, $code = null)
     {		
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
@@ -31,6 +31,8 @@ class ItemController extends Controller
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				return $this->render('item/add.html.twig',[
+					'mode' => $mode,
+					'code' => $code,
 					'languages' => $language,
 					'types' => $type,
 					'categories' => $category,
@@ -43,64 +45,81 @@ class ItemController extends Controller
     }
 	
 	/**
-     * @Route("/item/created", name="addeditem")
+     * @Route("/item/created/{mode}/{id}", name="addeditem")
      */
-    public function CreatedAction(Request $request)
+    public function CreatedAction(Request $request,$mode,$id = null)
     {	
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
 		
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
-				if($em->getRepository('AppBundle:Item')->find($request->request->get('code'))==NULL){
-					if($request->request->get('bookable')==null){
-						$bookable = "Not available";
-					}else{
-						$bookable = "Available";
+				if($request->request->get('bookable')==null){
+					$bookable = "Not available";
+				}else{
+					$bookable = "Available";
+				}
+				if($request->request->get('isbn')==null){
+					$isbn = NULL;
+				}else{
+					$isbn = $request->request->get('isbn');
+				}
+				
+				$type = $em->getRepository('AppBundle:Type')->find((int)$request->request->get('type'));
+				$category =$em->getRepository('AppBundle:Category')->find((int)$request->request->get('category'));
+				$title = $request->request->get('title');
+				$author = $request->request->get('author');
+				$publisher = $request->request->get('publisher');
+				$pub_year = $request->request->get('publication_year');
+				$language = $request->request->get('language');
+				$cost = $request->request->get('cost');
+				
+				if($mode == 'add'){
+					$code = $request->request->get('code');
+					$units = $request->request->get('units');
+				
+					if($em->getRepository('AppBundle:Item')->find($code) != null){
+						return $this->redirect($this->generateUrl('error',['error'=>'This code is already taken by another item']));
 					}
-					if($request->request->get('isbn')==null){
-						$isbn = NULL;
-					}else{
-						$isbn = $request->request->get('isbn');
-					}
-					
-					$type = $em->getRepository('AppBundle:Type')->find((int)$request->request->get('type'));
-					$category =$em->getRepository('AppBundle:Category')->find((int)$request->request->get('category'));
-								
 					$new_item = new Item();	
-					
-					$new_item->setCode($request->request->get('code'));
-					$new_item->setTitle($request->request->get('title'));
-					$new_item->setAuthor($request->request->get('author'));
-					$new_item->setPublisher($request->request->get('publisher'));
-					$new_item->setPublicationYear($request->request->get('publication_year'));
-					$new_item->setLanguage($em->getRepository('AppBundle:Languages')->find($request->request->get('language')));
-					$new_item->setIsbn($isbn);		
-					$new_item->setTotalUnit($request->request->get('units'));
-					$new_item->setBorrowedUnit(0);
-					$new_item->setBookedUnit(0);
-					$new_item->setCost($request->request->get('cost'));
-					$new_item->setDisable(0);
-					$new_item->setCategory($category);
-					$new_item->setTyppe($type);
+					$new_item->setCode($code);
+					$new_item->setDisable(0);		
+					$new_item->setTotalUnit($units);
 					$new_item->setNote(NULL);
 					$new_item->setLostUnit(0);
-					$new_item->setBookable($bookable);
+					$new_item->setBorrowedUnit(0);
+					$new_item->setBookedUnit(0);
 					$new_item->setAddDate(date("Y-m-d"));
 					
-					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
-					$new_log = new Logs();
-					$new_log->setLib($lib);
-					$new_log->setLogDate(date('Y-m-d'));
-					$code = $new_item->getCode();
-					$new_log->setAction("Added item $code");
-					$em->persist($new_log);
-					
-					$em->persist($new_item);
-					$em->flush();
-					return $this->redirect($this->generateUrl('itemlist'));
+					$action = 'Added item $code';
+				}else{
+					$new_item = $em->getRepository('AppBundle:Item')->find($id);
+					$action = "Updated item $id";
+					$code = $id;
 				}
-				return $this->redirect($this->generateUrl('errorAlreadyExistItem'));
+				
+				
+				$new_item->setTitle($title);
+				$new_item->setAuthor($author);
+				$new_item->setPublisher($publisher);
+				$new_item->setPublicationYear($pub_year);
+				$new_item->setLanguage($em->getRepository('AppBundle:Languages')->find($language));
+				$new_item->setIsbn($isbn);
+				$new_item->setCost($cost);
+				$new_item->setCategory($category);
+				$new_item->setTyppe($type);
+				$new_item->setBookable($bookable);
+				
+				$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+				$new_log = new Logs();
+				$new_log->setLib($lib);
+				$new_log->setLogDate(date('Y-m-d'));
+				$new_log->setAction($action);
+				$em->persist($new_log);
+				
+				$em->persist($new_item);
+				$em->flush();
+				return $this->redirect($this->generateUrl('readitem',['id' => $code]));
 			}
 			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}

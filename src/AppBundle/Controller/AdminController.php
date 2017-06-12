@@ -251,18 +251,22 @@ class AdminController extends Controller
 				if($mode == 'add'){
 					
 					$code = $request->request->get('code');
-					$new_member = new Member();
-					
-					$password = "NPIC".$dob['day'].$dob['month'].$dob['year'];
-					$passwordHashed = hash('sha256', $password.$this->getParameter('nonce'));
-					
-					$new_member->setCode($code);
-					$new_member->setPassword($passwordHashed);
-					$new_member->setAvatarPath('default_avatar.png');
-					$new_member->setEntryDate(date("Y-m-d"));
-					$new_member->setCurrentBorrowedBooksNb(0);
-					$new_member->setDisable(0);
-					$action = "Added new member $code";
+					if($em->getRepository('AppBundle:Member')->find($code) != null){
+						return $this->redirect($this->generateUrl('error',['error' => 'This code is already taken by another member']));
+					}else{
+						$new_member = new Member();
+						
+						$password = "NPIC".$dob['day'].$dob['month'].$dob['year'];
+						$passwordHashed = hash('sha256', $password.$this->getParameter('nonce'));
+						
+						$new_member->setCode($code);
+						$new_member->setPassword($passwordHashed);
+						$new_member->setAvatarPath('default_avatar.png');
+						$new_member->setEntryDate(date("Y-m-d"));
+						$new_member->setCurrentBorrowedBooksNb(0);
+						$new_member->setDisable(0);
+						$action = "Added new member $code";
+					}
 				}else{
 					$new_member = $em->getRepository('AppBundle:Member')->find($id);
 					$action = "Updated member $id";
@@ -351,15 +355,19 @@ class AdminController extends Controller
 				if($mode == 'add'){	
 					
 					$username = $request->request->get('username');
-					$password = $request->request->get('password');
-					$passwordHashed = hash('sha256', $password.$this->getParameter('nonce'));
-					
-					$new_librarian = new Librarian();
-					$new_librarian->setAvatarPath('default_avatar.png');
-					$new_librarian->setHireDate(date("Y-m-d"));
-					$new_librarian->setPassword($passwordHashed);
-					$new_librarian->setDisable(0);
-					$action = "Added new librarian $username";
+					if($em->getRepository('AppBundle:Librarian')->find($username) != null){
+						return $this->redirect($this->generateUrl('error',['error' => 'This username already exists']));
+					}else{
+						$password = $request->request->get('password');
+						$passwordHashed = hash('sha256', $password.$this->getParameter('nonce'));
+						
+						$new_librarian = new Librarian();
+						$new_librarian->setAvatarPath('default_avatar.png');
+						$new_librarian->setHireDate(date("Y-m-d"));
+						$new_librarian->setPassword($passwordHashed);
+						$new_librarian->setDisable(0);
+						$action = "Added new librarian $username";
+					}
 				}else{
 					$new_librarian = $lib_rep->find($id);
 					$action = "Updated librarian $id";
