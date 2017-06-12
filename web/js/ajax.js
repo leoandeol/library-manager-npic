@@ -163,13 +163,9 @@ $(document).ready(function(){
 		}
 		if(response['page']>1){
 		    var prev = document.createElement("button");
-			prev.setAttribute("class","btn btn-primary sortingButton previous");
+			prev.setAttribute("class","btn btn-primary center-block sortingButton previous");
 		    prev.setAttribute("value",response['page']-1);
-		    prev.innerHTML = "Previous";
-			var span = document.createElement("span");
-			span.setAttribute("class","glyphicon glyphicon-backward");
-			
-		    prev.append(span);			
+		    prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
 			ajaxButtons.append(prev);
 		}
 		if(next != null){
@@ -177,13 +173,9 @@ $(document).ready(function(){
 		}
 		if(response['page']<response['page_max']){
 		    var next = document.createElement("button");
-		    next.setAttribute("class","btn btn-primary sortingButton next");
+		    next.setAttribute("class","btn btn-primary center-block sortingButton next");
 		    next.setAttribute("value",parseInt(response['page'],10)+1);
-		    next.innerHTML = "Next";
-			var span = document.createElement("span");
-			span.setAttribute("class","glyphicon glyphicon-forward");
-			
-		    next.append(span);
+		    next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
 			ajaxButtons.append(next);
 		}
 	    },
