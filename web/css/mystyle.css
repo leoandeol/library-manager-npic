@@ -2,14 +2,16 @@
 -------------------------------------------------- */
 
 body {
+    padding-top:50px;/*
+
     margin:0px;
-    padding:0px;
-    display:flex;
+    padding:0px;    
+display:flex;
     flex-direction:column;
     width:100vw;
-    min-height:100vh;
+    min-height:100vh;*/
 }
-
+/*
 header {
     display:flex;
     flex-direction:column;
@@ -146,7 +148,6 @@ footer>p {
 }
 
 .menu-list-element {
-    /*display:flex*/;
     border-bottom:1px solid lightgrey;
     padding:5px;
     text-align:center;
@@ -347,7 +348,7 @@ h1 {
 }
 
 /** Responsive table layout **/
-
+/*
 .tableBookings {
 	margin:0 auto;
     margin-bottom:0px;
@@ -431,9 +432,9 @@ h1 {
 	display: block;
     }
 }
-
+*/
 /** bootstrap **/
-html {
+/*html {
     font-family: sans-serif;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -558,3 +559,4 @@ h6,
     font-size: 12px;
 }
 
+*/
