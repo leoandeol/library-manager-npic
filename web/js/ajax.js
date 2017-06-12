@@ -59,6 +59,9 @@ $(document).ready(function(){
     // BOOK AN ITEM
     var article = $("article");
     var table = $('.table');
+	var tbody = $('tbody')[0];
+	var container = $('.container');
+	var ulpager = $('ul.pager');
     
     table.on('click','.bookingButton',function(e){
 	e.stopPropagation()
@@ -87,11 +90,11 @@ $(document).ready(function(){
 	sortItems(1,e,data);
     });
     
-    article.on('click','.sortingButton',function(e){
+    ulpager.on('click','.sortingButton',function(e){
 	var data = $('.sortingForm').serialize();
 	sortItems(this.value,e,data);
     });	
-    
+	
     function sortItems(page,e,datas){
 	e.preventDefault();
 	$.ajax({
@@ -100,98 +103,43 @@ $(document).ready(function(){
 	    data	: datas,
 	    datatype: "json",
 	    success	: function(response){
-		var table = document.getElementById('table');
-		while(table.firstChild){
-		    table.firstChild.remove();
+		while(tbody.firstChild){
+		    tbody.firstChild.remove();
 		}
-		var header = document.createElement("div");
-		header.setAttribute("class","header row");
-		
-		var title = document.createElement("div");
-		title.setAttribute("class","cell");
-		title.innerHTML = "Title";
-		
-		var author = document.createElement("div");
-		author.setAttribute("class","cell");
-		author.innerHTML = "Author";
-		
-		var subject = document.createElement("div");
-		subject.setAttribute("class","cell");
-		subject.innerHTML = "Category";
-		
-		var lang_name = document.createElement("div");
-		lang_name.setAttribute("class","cell");
-		lang_name.innerHTML = "Language";
-		
-		var publication_year = document.createElement("div");
-		publication_year.setAttribute("class","cell");
-		publication_year.innerHTML = "Year";
-		
-		var bookable = document.createElement("div");
-		bookable.setAttribute("class","cell");
-		bookable.innerHTML = "Availability";
-		
-		var note = document.createElement("div");
-		note.setAttribute("class","cell");
-		note.innerHTML = "Note";
-		
-		var total_unit = document.createElement("div");
-		total_unit.setAttribute("class","cell");
-		total_unit.innerHTML = "Total units";
-		
-		header.appendChild(title);
-		header.appendChild(author);
-		header.appendChild(subject);
-		header.appendChild(lang_name);
-		header.appendChild(publication_year);
-		header.appendChild(bookable);
-		header.appendChild(note);
-		header.appendChild(total_unit);
-		
-		table.appendChild(header);
 		$.each(response['items'],function(i,item){
 		    // row to add
-		    var row = document.createElement("div");	
-		    row.setAttribute("class","row toSelect toSelectItem");
+		    var row = document.createElement("tr");	
+		    row.setAttribute("class","toSelect toSelectItem");
 		    row.setAttribute("id",item.code);
 		    // row's divs
-		    var title = document.createElement("div");
-		    title.setAttribute("class","cell");
+		    var title = document.createElement("td");
 		    title.innerHTML = item.title;
 		    
-		    var author = document.createElement("div");
-		    author.setAttribute("class","cell");
+		    var author = document.createElement("td");
 		    author.innerHTML = item.author;
 		    
-		    var subject = document.createElement("div");
-		    subject.setAttribute("class","cell");
+		    var subject = document.createElement("td");
 		    subject.innerHTML = item.subject;
 		    
-		    var lang_name = document.createElement("div");
-		    lang_name.setAttribute("class","cell");
+		    var lang_name = document.createElement("td");
 		    lang_name.innerHTML = item.lang_name;
 		    
-		    var publication_year = document.createElement("div");
-		    publication_year.setAttribute("class","cell");
+		    var publication_year = document.createElement("td");
 		    publication_year.innerHTML = item.publication_year;
 		    
-		    var bookable = document.createElement("div");
-		    bookable.setAttribute("class","cell");
+		    var bookable = document.createElement("td");
 		    bookable.innerHTML = item.bookable;
 		    
-		    var note = document.createElement("div");
-		    note.setAttribute("class","cell");
+		    var note = document.createElement("td");
 		    note.innerHTML = item.note;
 		    
-		    var total_unit = document.createElement("div");
-		    total_unit.setAttribute("class","cell");
+		    var total_unit = document.createElement("td");
 		    total_unit.innerHTML = item.total_unit;
 		    
-		    var button = document.createElement("div");
-		    button.setAttribute("class","cell");
+		    var button = document.createElement("td");
 		    var butt = document.createElement("button");
 		    butt.setAttribute('value',item.code);
-		    butt.setAttribute('class','bookingButton');
+		    butt.setAttribute('class','bookingButton btn btn-primary');
 		    butt.innerHTML = "Book";
 		    
 		    button.appendChild(butt);
@@ -205,33 +153,48 @@ $(document).ready(function(){
 		    row.appendChild(total_unit);
 		    row.appendChild(button);
 		    
-		    table.appendChild(row);
+		    tbody.appendChild(row);
 		});
-		var article = $("article");
-		var prev = document.getElementById('prev');
-		var next = document.getElementById('next');
+		var prev = $('.previous');
+		var next = $('.next');
 		
 		if(prev != null){
-		    article.find('#prev')[0].remove();
+		    ulpager.find('.previous').remove();
 		}
 		if(response['page']>1){
 		    var prev = document.createElement("button");
-		    prev.setAttribute("class","InputAddOn-item sortingButton");
-		    prev.setAttribute("id","prev");
+			prev.setAttribute("class","sortingButton");
 		    prev.setAttribute("value",response['page']-1);
 		    prev.innerHTML = "Previous";
-		    article.append(prev);
+			var span = document.createElement("span");
+			span.setAttribute("class","glyphicon glyphicon-backward");
+			
+		    prev.append(span);
+			
+			var li = document.createElement("li");
+			li.setAttribute("class","previous");
+			
+			li.append(prev);
+			ulpager.append(li);
 		}
 		if(next != null){
-		    article.find('#next')[0].remove();
+		    ulpager.find('.next').remove();
 		}
 		if(response['page']<response['page_max']){
 		    var next = document.createElement("button");
-		    next.setAttribute("class","InputAddOn-item sortingButton");
-		    next.setAttribute("id","next");
+		    next.setAttribute("class","sortingButton");
 		    next.setAttribute("value",parseInt(response['page'],10)+1);
 		    next.innerHTML = "Next";
-		    article.append(next);
+			var span = document.createElement("span");
+			span.setAttribute("class","glyphicon glyphicon-forward");
+			
+		    next.append(span);
+			
+			var li = document.createElement("li");
+			li.setAttribute("class","next");
+			
+			li.append(next);
+			ulpager.append(li);
 		}
 	    },
 	    error	: function(jqXHR, textStatus, errorThrown){
@@ -242,7 +205,7 @@ $(document).ready(function(){
     
     // MEMBER LIST
     
-    article.on('click','.checkMemberButton',function(e){
+    ulpager.on('click','.checkMemberButton',function(e){
 	checkAllMembers(this.value,e)
     });
     
@@ -253,64 +216,32 @@ $(document).ready(function(){
 	    url		: Routing.generate('checkalluser',{'page':page}),
 	    datatype: "json",
 	    success	: function(response){
-		var table = document.getElementById('table');
-		while(table.firstChild){
-		    table.firstChild.remove();
+		while(tbody.firstChild){
+		    tbody.firstChild.remove();
 		}
-		var header = document.createElement("div");
-		header.setAttribute("class","header row");
-		
-		var code = document.createElement("div");
-		code.setAttribute("class","cell");
-		code.innerHTML = "Code";
-		
-		var fname = document.createElement("div");
-		fname.setAttribute("class","cell");
-		fname.innerHTML = "First name";
-		
-		var lname = document.createElement("div");
-		lname.setAttribute("class","cell");
-		lname.innerHTML = "Last name";
-		
-		var activity = document.createElement("div");
-		activity.setAttribute("class","cell");
-		activity.innerHTML = "Activity";
-		
-		
-		header.appendChild(code);
-		header.appendChild(fname);
-		header.appendChild(lname);
-		header.appendChild(activity);
-		table.appendChild(header);
-
 		$.each(response['members'],function(i,member){
 		    // row to add
-		    var row = document.createElement("div");	
-		    row.setAttribute("class","row toSelect toSelectUser");
+		    var row = document.createElement("tr");	
+		    row.setAttribute("class","toSelect toSelectUser");
 		    row.setAttribute("id",member.code);
 		    // row's divs
-		    var code = document.createElement("div");
-		    code.setAttribute("class","cell");
+		    var code = document.createElement("td");
 		    code.innerHTML = member.code;
 		    
-		    var fname = document.createElement("div");
-		    fname.setAttribute("class","cell");
+		    var fname = document.createElement("td");
 		    fname.innerHTML = member.first_name;
 		    
-		    var lname = document.createElement("div");
-		    lname.setAttribute("class","cell");
+		    var lname = document.createElement("td");
 		    lname.innerHTML = member.last_name;
 		    
-		    var activity = document.createElement("div");
-		    activity.setAttribute("class","cell");
+		    var activity = document.createElement("td");
 		    if(member.disable == 0){
 			activity.innerHTML = "Active";
 		    }else{
 			activity.innerHTML = "Inactive";
 		    }
 		    
-		    var button = document.createElement("div");
-		    button.setAttribute("class","cell");
+		    var button = document.createElement("td");
 		    var butt = document.createElement("button");
 		    butt.setAttribute('value',member.code);
 		    butt.setAttribute('class','checkBookingButton');
@@ -324,12 +255,11 @@ $(document).ready(function(){
 		    row.appendChild(button);
 		    table.appendChild(row);
 		});
-		var article = $("article");
 		var prev = document.getElementById('prev');
 		var next = document.getElementById('next');
 		
 		if(prev != null){
-		    article.find('#prev')[0].remove();
+		    ulpager.find('.previous').remove();
 		}
 		if(response['page']>1){
 		    var prev = document.createElement("button");

@@ -52,18 +52,20 @@
     <div class="item-info">Category : {{ item.getCategory().getSubject() }}</div>
     <div class="item-info">Disponibility : {{ item.getBookable() }}</div>
 	{% if app.session.get('isAdmin') == false %}
-		<div class="item-info" onmouseout="GestionHover('{{item.getCode()}}',-1,5)">Note this item :
-			<ul class="listeEtoile" style="list-style-type : none;">
-				{% for i in range(1,5) %}
-					<li>
-						<a onclick="note('{{item.getCode()}}',{{i}},event)" onmouseover="GestionHover('{{item.getCode()}}',{{i}},5)">
-							<img id="staroff-{{i}}" src="{{ asset('img/staroff.gif') }}" border="0" title="{{i}}" style="border-width: 0px; display: block;">
-							<img id="staron-{{i}}" src="{{ asset('img/staron.gif') }}" border="0" title="{{i}}" style="border-width: 0px; display: none;">
-						</a>
-					</li>
-				{% endfor %}
-			</ul>
-		</div>
+		{% if app.session.get('connected') %}
+			<div class="item-info" onmouseout="GestionHover('{{item.getCode()}}',-1,5)">Note this item :
+				<ul class="listeEtoile" style="list-style-type : none;">
+					{% for i in range(1,5) %}
+						<li>
+							<a onclick="note('{{item.getCode()}}',{{i}},event)" onmouseover="GestionHover('{{item.getCode()}}',{{i}},5)">
+								<img id="staroff-{{i}}" src="{{ asset('img/staroff.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: block;">
+								<img id="staron-{{i}}" src="{{ asset('img/staron.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: none;">
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
 	{% endif %}
   </div>
   <button value={{item.getCode()}} class="InputAddOn-item bookingButton">Book</button>

@@ -114,9 +114,6 @@ function getNote(code){
 					}
 				}
 				ArrListeEtoile[code] = response['data'];
-			},
-			error	: function(jqXHR, textStatus, errorThrown){
-				alert(textStatus, errorThrown);
 			}
 		});
 	}

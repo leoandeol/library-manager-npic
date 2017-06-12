@@ -22,7 +22,7 @@
       <ul class="nav navbar-nav navbar-left">
 	
       </ul>
-      <form class="navbar-form navbar-right inline-form">
+      <form class="navbar-form navbar-right inline-form sortingForm" action="/item/list">
         <div class="form-group">
 	  <div class="input-group">
 	    <label class="input-group-addon" for="category">Category :</label>
@@ -123,7 +123,7 @@
 	    {{ item.total_unit }}
 	  </td>
 	  <td>
-	    <button value={{item.code}} class="btn btn-primary">Book</button>
+	    <button value={{item.code}} class="btn btn-primary bookingButton">Book</button>
 	  </td>
 	</tr>
 	{% endfor %}
@@ -132,11 +132,11 @@
   </div>
   <ul class="pager col-lg-4">
     {% if page>1 %}
-    <li class="previous"><a href="/item/list/{{page-1}}"><span class="glyphicon glyphicon-backward"></span> Previous</a></li>
+		<li class="previous"><button value="{{page-1}}" class="sortingButton"><span class="glyphicon glyphicon-backward"></span>Previous</button></li>
     {% endif %}
     {% if page<page_max %}
-			<li class="next"><a href="/item/list/{{page+1}}">Next<span class="glyphicon glyphicon-forward"></span></a></li>
-			{% endif %}
+		<li class="next"><button value="{{page+	1}}" class="sortingButton"><span class="glyphicon glyphicon-forward"></span>Next</button></li>
+	{% endif %}
   </ul>
 
 
