@@ -213,6 +213,7 @@ $(document).ready(function(){
 	e.preventDefault();
 	$.ajax({
 	    type	: "POST",
+		
 	    url		: Routing.generate('checkalluser',{'page':page}),
 	    datatype: "json",
 	    success	: function(response){
