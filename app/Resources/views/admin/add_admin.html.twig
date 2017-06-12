@@ -2,15 +2,25 @@
 
 {% block body %}
 <article class="article-text-block" >
-  <h1>Add new administrator</h1>
-  <form action="/admin/added_admin" method="post" class="big-form" onsubmit="return checkForm(this)">
+  <h1>
+	{% if mode == 'add' %}
+		Add new administrator
+	{% else %}
+		Update administrator {{code}}
+	{% endif %}
+  </h1>
+  <form action="/admin/added_admin/{{mode}}/{{code}}" method="post" class="big-form" onsubmit="return checkForm(this)">
     <div class="InputAddOn">
       <div class="InputAddOn-item" for="fname">First Name :</div>
       <input required type="text" id="fname" name="fname" onchange="testName(this)" class="InputAddOn-field" />
-    </div><div class="InputAddOn">
-      <div class="InputAddOn-item" for="username">Username :</div>
-      <input required type="text" id="username" name="username" onchange="testCode(this)" class="InputAddOn-field" />
-    </div><div class="InputAddOn">
+    </div>
+	{% if mode == 'add' %}
+		<div class="InputAddOn">
+		  <div class="InputAddOn-item" for="username">Username :</div>
+		  <input required type="text" id="username" name="username" onchange="testCode(this)" class="InputAddOn-field" />
+		</div>
+	{% endif %}
+	<div class="InputAddOn">
       <div class="InputAddOn-item" for="lname">Last name :</div>
       <input required type="text" id="lname" name="lname" onchange="testName(this)" class="InputAddOn-field" />
     </div><div class="InputAddOn">
@@ -38,10 +48,12 @@
       <div class="InputAddOn-item" for="pcode">Postal code :</div>
       <input required type="text" onchange="testPostCode(this)" id="pcode" name="pcode" class="InputAddOn-field" />
     </div>	
-	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="password">Password :</div>
-      <input required type="text" id="password" name="password" class="InputAddOn-field" />
-    </div>
+	{% if mode == 'add' %}
+		<div class="InputAddOn">
+		  <div class="InputAddOn-item" for="password">Password :</div>
+		  <input required type="text" id="password" name="password" class="InputAddOn-field" />
+		</div>
+	{% endif %}
 	
     <div class="InputAddOn submit-login">
       <button type="submit" class="InputAddOn-item">Submit</button>

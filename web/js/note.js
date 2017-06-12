@@ -62,7 +62,6 @@ function note(code,note,e){
 		dataType: "json",
 		success	: function(response){
 			if(response['data'] == 'Success'){
-				alert("Thank you for noting.");
 				ArrListeEtoile[code] = note;
 				for (i=1; i<= 5; i++){
 					var idoff = "staroff-" + i;

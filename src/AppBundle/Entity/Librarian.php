@@ -19,9 +19,9 @@ class Librarian{
 	 * @ORM\Column(type="string")
 	 * 
 	 * @Assert\Image(
-     *     minWidth = 200,
+     *     minWidth = 0,
      *     maxWidth = 1000,
-     *     minHeight = 200,
+     *     minHeight = 0,
      *     maxHeight = 1000
      * )
      */

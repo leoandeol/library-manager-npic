@@ -208,9 +208,9 @@ class UserController extends Controller
     }
 	
 	/**
-     * @Route("/user/bookings/{id}", name="bookings", options={"expose"=true})
+     * @Route("/user/bookings/{id}/{page}", name="bookings", options={"expose"=true})
      */
-	function checkBookingsAction(Request $request, $id){
+	function checkBookingsAction(Request $request, $id, $page = 1){
 		$session = $request->getSession();
 		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
@@ -222,11 +222,56 @@ class UserController extends Controller
 				$canCheck = false;
 			}
 			if($canCheck){
-				$bookings = $em->getRepository('AppBundle:Transaction')->findByMember($id);
-				return $this->render('user/bookings.html.twig', [
-				'bookings' => $bookings,
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-				]);
+				if($request->request->get('title') == null){
+					$title = '';
+				}else{
+					$title  = $request->request->get('title');
+				}
+				if($request->request->get('state') == null){
+					$state = '';
+				}else{
+					$state  = $request->request->get('state');
+				}
+				$year = $request->request->get('year');
+				$month  = $request->request->get('month');
+				$day  = $request->request->get('day');
+				if($day  == null){
+					if($month  == null){
+						if($year  == null){
+							$from =  date("2000-01-01");
+						}
+					}
+				}else{
+					$from = $year.'-'.$month.'-'.$day;
+				}
+				$trans_rep = $em->getRepository('AppBundle:Transaction');
+				
+				$total = $trans_rep->getNumber("",$id,$title,$from,$state);
+				
+				$trans_per_page = 16;
+				$nb_max_pages = ceil($total[0][1] / $trans_per_page);
+				$current = ($page * $trans_per_page) - $trans_per_page;
+				
+				$bookings = $trans_rep->getAll($current,$trans_per_page,"",$id,$title,$from,$state);
+				
+				$serializer = $this->get('serializer');
+				$bookingsJson = $serializer->serialize($bookings,'json');
+				
+				if($request->isXmlHttpRequest()){
+					return new JsonResponse([
+						'page' => $page,
+						'member_code' => $id,
+						'page_max' => $nb_max_pages,
+						'bookings' => $bookingsJson,
+					]);
+				}else{
+					return $this->render('user/bookings.html.twig', [
+						'page' => $page,
+						'member_code' => $id,
+						'page_max' => $nb_max_pages,
+						'bookings' => $bookings,
+					]);
+				}
 			}else{
 				return $this->redirect($this->generateUrl('home'));
 			}
@@ -250,6 +295,13 @@ class UserController extends Controller
 			}
 			if($canCheck){
 				$transaction = $em->getRepository('AppBundle:Transaction')->find($id);
+				$today = new \DateTime(date('Y-m-d'));
+				$toReturn = $transaction->getToReturnDate();
+				if($toReturn  < $today && $transaction->getState() == 'Borrowed'){
+					$transaction->setFineToPay($today->diff($toReturn )->days *$transaction->getFineCostPerDay());
+					$em->persist($transaction);
+					$em->flush();
+				}
 				return $this->render('user/booking.html.twig', [
 				'transaction' => $transaction,
 				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,

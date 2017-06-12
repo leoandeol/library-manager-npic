@@ -1,9 +1,13 @@
 $(document).ready(function(){
 	$('.table').on('mouseenter','.toSelect',function(e){
+		e.stopPropagation()
+		e.preventDefault();
 		$(this).css("backgroundColor","#5D95AC");
 	});
 	
 	$('.table').on('mouseleave','.toSelect',function(e){
+		e.stopPropagation()
+		e.preventDefault();
 		$(this).css("backgroundColor","");
 	});
 	
@@ -23,5 +27,17 @@ $(document).ready(function(){
 		e.stopPropagation()
 		e.preventDefault();
 		window.location = Routing.generate("bookings", {'id':this.value});
+	});
+	
+	$('.table').on('mouseenter','.bookingButton',function(e){
+		e.stopPropagation()
+		e.preventDefault();
+		$(this).css('backgroundColor','green');
+	});
+	
+	$('.table').on('mouseleave','.bookingButton',function(e){
+		e.stopPropagation()
+		e.preventDefault();
+		$(this).css('backgroundColor','');
 	});
 });

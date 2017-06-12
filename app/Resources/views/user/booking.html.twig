@@ -10,7 +10,7 @@
   
 		<div class="item-info">Transaction ID : {{ transaction.getId() }}</div>
 		<div class="item-info">Item Id :<a href="/item/read/{{ transaction.getItem().getCode() }}">{{ transaction.getItem().getCode() }}</a></div>
-		<div class="item-info">Member Id :<a href="/user/general_infos/{{ transaction.getMember().getCode() }}">{{ transaction.getMember().getCode() }}</a></div>
+		<div class="item-info">Member Id :<a href="/user/account/{{ transaction.getMember().getCode() }}">{{ transaction.getMember().getCode() }}</a></div>
 		<div class="item-info">Borrow date : 
 			{% if transaction.getBorrowDate() == NULL %}
 			Not borrowed yet
@@ -36,36 +36,42 @@
 			{% if transaction.getLibForBorrow() == NULL %}
 			Not borrowed yet
 			{% else %}
-			<a href="/user/general_infos/{{ transaction.getLibForBorrow().getUsername() }}">{{transaction.getLibForBorrow().getUsername() }}</a>
+			<a href="/user/account/{{ transaction.getLibForBorrow().getUsername() }}">{{transaction.getLibForBorrow().getUsername() }}</a>
 			{% endif %}
 		</div>
 		<div class="item-info">Librarian who processed the return : 
 			{% if transaction.getLibForReturn() == NULL %}
 			Not gave back yet
 			{% else %}
-			<a href="/user/general_infos/{{ transaction.getLibForReturn().getUsername() }}">{{transaction.getLibForReturn().getUsername() }}</a>
+			<a href="/user/account/{{ transaction.getLibForReturn().getUsername() }}">{{transaction.getLibForReturn().getUsername() }}</a>
 			{% endif %}
 		</div>
-		<div class="item-info">Fine cost per day : {{ transaction.getFineCostPerDay() }}</div>
+		<div class="item-info">Fine to pay : {{ transaction.getFineToPay() }} USD</div>
 		<div class="item-info">State : {{ transaction.getState() }}</div>
 		{% if transaction.getNote() != '' %}
 			<div class="item-info">Comment : {{ transaction.getNote() }}</div>
 		{% endif %}
 		{% if app.session.get('isAdmin') %}
 			<form action="/admin/changeTransactionState/{{transaction.getId()}}" method="post" onsubmit="return testForm(this)" class="big-form">
-				<div class="menu-list-element">
-					Change state : 
-					<select name="state">
-						<option value="Lost">Lost</option>
-						<option value="Booked">Booked</option>
-						<option value="Borrowed">Borrowed</option>
-						<option value="Finished">Finished</option>
-					</select>
+				<div class="InputAddOn">
+					<div class="InputAddOn-item" >Change State :</div> 
+					<div class="InputAddOn-field">
+						<select name="state">
+							<option value="Lost">Lost</option>
+							<option value="Booked">Booked</option>
+							<option value="Borrowed">Borrowed</option>
+							<option value="Finished">Finished</option>
+						</select>
+					</div>
+				</div>
+				<div class="InputAddOn">
+					<div class="InputAddOn-item" >Fine cost per day (in $)</div>
+					<div class="InputAddOn-field"><input type="number" name="fineCost"></div>
 				</div>
 				<div class="InputAddOn submit-login">
 					<button type="submit" id="submit" class="InputAddOn-item">Submit</button>
 				</div>
-		</form>
+			</form>
 		{% endif %}
 	</div>
 </article>
