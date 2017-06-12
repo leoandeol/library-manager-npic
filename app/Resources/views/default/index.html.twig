@@ -1,74 +1,79 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<article class="article-large-block">
-<h1>Welcome to the NPIC's online Library</h1>
-<div class="news-block">
-  <div class="news-item">
-    <div class="intro-table">
-      <span>Top 5 Rated books</span>
-    </div>
-    <div class="table">
-      <div class="header row">
-		<div class="cell">
-		  Title
-		</div>
-		<div class="cell">
-		  Author
-		</div>
-		<div class="cell">
-		  Note
-		</div>
+<div class="container">
+  <div class="panel panel-primary">
+    <table class="table table-striped table-condensed">
+      <div class="panel-heading">
+	<h3 class="panel-title">Top 5 Rated books</h3>
       </div>
-      {% for top in tops %}
-      <div class="row toSelect toSelectItem" id={{top.code}}>
-		<div class="cell">
-		  {{ top.title }}
-		</div>
-		<div class="cell">
-		  {{ top.author }}
-		</div>
-		<div class="cell">
-		  {{ top.note }}
-		</div>
-      </div>
-      {% endfor %}
-    </div>
+      <thead>
+	<tr>
+	  <td>
+	    Title
+	  </td>
+	  <td>
+	    Author
+	  </td>
+	  <td>
+	    Note
+	  </td>
+	</tr>
+      </thead>
+      <tbody>
+	{% for top in tops %}
+	<tr class="toSelect toSelectItem" id={{top.code}}>
+	  <td>
+	    {{ top.title }}
+	  </td>
+	  <td>
+	    {{ top.author }}
+	  </td>
+	  <td>
+	    {{ top.note }}
+	  </td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
   </div>
-  
-  <div class="news-item">
-    <div class="intro-table">
-      <span>Most borrowed books</span>
-    </div>
-    <div class="table">
-      <div class="header row">
-		<div class="cell">
-		  Title
-		</div>
-		<div class="cell">
-		  Author
-		</div>
-		<div class="cell">
-		  Category
-		</div>
-	  </div>
-      {% for pop in pops %}
-      <div class="row toSelect toSelectItem" id={{pop.code}}>
-		<div class="cell">
-		  {{ pop.title }}
-		</div>
-		<div class="cell">
-		  {{ pop.author }}
-		</div>
-		<div class="cell">
-		  {{ pop.subject }}
-		</div>
+
+  <div class="panel panel-primary">
+    <table class="table table-striped table-condensed">
+      <div class="panel-heading">
+	<h3 class="panel-title">Top 5 Borrowed books</h3>
       </div>
-      {% endfor %}
-    </div>
+      <thead>
+	<tr>
+	  <td>
+	    Title
+	  </td>
+	  <td>
+	    Author
+	  </td>
+	  <td>
+	    Category
+	  </td>
+	</tr>
+      </thead>
+      <tbody>
+	{% for pop in pops %}
+	<div class="row toSelect toSelectItem" id={{pop.code}}>
+	  <div class="cell">
+	    {{ pop.title }}
+	  </div>
+	  <div class="cell">
+	    {{ pop.author }}
+	  </div>
+	  <div class="cell">
+	    {{ pop.subject }}
+	  </div>
+	</div>
+	{% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
-</article>
 {% endblock %}
 
 {% block javascripts %}
