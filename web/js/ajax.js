@@ -61,7 +61,7 @@ $(document).ready(function(){
     var table = $('.table');
 	var tbody = $('tbody')[0];
 	var container = $('.container');
-	var ulpager = $('ul.pager');
+	var ajaxButtons = $('.ajaxButtons');
     
     table.on('click','.bookingButton',function(e){
 	e.stopPropagation()
@@ -90,7 +90,7 @@ $(document).ready(function(){
 	sortItems(1,e,data);
     });
     
-    ulpager.on('click','.sortingButton',function(e){
+    ajaxButtons.on('click','.sortingButton',function(e){
 	var data = $('.sortingForm').serialize();
 	sortItems(this.value,e,data);
     });	
@@ -159,42 +159,32 @@ $(document).ready(function(){
 		var next = $('.next');
 		
 		if(prev != null){
-		    ulpager.find('.previous').remove();
+		    ajaxButtons.find('.previous').remove();
 		}
 		if(response['page']>1){
 		    var prev = document.createElement("button");
-			prev.setAttribute("class","sortingButton");
+			prev.setAttribute("class","btn btn-primary sortingButton previous");
 		    prev.setAttribute("value",response['page']-1);
 		    prev.innerHTML = "Previous";
 			var span = document.createElement("span");
 			span.setAttribute("class","glyphicon glyphicon-backward");
 			
-		    prev.append(span);
-			
-			var li = document.createElement("li");
-			li.setAttribute("class","previous");
-			
-			li.append(prev);
-			ulpager.append(li);
+		    prev.append(span);			
+			ajaxButtons.append(prev);
 		}
 		if(next != null){
-		    ulpager.find('.next').remove();
+		    ajaxButtons.find('.next').remove();
 		}
 		if(response['page']<response['page_max']){
 		    var next = document.createElement("button");
-		    next.setAttribute("class","sortingButton");
+		    next.setAttribute("class","btn btn-primary sortingButton next");
 		    next.setAttribute("value",parseInt(response['page'],10)+1);
 		    next.innerHTML = "Next";
 			var span = document.createElement("span");
 			span.setAttribute("class","glyphicon glyphicon-forward");
 			
 		    next.append(span);
-			
-			var li = document.createElement("li");
-			li.setAttribute("class","next");
-			
-			li.append(next);
-			ulpager.append(li);
+			ajaxButtons.append(next);
 		}
 	    },
 	    error	: function(jqXHR, textStatus, errorThrown){
@@ -205,7 +195,7 @@ $(document).ready(function(){
     
     // MEMBER LIST
     
-    ulpager.on('click','.checkMemberButton',function(e){
+    ajaxButtons.on('click','.checkMemberButton',function(e){
 	checkAllMembers(this.value,e)
     });
     
@@ -260,7 +250,7 @@ $(document).ready(function(){
 		var next = document.getElementById('next');
 		
 		if(prev != null){
-		    ulpager.find('.previous').remove();
+		    ajaxButtons.find('.previous').remove();
 		}
 		if(response['page']>1){
 		    var prev = document.createElement("button");
@@ -268,10 +258,10 @@ $(document).ready(function(){
 		    prev.setAttribute("id","prev");
 		    prev.setAttribute("value",response['page']-1);
 		    prev.innerHTML = "Previous";
-		    article.append(prev);
+		    ajaxButtons.append(prev);
 		}
 		if(next != null){
-		    article.find('#next')[0].remove();
+		    ajaxButtons.find('#next')[0].remove();
 		}
 		if(response['page']<response['page_max']){
 		    var next = document.createElement("button");
@@ -279,7 +269,7 @@ $(document).ready(function(){
 		    next.setAttribute("id","next");
 		    next.setAttribute("value",parseInt(response['page'],10)+1);
 		    next.innerHTML = "Next";
-		    article.append(next);
+		    ajaxButtons.append(next);
 		}
 	    },
 	    error	: function(jqXHR, textStatus, errorThrown){

@@ -123,19 +123,19 @@
 	    {{ item.total_unit }}
 	  </td>
 	  <td>
-	    <button value={{item.code}} class="btn btn-primary">Book</button>
+	    <button value={{item.code}} class="btn btn-primary bookingButton">Book</button>
 	  </td>
 	</tr>
 	{% endfor %}
       </tbody>
     </table>
     <div class="panel-footer clearfix">
-      <div class="pull-right">
+      <div class="pull-left ajaxButtons">
 	{% if page>1 %}
-	<button value="{{page-1}}" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Previous</button>
+	<button value="{{page-1}}" class="btn btn-primary sortingButton previous"><span class="glyphicon glyphicon-backward"></span> Previous</button>
 	{% endif %}
 	{% if page<page_max %}
-			    <button value="{{page+1}}" class="btn btn-primary"><span class="glyphicon glyphicon-backward"></span> Next</button>			    {% endif %}
+	<button value="{{page+1}}" class="btn btn-primary sortingButton next"><span class="glyphicon glyphicon-forward"></span> Next</button>{% endif %}
       </div>
     </div>
   </div>
