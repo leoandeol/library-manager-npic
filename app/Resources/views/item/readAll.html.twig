@@ -22,7 +22,7 @@
       <ul class="nav navbar-nav navbar-left">
 	
       </ul>
-      <form class="navbar-form navbar-right inline-form">
+      <form class="navbar-form navbar-right inline-form" action="/item/list" method="post">
         <div class="form-group">
 	  <div class="input-group">
 	    <label class="input-group-addon" for="category">Category :</label>
@@ -51,7 +51,7 @@
 	      {% endfor %}
 	    </select>
 	  </div>
-          <input type="search" name="Search"  class="input-sm form-control" placeholder="Recherche">
+          <input type="search" name="Search" class="input-sm form-control" placeholder="Recherche">
           <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-eye-open"></span> Search</button>
         </div>
       </form>
