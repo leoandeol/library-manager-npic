@@ -40,7 +40,7 @@ class MailService
             ->setTo($to)
             ->setSubject($subject)
             ->setBody(
-                $this->renderView(
+                $this->templating->render(
                     $path,
                     $array
                 ),
