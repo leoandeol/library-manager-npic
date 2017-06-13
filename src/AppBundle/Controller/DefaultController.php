@@ -90,7 +90,7 @@ class DefaultController extends Controller
 			
 			foreach($members as $member){			
 				$today 		  = new \DateTime(date('Y-m-d'));
-				$memb_mail    = $member->getMail();
+				$memb_mail    = $member->getEmail();
 				$transactions = $trans_rep->findBy(array('member'=>$member));
 				foreach($transactions as $transac){
 					$id 	  = $transac->getId();
@@ -110,7 +110,7 @@ class DefaultController extends Controller
 						$mailer->sendTemplateMessage($memb_mail,"NPIC Library return reminder","email/reminderToReturnAndPay.html.twig",
 						array('trans_id' => $id, 'days' => $dif,'fcpd' => $toReturn,'toPay' => $toPay));
 						foreach($librarians as $librarian){
-							$mailer->sendTemplateMessage($memb_mail,"NPIC Library transaction ended","email/reminderTransactionEnded.html.twig",
+							$mailer->sendTemplateMessage($librarian->getEmail(),"NPIC Library transaction ended","email/reminderTransactionEnded.html.twig",
 							array('trans_id' => $id,'memb_id' => $member->getCode(), 'days' => $dif,'toPay' => $toPay));
 						}
 					}
