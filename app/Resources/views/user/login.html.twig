@@ -2,21 +2,33 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-	{{ parent() }}
- <form id="loginForm" action="/user/loggedin" method="post" class="login-block">
-  <div class="InputAddOn">
-    <div class="InputAddOn-item">Username</div>
-    <input class="InputAddOn-field" id="username" name="username">
-  </div>
-  <div class="InputAddOn">
-    <div class="InputAddOn-item">Password</div>
-    <input class="InputAddOn-field" type="password" id="password" name="password">
-  </div>
-  <div class="InputAddOn submit-login">
-    <button class="InputAddOn-item" id="loginSubmit" type="submit">Submit</button>
-  </div>
- </form>
+{{ parent() }}
+<div class="container">
+  <form id="loginForm" action="/user/loggedin" method="post" class="col-md-4 col-xs-12 center-block text-center">
+    <div class="form-group">
+      <label for="username" class="cols-sm-2 control-label">Username</label>
+      <div class="cols-sm-10">
+	<div class="input-group">
+	  <span class="input-group-addon"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></span>
+	  <input type="text" class="form-control" name="username" id="username"  placeholder="Enter your Username"/>
+	</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password" class="cols-sm-2 control-label">Password</label>
+      <div class="cols-sm-10">
+	<div class="input-group">
+	  <span class="input-group-addon"><span class="glyphicon glyphicon-lock" aria-hidden="true"></span></span>
+	  <input type="password" class="form-control" name="password" id="password"  placeholder="Enter your Password"/>
+	</div>
+      </div>
+    </div>
+    <div class="form-group ">
+      <button class="btn btn-primary btn-lg btn-block center-block" id="loginSubmit" type="submit">Submit</button>
+    </div>
+  </form>
+</div>
 {% endblock %}
 {% block javascripts %}
-	 <script src="{{ asset('js/ajax.js') }}"></script>
+<script src="{{ asset('js/ajax.js') }}"></script>
 {% endblock %}
