@@ -57,8 +57,8 @@
 
 <article class="item-list">
   <h1>Details of item</h1>
-	<input hidden value="{{app.session.get('isAdmin')}}" id='isAdmin'></input>
-	<input hidden value="{{item.getCode()}}" id='itemCode'></input>
+  <input hidden value="{{app.session.get('isAdmin')}}" id='isAdmin'></input>
+  <input hidden value="{{item.getCode()}}" id='itemCode'></input>
   <div class="item-info-list">
     <div class="item-info">Name : {{ item.getTitle() }}</div>
     <div class="item-info">Date of publication : {{ item.getPublicationYear() }}</div>
@@ -66,86 +66,86 @@
     <div class="item-info">Publisher : {{ item.getPublisher() }}</div>
     <div class="item-info">Category : {{ item.getCategory().getSubject() }}</div>
     <div class="item-info">Disponibility : {{ item.getBookable() }}</div>
-	{% if app.session.get('isAdmin') == false %}
-		{% if app.session.get('connected') %}
-			<div class="item-info" onmouseout="GestionHover('{{item.getCode()}}',-1,5)">Note this item :
-				<ul class="listeEtoile" style="list-style-type : none;">
-					{% for i in range(1,5) %}
-						<li>
-							<a onclick="note('{{item.getCode()}}',{{i}},event)" onmouseover="GestionHover('{{item.getCode()}}',{{i}},5)">
-								<img id="staroff-{{i}}" src="{{ asset('img/staroff.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: block;">
-								<img id="staron-{{i}}" src="{{ asset('img/staron.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: none;">
-							</a>
-						</li>
-					{% endfor %}
-				</ul>
-			</div>
-		{% endif %}
-	{% endif %}
+    {% if app.session.get('isAdmin') == false %}
+    {% if app.session.get('connected') %}
+    <div class="item-info" onmouseout="GestionHover('{{item.getCode()}}',-1,5)">Note this item :
+      <ul class="listeEtoile" style="list-style-type : none;">
+	{% for i in range(1,5) %}
+	<li>
+	  <a onclick="note('{{item.getCode()}}',{{i}},event)" onmouseover="GestionHover('{{item.getCode()}}',{{i}},5)">
+	    <img id="staroff-{{i}}" src="{{ asset('img/staroff.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: block;">
+	    <img id="staron-{{i}}" src="{{ asset('img/staron.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: none;">
+	  </a>
+	</li>
+	{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    {% endif %}
   </div>
   <button value={{item.getCode()}} class="InputAddOn-item bookingButton">Book</button>
-	{% if app.session.get('isAdmin') %}
-	
-	<h1>Details for admin</h1>
-	<div class="item-info-list">
-	<div class="item-info">Total units : {{ item.getTotalUnit() }} </div>
-	<div class="item-info">Borrowed units : {{ item.getBorrowedUnit() }} </div>
-	<div class="item-info">Lost units : {{ item.getLostUnit() }} </div>
-	<div class="item-info">Cost : {{ item.getCost() }} $ </div>
-	</div>
-		{% if item.getDisable()==0 %}
-				<div class="item-info">Disabled : No </div>
-				</div>
-				<a href="/admin/disable_item/
-				{{item.getCode()}}
-				"><button class="InputAddOn-item">Disable</button></a>
-		{% else %}
-				<div class="item-info">Disabled : Yes </div>
-				</div>
-				<a href="/admin/reactivate_item/
-				{{item.getCode()}}
-				"><button class="InputAddOn-item">Reactivate</button></a>
-		{% endif %}
-		<form action="/item/add_units/{{item.getCode()}}" method="post" onsubmit="return testForm(this)" class="big-form">
-		<div class="InputAddOn">
-			<input type="number" id="amount" onchange="testAmount(this)" name="amount" class="InputAddOn-field">
-		</div>
-		<div class="InputAddOn submit-login">
-			<button type="submit" id="submit" class="InputAddOn-item">Add units</button>
-		</div>
-		</form>
-		<form action="/item/add_lost_units/{{item.getCode()}}" method="post" onsubmit="return testForm(this)" class="big-form">
-		<div class="InputAddOn">
-			<input type="number" id="amount" onchange="testAmount(this)" name="amount" class="InputAddOn-field">
-		</div>
-		<div class="InputAddOn submit-login">
-			<button type="submit" id="submit" class="InputAddOn-item">Add LOST units</button>
-		</div>
-		</form>
-	</div>
-	<div class="InputAddOn">
-		<a href="/item/create/update/{{item.getCode()}}"><button class="InputAddOn-item">Update informations</button></a>
-	</div>
-	{% endif %}
-	
+  {% if app.session.get('isAdmin') %}
+  
+  <h1>Details for admin</h1>
+  <div class="item-info-list">
+    <div class="item-info">Total units : {{ item.getTotalUnit() }} </div>
+    <div class="item-info">Borrowed units : {{ item.getBorrowedUnit() }} </div>
+    <div class="item-info">Lost units : {{ item.getLostUnit() }} </div>
+    <div class="item-info">Cost : {{ item.getCost() }} $ </div>
+  </div>
+  {% if item.getDisable()==0 %}
+  <div class="item-info">Disabled : No </div>
+</div>
+<a href="/admin/disable_item/
+	 {{item.getCode()}}
+	 "><button class="InputAddOn-item">Disable</button></a>
+{% else %}
+<div class="item-info">Disabled : Yes </div>
+</div>
+<a href="/admin/reactivate_item/
+	 {{item.getCode()}}
+	 "><button class="InputAddOn-item">Reactivate</button></a>
+{% endif %}
+<form action="/item/add_units/{{item.getCode()}}" method="post" onsubmit="return testForm(this)" class="big-form">
+  <div class="InputAddOn">
+    <input type="number" id="amount" onchange="testAmount(this)" name="amount" class="InputAddOn-field">
+  </div>
+  <div class="InputAddOn submit-login">
+    <button type="submit" id="submit" class="InputAddOn-item">Add units</button>
+  </div>
+</form>
+<form action="/item/add_lost_units/{{item.getCode()}}" method="post" onsubmit="return testForm(this)" class="big-form">
+  <div class="InputAddOn">
+    <input type="number" id="amount" onchange="testAmount(this)" name="amount" class="InputAddOn-field">
+  </div>
+  <div class="InputAddOn submit-login">
+    <button type="submit" id="submit" class="InputAddOn-item">Add LOST units</button>
+  </div>
+</form>
+</div>
+<div class="InputAddOn">
+  <a href="/item/create/update/{{item.getCode()}}"><button class="InputAddOn-item">Update informations</button></a>
+</div>
+{% endif %}
+
 </article>
 {% endblock %}
 {% block javascripts %}
 <script>	
-	function testAmount(input){
-		var reg = new RegExp("^[1-9][0-9]*$");
-		if(reg.test(input.value)){
-			input.style.borderColor="";
-			return true;
-		}else{
-			input.style.borderColor="red";
-			return false;
-		}
-	}
-	
-	function testForm(form){
-		return testAmount(form.amount);
-	}
+  function testAmount(input){
+  var reg = new RegExp("^[1-9][0-9]*$");
+  if(reg.test(input.value)){
+  input.style.borderColor="";
+  return true;
+  }else{
+  input.style.borderColor="red";
+  return false;
+  }
+  }
+  
+  function testForm(form){
+  return testAmount(form.amount);
+  }
 </script>
 <script src="{{ asset('js/note.js') }}"></script>
 <script src="{{ asset('js/ajax.js') }}"></script>
