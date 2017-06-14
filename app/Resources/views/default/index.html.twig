@@ -58,17 +58,17 @@
       </thead>
       <tbody>
 	{% for pop in pops %}
-	<div class="row toSelect toSelectItem" id={{pop.code}}>
-	  <div class="cell">
+	<tr class="toSelect toSelectItem" id={{pop.code}}>
+	  <td>
 	    {{ pop.title }}
-	  </div>
-	  <div class="cell">
+	  </td>
+	  <td>
 	    {{ pop.author }}
-	  </div>
-	  <div class="cell">
+	  </td>
+	  <td>
 	    {{ pop.subject }}
-	  </div>
-	</div>
+	  </td>
+	</tr>
 	{% endfor %}
       </tbody>
     </table>
