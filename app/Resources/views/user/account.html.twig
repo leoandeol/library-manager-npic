@@ -15,12 +15,6 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-3 col-xs-12 col-md-offset-1">
-	<a href="/user/general_infos/{% if data['isMember'] %}{{ data['user'].getCode() }}
-		 {% else %}{{ data['user'].getUsername() }}
-		 {% endif %}
-		 "><button class="btn btn-primary">General informations</button></a>
-      </div>  
       {% if app.session.get('isAdmin') == false %}
       <div class="col-md-3 col-xs-12 col-md-offset-1">
 	<a href="/user/bookings/{{data['user'].getCode()}}"><button class="btn btn-primary">Check my bookings</button></a>
