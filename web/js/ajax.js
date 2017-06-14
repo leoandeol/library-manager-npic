@@ -535,89 +535,107 @@ $(document).ready(function(){
     });	
     
     function checkMemberBookings(page,member_code,e,datas){
-	e.preventDefault();
-	$.ajax({
-	    type	: "POST",
-	    url		: Routing.generate('bookings',{'id':member_code,'page':page}),
-	    data	: datas,
-	    datatype: "json",
-	    success	: function(response){
-		
-		while(tbody.firstChild){
-		    tbody.firstChild.remove();
-		}
-		
-		$.each(JSON.parse(response['bookings']),function(i,tr){
-		    // row to add
-		    var row = document.createElement("tr");	
-		    row.setAttribute("class","toSelect toSelectTrans");
-		    row.setAttribute("id",tr.id);
-		    // row's divs
-			var mem_code = document.createElement("option");
-			mem_code.setAttribute("id","memberCodeTransaction");
-			mem_code.setAttribute("value",response['member_code']);
+		e.preventDefault();
+		$.ajax({
+			type	: "POST",
+			url		: Routing.generate('bookings',{'id':member_code,'page':page}),
+			data	: datas,
+			datatype: "json",
+			success	: function(response){
 			
-		    var code = document.createElement("td");
-		    code.innerHTML = tr.id;
-
-		    var lname = document.createElement("td");
-		    lname.innerHTML = tr.item.title;
-		    
-		    var bdate = document.createElement("td");
-			sBDate = tr.bookedDate.split('T')[0];
-			ssBDate = sBDate.split('-');
-			okBDate = ssBDate[2]+'-'+ssBDate[1]+'-'+ssBDate[0];
-		    bdate.innerHTML = okBDate;
-
-		    var rdate = document.createElement("td");
-			if(tr.borrowDate == null){
-				okRDate = 'Not borrowed yet';
-			}else{
-				sRDate = tr.borrowDate.split('T')[0];
-				ssRDate = sRDate.split('-');
-				okRDate = ssRDate[2]+'-'+ssRDate[1]+'-'+ssRDate[0];
+			while(tbody.firstChild){
+				tbody.firstChild.remove();
 			}
-		    rdate.innerHTML = okRDate;
-		    
-		    var activity = document.createElement("td");
-		    activity.innerHTML = tr.state;
-		    
-		    row.appendChild(mem_code);
-		    row.appendChild(code);
-		    row.appendChild(lname);
-		    row.appendChild(bdate);
-		    row.appendChild(rdate);
-		    row.appendChild(activity);
-		    tbody.appendChild(row);
-		});
-		var prev = $('.previous');
-		var next = $('.next');
-		
-		if(prev != null){
-		    ajaxButtons.find('.previous').remove();
-		}
-		if(response['page']>1){
-		    var prev = document.createElement("button");
-			prev.setAttribute("class","btn btn-primary center-block checkLibButton previous");
-		    prev.setAttribute("value",response['page']-1);
-		    prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
-			ajaxButtons.append(prev);
-		}
-		if(next != null){
-		    ajaxButtons.find('.next').remove();
-		}
-		if(response['page']<response['page_max']){
-		    var next = document.createElement("button");
-		    next.setAttribute("class","btn btn-primary center-block checkLibButton next");
-		    next.setAttribute("value",parseInt(response['page'],10)+1);
-		    next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
-			ajaxButtons.append(next);
-		}
-	    },
-	    error	: function(jqXHR, textStatus, errorThrown){
-		alert('error');
-	    }
-	});
-    }
-});
+			
+			$.each(JSON.parse(response['bookings']),function(i,tr){
+				// row to add
+				var row = document.createElement("tr");	
+				row.setAttribute("class","toSelect toSelectTrans");
+				row.setAttribute("id",tr.id);
+				// row's divs
+				var mem_code = document.createElement("option");
+				mem_code.setAttribute("id","memberCodeTransaction");
+				mem_code.setAttribute("value",response['member_code']);
+				
+				var code = document.createElement("td");
+				code.innerHTML = tr.id;
 
+				var lname = document.createElement("td");
+				lname.innerHTML = tr.item.title;
+				
+				var bdate = document.createElement("td");
+				sBDate = tr.bookedDate.split('T')[0];
+				ssBDate = sBDate.split('-');
+				okBDate = ssBDate[2]+'-'+ssBDate[1]+'-'+ssBDate[0];
+				bdate.innerHTML = okBDate;
+
+				var rdate = document.createElement("td");
+				if(tr.borrowDate == null){
+					okRDate = 'Not borrowed yet';
+				}else{
+					sRDate = tr.borrowDate.split('T')[0];
+					ssRDate = sRDate.split('-');
+					okRDate = ssRDate[2]+'-'+ssRDate[1]+'-'+ssRDate[0];
+				}
+				rdate.innerHTML = okRDate;
+				
+				var activity = document.createElement("td");
+				activity.innerHTML = tr.state;
+				
+				row.appendChild(mem_code);
+				row.appendChild(code);
+				row.appendChild(lname);
+				row.appendChild(bdate);
+				row.appendChild(rdate);
+				row.appendChild(activity);
+				tbody.appendChild(row);
+			});
+			var prev = $('.previous');
+			var next = $('.next');
+			
+			if(prev != null){
+				ajaxButtons.find('.previous').remove();
+			}
+			if(response['page']>1){
+				var prev = document.createElement("button");
+				prev.setAttribute("class","btn btn-primary center-block checkLibButton previous");
+				prev.setAttribute("value",response['page']-1);
+				prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
+				ajaxButtons.append(prev);
+			}
+			if(next != null){
+				ajaxButtons.find('.next').remove();
+			}
+			if(response['page']<response['page_max']){
+				var next = document.createElement("button");
+				next.setAttribute("class","btn btn-primary center-block checkLibButton next");
+				next.setAttribute("value",parseInt(response['page'],10)+1);
+				next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
+				ajaxButtons.append(next);
+			}
+			},
+			error	: function(jqXHR, textStatus, errorThrown){
+			alert('error');
+			}
+		});
+    }
+	
+	// COMMETING ITEM
+	
+	$('.commentForm').submit(function(e){
+		var data = $(this).serialize();
+		commentItem(e,data,$(this)[0]['item_code'],$(this)[0]['user_code']);
+    });
+	
+	function commentItem(e,datas,item_code,user_code){
+		e.preventDefault;
+		$.ajax({
+			type	: "POST",
+			url		: Routing.generate('commentItem',{'item_code':item_code,'user_code':user_code}),
+			data	: datas,
+			datatype: "json",
+			success	: function(response){
+			
+			}
+	}
+});

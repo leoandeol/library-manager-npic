@@ -192,6 +192,12 @@
       </div>
     </li>
   </ul>
+  <form class="commentForm" action="item/comment/{{item.getCode()}}/{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}" >
+	<input type="text" name="comment" placeholder="Write your comment here">
+	<input hidden name="item_code" value="{{item.getCode()}}">
+	<input hidden name="user_code" value="{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}">
+	<button type="submit" >Post</button>
+  </form>
 
 </div>
 {% endblock %}

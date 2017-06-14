@@ -379,5 +379,23 @@ class ItemController extends Controller
 		
 		return new JsonResponse(array('data'=>$res));
 	}
+	
+	/**
+	 * @Route("/item/comment/{item_code}/{user_code}", name="commentItem", options={"expose"=true})
+	 */
+	public function commentItemAction(Request $request,$item_code,$user_code){
+		$em = $this->getDoctrine()->getManager();
+		$session = $request->getSession();
+		if($session->get('connected')){
+			$comment = $request->request->get('comment');
+			if(($user = $em->getRepository('AppBundle:Librarian')->find($user_code)) == NULL){
+				$user = $em->getRepository('AppBundle:Member')->find($user_code);
+			}
+			$response = 'SUCCESS';
+		}else{
+			$response = 'NOT_CONNECTED';
+		}
+		return new JsonResponse(array('response' => $response, 'comment' => $comment, 'user' => $user, 'item_code' => $item_code));
+	}
 }
 
