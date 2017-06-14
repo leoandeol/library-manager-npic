@@ -57,7 +57,6 @@ $(document).ready(function(){
     });
     
     // BOOK AN ITEM
-    var article = $("article");
     var table = $('.table');
 	var tbody = $('tbody')[0];
 	var container = $('.container');
@@ -227,7 +226,7 @@ $(document).ready(function(){
 		    var button = document.createElement("td");
 		    var butt = document.createElement("button");
 		    butt.setAttribute('value',member.code);
-		    butt.setAttribute('class','checkBookingButton');
+		    butt.setAttribute('class','checkBookingButton btn btn-primary');
 		    butt.innerHTML = "Check bookings";
 		    
 		    button.appendChild(butt);
@@ -236,32 +235,30 @@ $(document).ready(function(){
 		    row.appendChild(lname);
 		    row.appendChild(activity);
 		    row.appendChild(button);
-		    table.appendChild(row);
+		    tbody.appendChild(row);
 		});
-		var prev = document.getElementById('prev');
-		var next = document.getElementById('next');
+		var prev = $('.previous');
+		var next = $('.next');
 		
 		if(prev != null){
 		    ajaxButtons.find('.previous').remove();
 		}
 		if(response['page']>1){
 		    var prev = document.createElement("button");
-		    prev.setAttribute("class","InputAddOn-item checkMemberButton");
-		    prev.setAttribute("id","prev");
+			prev.setAttribute("class","btn btn-primary center-block checkMemberButton previous");
 		    prev.setAttribute("value",response['page']-1);
-		    prev.innerHTML = "Previous";
-		    ajaxButtons.append(prev);
+		    prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
+			ajaxButtons.append(prev);
 		}
 		if(next != null){
-		    ajaxButtons.find('#next')[0].remove();
+		    ajaxButtons.find('.next').remove();
 		}
 		if(response['page']<response['page_max']){
 		    var next = document.createElement("button");
-		    next.setAttribute("class","InputAddOn-item checkMemberButton");
-		    next.setAttribute("id","next");
+		    next.setAttribute("class","btn btn-primary center-block checkMemberButton next");
 		    next.setAttribute("value",parseInt(response['page'],10)+1);
-		    next.innerHTML = "Next";
-		    ajaxButtons.append(next);
+		    next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
+			ajaxButtons.append(next);
 		}
 	    },
 	    error	: function(jqXHR, textStatus, errorThrown){
@@ -270,8 +267,8 @@ $(document).ready(function(){
 	});
     }
     
-    article.on('click','.checkLibButton',function(e){
-	checkAllLibs(this.value,e)
+    ajaxButtons.on('click','.checkLibButton',function(e){
+		checkAllLibs(this.value,e)
     });
     
     function checkAllLibs(page,e){
@@ -281,56 +278,27 @@ $(document).ready(function(){
 	    url		: Routing.generate('checkalllib',{'page':page}),
 	    datatype: "json",
 	    success	: function(response){
-		var table = document.getElementById('table');
-		while(table.firstChild){
-		    table.firstChild.remove();
+			
+		while(tbody.firstChild){
+		    tbody.firstChild.remove();
 		}
-		var header = document.createElement("div");
-		header.setAttribute("class","header row");
-		
-		var code = document.createElement("div");
-		code.setAttribute("class","cell");
-		code.innerHTML = "Username";
-		
-		var fname = document.createElement("div");
-		fname.setAttribute("class","cell");
-		fname.innerHTML = "First name";
-		
-		var lname = document.createElement("div");
-		lname.setAttribute("class","cell");
-		lname.innerHTML = "Last name";
-		
-		var activity = document.createElement("div");
-		activity.setAttribute("class","cell");
-		activity.innerHTML = "Activity";
-		
-		
-		header.appendChild(code);
-		header.appendChild(fname);
-		header.appendChild(lname);
-		header.appendChild(activity);
-		table.appendChild(header);
 
 		$.each(response['libs'],function(i,lib){
 		    // row to add
-		    var row = document.createElement("div");	
-		    row.setAttribute("class","row toSelect toSelectUser");
+		    var row = document.createElement("tr");	
+		    row.setAttribute("class","toSelect toSelectUser");
 		    row.setAttribute("id",lib.username);
 		    // row's divs
-		    var code = document.createElement("div");
-		    code.setAttribute("class","cell");
+		    var code = document.createElement("td");
 		    code.innerHTML = lib.username;
 		    
-		    var fname = document.createElement("div");
-		    fname.setAttribute("class","cell");
+		    var fname = document.createElement("td");
 		    fname.innerHTML = lib.first_name;
 		    
-		    var lname = document.createElement("div");
-		    lname.setAttribute("class","cell");
+		    var lname = document.createElement("td");
 		    lname.innerHTML = lib.last_name;
 		    
-		    var activity = document.createElement("div");
-		    activity.setAttribute("class","cell");
+		    var activity = document.createElement("td");
 		    if(lib.disable == 0){
 			activity.innerHTML = "Active";
 		    }else{
@@ -341,33 +309,30 @@ $(document).ready(function(){
 		    row.appendChild(fname);
 		    row.appendChild(lname);
 		    row.appendChild(activity);
-		    table.appendChild(row);
+		    tbody.appendChild(row);
 		});
-		var article = $("article");
-		var prev = document.getElementById('prev');
-		var next = document.getElementById('next');
+		var prev = $('.previous');
+		var next = $('.next');
 		
 		if(prev != null){
-		    article.find('#prev')[0].remove();
+		    ajaxButtons.find('.previous').remove();
 		}
 		if(response['page']>1){
 		    var prev = document.createElement("button");
-		    prev.setAttribute("class","InputAddOn-item checkLibButton");
-		    prev.setAttribute("id","prev");
+			prev.setAttribute("class","btn btn-primary center-block checkLibButton previous");
 		    prev.setAttribute("value",response['page']-1);
-		    prev.innerHTML = "Previous";
-		    article.append(prev);
+		    prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
+			ajaxButtons.append(prev);
 		}
 		if(next != null){
-		    article.find('#next')[0].remove();
+		    ajaxButtons.find('.next').remove();
 		}
 		if(response['page']<response['page_max']){
 		    var next = document.createElement("button");
-		    next.setAttribute("class","InputAddOn-item checkLibButton");
-		    next.setAttribute("id","next");
+		    next.setAttribute("class","btn btn-primary center-block checkLibButton next");
 		    next.setAttribute("value",parseInt(response['page'],10)+1);
-		    next.innerHTML = "Next";
-		    article.append(next);
+		    next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
+			ajaxButtons.append(next);
 		}
 	    },
 	    error	: function(jqXHR, textStatus, errorThrown){
@@ -383,7 +348,7 @@ $(document).ready(function(){
 	checkLogs(1,e,data);
     });
     
-    article.on('click','.checkLogsButton',function(e){
+    ajaxButtons.on('click','.checkLogsButton',function(e){
 	var data = $('.logsForm').serialize();
 	checkLogs(this.value,e,data);
     });	
@@ -397,91 +362,60 @@ $(document).ready(function(){
 	    datatype: "json",
 	    success	: function(response){
 		var table = document.getElementById('table');
-		while(table.firstChild){
-		    table.firstChild.remove();
+		
+		while(tbody.firstChild){
+		    tbody.firstChild.remove();
 		}
-		var header = document.createElement("div");
-		header.setAttribute("class","header row");
 		
-		var code = document.createElement("div");
-		code.setAttribute("class","cell");
-		code.innerHTML = "Log ID";
-		
-		var fname = document.createElement("div");
-		fname.setAttribute("class","cell");
-		fname.innerHTML = "User ID";
-		
-		var lname = document.createElement("div");
-		lname.setAttribute("class","cell");
-		lname.innerHTML = "Date of the action";
-		
-		var activity = document.createElement("div");
-		activity.setAttribute("class","cell");
-		activity.innerHTML = "Action";
-		
-		
-		header.appendChild(code);
-		header.appendChild(fname);
-		header.appendChild(lname);
-		header.appendChild(activity);
-		table.appendChild(header);
-
 		$.each(JSON.parse(response['logs']),function(i,log){
 		    // row to add
-		    var row = document.createElement("div");	
-		    row.setAttribute("class","row toSelect toSelectLog");
+		    var row = document.createElement("tr");	
+		    row.setAttribute("class","toSelect toSelectLog");
 		    row.setAttribute("id",log['id']);
 		    // row's divs
-		    var code = document.createElement("div");
-		    code.setAttribute("class","cell");
+		    var code = document.createElement("td");
 		    code.innerHTML = log['id'];
 		    
-		    var fname = document.createElement("div");
-		    fname.setAttribute("class","cell");
+		    var fname = document.createElement("td");
 		    if(!("librarian_username" in log)){
 			fname.innerHTML = log['member_code'];
 		    }else{
 			fname.innerHTML = log['librarian_username'];
 		    }
-		    var lname = document.createElement("div");
-		    lname.setAttribute("class","cell");
+		    var lname = document.createElement("td");
 		    lname.innerHTML = log['log_date'];
 		    
-		    var activity = document.createElement("div");
-		    activity.setAttribute("class","cell");
+		    var activity = document.createElement("td");
 		    activity.innerHTML = log['action'];
 		    
 		    row.appendChild(code);
 		    row.appendChild(fname);
 		    row.appendChild(lname);
 		    row.appendChild(activity);
-		    table.appendChild(row);
+		    tbody.appendChild(row);
 		});
-		var article = $("article");
-		var prev = document.getElementById('prev');
-		var next = document.getElementById('next');
+		var prev = $('.previous');
+		var next = $('.next');
 		
 		if(prev != null){
-		    article.find('#prev')[0].remove();
+		    ajaxButtons.find('.previous').remove();
 		}
 		if(response['page']>1){
 		    var prev = document.createElement("button");
-		    prev.setAttribute("class","InputAddOn-item checkLogsButton");
-		    prev.setAttribute("id","prev");
+			prev.setAttribute("class","btn btn-primary center-block checkLibButton previous");
 		    prev.setAttribute("value",response['page']-1);
-		    prev.innerHTML = "Previous";
-		    article.append(prev);
+		    prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
+			ajaxButtons.append(prev);
 		}
 		if(next != null){
-		    article.find('#next')[0].remove();
+		    ajaxButtons.find('.next').remove();
 		}
 		if(response['page']<response['page_max']){
 		    var next = document.createElement("button");
-		    next.setAttribute("class","InputAddOn-item checkLogsButton");
-		    next.setAttribute("id","next");
+		    next.setAttribute("class","btn btn-primary center-block checkLibButton next");
 		    next.setAttribute("value",parseInt(response['page'],10)+1);
-		    next.innerHTML = "Next";
-		    article.append(next);
+		    next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
+			ajaxButtons.append(next);
 		}
 	    },
 	    error	: function(jqXHR, textStatus, errorThrown){
@@ -497,7 +431,7 @@ $(document).ready(function(){
 	checkBookings(1,e,data);
     });
     
-    article.on('click','.checkBookingsButton',function(e){
+    ajaxButtons.on('click','.checkBookingsButton',function(e){
 	var data = $('.bookingsForm').serialize();
 	checkBookings(this.value,e,data);
     });	
@@ -510,73 +444,33 @@ $(document).ready(function(){
 	    data	: datas,
 	    datatype: "json",
 	    success	: function(response){
-		var table = document.getElementById('table');
-		while(table.firstChild){
-		    table.firstChild.remove();
+		
+		while(tbody.firstChild){
+		    tbody.firstChild.remove();
 		}
-		var header = document.createElement("div");
-		header.setAttribute("class","header row");
-		
-		var code = document.createElement("div");
-		code.setAttribute("class","cell");
-		code.innerHTML = "Transaction ID";
-		
-		var fname = document.createElement("div");
-		fname.setAttribute("class","cell");
-		fname.innerHTML = "Member code";
-		
-		var lname = document.createElement("div");
-		lname.setAttribute("class","cell");
-		lname.innerHTML = "Item title";
-		
-		var bdate = document.createElement("div");
-		bdate.setAttribute("class","cell");
-		bdate.innerHTML = "Booked date";
-		
-		var rdate = document.createElement("div");
-		rdate.setAttribute("class","cell");
-		rdate.innerHTML = "Borrow date";
-		
-		var activity = document.createElement("div");
-		activity.setAttribute("class","cell");
-		activity.innerHTML = "State";
-		
-		
-		header.appendChild(code);
-		header.appendChild(fname);
-		header.appendChild(lname);
-		header.appendChild(bdate);
-		header.appendChild(rdate);
-		header.appendChild(activity);
-		table.appendChild(header);
 		
 		$.each(JSON.parse(response['trans']),function(i,tr){
 		    // row to add
-		    var row = document.createElement("div");	
-		    row.setAttribute("class","row toSelect toSelectTrans");
+		    var row = document.createElement("tr");	
+		    row.setAttribute("class","toSelect toSelectTrans");
 		    row.setAttribute("id",tr.id);
 		    // row's divs
-		    var code = document.createElement("div");
-		    code.setAttribute("class","cell");
+		    var code = document.createElement("td");
 		    code.innerHTML = tr.id;
 		    
-		    var fname = document.createElement("div");
-		    fname.setAttribute("class","cell");
+		    var fname = document.createElement("td");
 		    fname.innerHTML = tr.member.code;
 
-		    var lname = document.createElement("div");
-		    lname.setAttribute("class","cell");
+		    var lname = document.createElement("td");
 		    lname.innerHTML = tr.item.title;
 		    
-		    var bdate = document.createElement("div");
-		    bdate.setAttribute("class","cell");
+		    var bdate = document.createElement("td");
 			sBDate = tr.bookedDate.split('T')[0];
 			ssBDate = sBDate.split('-');
 			okBDate = ssBDate[2]+'-'+ssBDate[1]+'-'+ssBDate[0];
 		    bdate.innerHTML = okBDate;
 
-		    var rdate = document.createElement("div");
-		    rdate.setAttribute("class","cell");
+		    var rdate = document.createElement("td");
 			if(tr.borrowDate == null){
 				okRDate = 'Not borrowed yet';
 			}else{
@@ -586,8 +480,7 @@ $(document).ready(function(){
 			}
 		    rdate.innerHTML = okRDate;
 		    
-		    var activity = document.createElement("div");
-		    activity.setAttribute("class","cell");
+		    var activity = document.createElement("td");
 		    activity.innerHTML = tr.state;
 		    
 		    row.appendChild(code);
@@ -596,33 +489,30 @@ $(document).ready(function(){
 		    row.appendChild(bdate);
 		    row.appendChild(rdate);
 		    row.appendChild(activity);
-		    table.appendChild(row);
+		    tbody.appendChild(row);
 		});
-		var article = $("article");
-		var prev = document.getElementById('prev');
-		var next = document.getElementById('next');
+		var prev = $('.previous');
+		var next = $('.next');
 		
 		if(prev != null){
-		    article.find('#prev')[0].remove();
+		    ajaxButtons.find('.previous').remove();
 		}
 		if(response['page']>1){
 		    var prev = document.createElement("button");
-		    prev.setAttribute("class","InputAddOn-item checkBookingsButton");
-		    prev.setAttribute("id","prev");
+			prev.setAttribute("class","btn btn-primary center-block checkLibButton previous");
 		    prev.setAttribute("value",response['page']-1);
-		    prev.innerHTML = "Previous";
-		    article.append(prev);
+		    prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
+			ajaxButtons.append(prev);
 		}
 		if(next != null){
-		    article.find('#next')[0].remove();
+		    ajaxButtons.find('.next').remove();
 		}
 		if(response['page']<response['page_max']){
 		    var next = document.createElement("button");
-		    next.setAttribute("class","InputAddOn-item checkBookingsButton");
-		    next.setAttribute("id","next");
+		    next.setAttribute("class","btn btn-primary center-block checkLibButton next");
 		    next.setAttribute("value",parseInt(response['page'],10)+1);
-		    next.innerHTML = "Next";
-		    article.append(next);
+		    next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
+			ajaxButtons.append(next);
 		}
 	    },
 	    error	: function(jqXHR, textStatus, errorThrown){
@@ -639,7 +529,7 @@ $(document).ready(function(){
 	checkMemberBookings(1,$(this)[0][0].value,e,data);
     });
     
-    article.on('click','.checkMemberBookingsButton',function(e){
+    ajaxButtons.on('click','.checkMemberBookingsButton',function(e){
 	var data = $('.MemberBookingsForm').serialize();
 	checkMemberBookings(this.value,$('.MemberBookingsForm')[0][0].value,e,data);
     });	
@@ -652,69 +542,34 @@ $(document).ready(function(){
 	    data	: datas,
 	    datatype: "json",
 	    success	: function(response){
-		console.log(response);
-		var table = document.getElementById('table');
-		while(table.firstChild){
-		    table.firstChild.remove();
+		
+		while(tbody.firstChild){
+		    tbody.firstChild.remove();
 		}
-		var header = document.createElement("div");
-		header.setAttribute("class","header row");
-		
-		var code = document.createElement("div");
-		code.setAttribute("class","cell");
-		code.innerHTML = "Transaction ID";
-		
-		var lname = document.createElement("div");
-		lname.setAttribute("class","cell");
-		lname.innerHTML = "Item title";
-		
-		var bdate = document.createElement("div");
-		bdate.setAttribute("class","cell");
-		bdate.innerHTML = "Booked date";
-		
-		var rdate = document.createElement("div");
-		rdate.setAttribute("class","cell");
-		rdate.innerHTML = "Borrow date";
-		
-		var activity = document.createElement("div");
-		activity.setAttribute("class","cell");
-		activity.innerHTML = "State";
-		
-		
-		header.appendChild(code);
-		header.appendChild(lname);
-		header.appendChild(bdate);
-		header.appendChild(rdate);
-		header.appendChild(activity);
-		table.appendChild(header);
 		
 		$.each(JSON.parse(response['bookings']),function(i,tr){
 		    // row to add
-		    var row = document.createElement("div");	
-		    row.setAttribute("class","row toSelect toSelectTrans");
+		    var row = document.createElement("tr");	
+		    row.setAttribute("class","toSelect toSelectTrans");
 		    row.setAttribute("id",tr.id);
 		    // row's divs
 			var mem_code = document.createElement("option");
 			mem_code.setAttribute("id","memberCodeTransaction");
 			mem_code.setAttribute("value",response['member_code']);
 			
-		    var code = document.createElement("div");
-		    code.setAttribute("class","cell");
+		    var code = document.createElement("td");
 		    code.innerHTML = tr.id;
 
-		    var lname = document.createElement("div");
-		    lname.setAttribute("class","cell");
+		    var lname = document.createElement("td");
 		    lname.innerHTML = tr.item.title;
 		    
-		    var bdate = document.createElement("div");
-		    bdate.setAttribute("class","cell");
+		    var bdate = document.createElement("td");
 			sBDate = tr.bookedDate.split('T')[0];
 			ssBDate = sBDate.split('-');
 			okBDate = ssBDate[2]+'-'+ssBDate[1]+'-'+ssBDate[0];
 		    bdate.innerHTML = okBDate;
 
-		    var rdate = document.createElement("div");
-		    rdate.setAttribute("class","cell");
+		    var rdate = document.createElement("td");
 			if(tr.borrowDate == null){
 				okRDate = 'Not borrowed yet';
 			}else{
@@ -724,8 +579,7 @@ $(document).ready(function(){
 			}
 		    rdate.innerHTML = okRDate;
 		    
-		    var activity = document.createElement("div");
-		    activity.setAttribute("class","cell");
+		    var activity = document.createElement("td");
 		    activity.innerHTML = tr.state;
 		    
 		    row.appendChild(mem_code);
@@ -734,33 +588,30 @@ $(document).ready(function(){
 		    row.appendChild(bdate);
 		    row.appendChild(rdate);
 		    row.appendChild(activity);
-		    table.appendChild(row);
+		    tbody.appendChild(row);
 		});
-		var article = $("article");
-		var prev = document.getElementById('prev');
-		var next = document.getElementById('next');
+		var prev = $('.previous');
+		var next = $('.next');
 		
 		if(prev != null){
-		    article.find('#prev')[0].remove();
+		    ajaxButtons.find('.previous').remove();
 		}
 		if(response['page']>1){
 		    var prev = document.createElement("button");
-		    prev.setAttribute("class","InputAddOn-item checkMemberBookingsButton");
-		    prev.setAttribute("id","prev");
+			prev.setAttribute("class","btn btn-primary center-block checkLibButton previous");
 		    prev.setAttribute("value",response['page']-1);
-		    prev.innerHTML = "Previous";
-		    article.append(prev);
+		    prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
+			ajaxButtons.append(prev);
 		}
 		if(next != null){
-		    article.find('#next')[0].remove();
+		    ajaxButtons.find('.next').remove();
 		}
 		if(response['page']<response['page_max']){
 		    var next = document.createElement("button");
-		    next.setAttribute("class","InputAddOn-item checkMemberBookingsButton");
-		    next.setAttribute("id","next");
+		    next.setAttribute("class","btn btn-primary center-block checkLibButton next");
 		    next.setAttribute("value",parseInt(response['page'],10)+1);
-		    next.innerHTML = "Next";
-		    article.append(next);
+		    next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
+			ajaxButtons.append(next);
 		}
 	    },
 	    error	: function(jqXHR, textStatus, errorThrown){
