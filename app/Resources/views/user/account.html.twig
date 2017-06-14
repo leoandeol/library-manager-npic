@@ -5,12 +5,202 @@
 <div class="container">
   <div class="col-xs-12 col-md-8 center-block">
     <div class="row">
-      <div class="col-md-12 col-xs-12 center-block">
+      <div class="col-md-6 col-xs-12">
 	<img src="{{ asset('uploads/avatars/' ~  data['avatar']) }}"  width="280px;" height="280px;" class="center-block img-responsive img-rounded"/>
 	{% if attribute(data, "form") is defined %}
 	{{ form_start(data['form']) }}
 	{{ form_widget(data['form']) }}
 	{{ form_end(data['form']) }}
+	{% endif %}
+      </div>
+      <div class="col-md-6 col-xs-12">
+	{% if data['isMember']==false %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Username:</div>
+	    <input disabled class="form-control" value="{{data['user'].getUsername()}}" class="form-control"/>
+	  </div>
+	</div>
+	{% else %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon">Code:</div>
+	    <input disabled class="form-control" value="{{data['user'].getCode()}}"/>
+	  </div>
+	</div>
+	{% endif %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Firstname:</div>
+    	    <input disabled class="form-control" value="{{data['user'].getFirstName()}}" class="form-control"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Lastname:</div>
+    	    <input disabled class="form-control" value="{{data['user'].getLastName()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Email:</div>
+    	    <input disabled class="form-control" value="{{data['user'].getEmail()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Gender:</div>
+    	    <input disabled class="form-control" value="{{data['user'].getGender()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >City:</div>
+    	    <input disabled class="form-control" value="{{data['user'].getAddress().getCity()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Postal code:</div>
+    	    <input disabled class="form-control" value="{{data['user'].getAddress().getPostalCode()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Street:</div>
+    	    <input disabled class="form-control" value="{{data['user'].getAddress().getStreet()}}"/>
+	  </div>
+	</div>
+	{% if data['isMember']==false %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Tel:</div>
+	    <input disabled class="form-control" value="{{data['user'].getTel()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Hire date:</div>
+	    <input disabled class="form-control" value="{{data['user'].getHireDate()|date('Y-m-d')}}"/>
+	  </div>
+	</div>
+	{% else %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >National ID:</div>
+	    <input disabled class="form-control" value="{{data['user'].getNationalId()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Civil situation:</div>
+	    <input disabled class="form-control" value="{{data['user'].getCivilSituation()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Date of birth:</div>
+	    <input disabled class="form-control" value="{{data['user'].getDob()|date('Y-m-d')}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Tel mobile:</div>
+	    <input disabled class="form-control" value="{{data['user'].getTelMobile()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Tel home:</div>
+	    <input disabled class="form-control" value="{{data['user'].getTelHome()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Tel ref:</div>
+	    <input disabled class="form-control" value="{{data['user'].getTelRef()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Entry date:</div>
+	    <input disabled class="form-control" value="{{data['user'].getEntryDate()|date('Y-m-d')}}"/>
+	  </div>
+	</div>
+	{% if data['user'].getStudent() %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Major:</div>
+	    <input disabled class="form-control" value="{{data['user'].getMajor().getName()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Degree:</div>
+	    <input disabled class="form-control" value="{{data['user'].getDegree().getName()}}"/>
+	  </div>
+	</div>
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Degree year:</div>
+	    <input disabled class="form-control" value="{{data['user'].getDegreeYear().getYear()}}"/>
+	  </div>
+	</div>
+	{% else %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Function:</div>
+	    <input disabled class="form-control" value="{{data['user'].getFunction().getName()}}"/>
+	  </div>
+	</div>
+	{% endif %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">
+	    <div class="input-group-addon" >Faculty:</div>
+	    <input disabled class="form-control" value="{{data['user'].getFaculty().getName()}}"/>
+	  </div>
+	</div>
+	{% endif %}
+	{% if data['isAdmin'] %}
+	{% if data['isMember'] == false %}
+	{% if data['user'].getUsername() != app.session.get('user').getUsername() %}
+	{% if data['user'].getDisable()==0 %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">	
+	    <a href="/admin/disable_user/
+		     {{data['user'].getUsername()}}
+		     "><button class="input-group-addon">Disable</button></a>
+	  </div>
+	</div>
+	{% else %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">	
+	    <a href="/admin/reactivate_user/
+		     {{data['user'].getUsername()}}
+		     "><button class="input-group-addon">Reactivate</button></a>
+	  </div>
+	</div>
+	{% endif %}
+	{% endif %}
+	{% else %}
+	{% if data['user'].getDisable()==0 %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">	
+	    <a href="/admin/disable_user/
+		     {{data['user'].getCode()}}
+		     "><button class="input-group-addon">Disable</button></a>
+	  </div>
+	</div>
+	{% else %}
+	<div class="form-group col-md-12 col-xs-12">
+	  <div class="input-group">	
+	    <a href="/admin/reactivate_user/
+		     {{data['user'].getCode()}}
+		     "><button class="input-group-addon">Reactivate</button></a>
+	  </div>
+	</div>
+	{% endif %}
+	{% endif %}
 	{% endif %}
       </div>
     </div>
@@ -22,9 +212,9 @@
       {% else %}
       <div class="col-md-3 col-xs-12 col-md-offset-1">
 	<a href="/admin/{% if data['isMember'] %}add_user
-		{% else %}add_admin{% endif %}/update/
-		{% if data['isMember'] %}{{ data['user'].getCode() }}
-		{% else %}{{ data['user'].getUsername() }}
+		 {% else %}add_admin{% endif %}/update/
+		 {% if data['isMember'] %}{{ data['user'].getCode() }}
+		 {% else %}{{ data['user'].getUsername() }}
 		 {% endif %}"><button class="btn btn-primary">Update informations</button></a>
       </div>
       {% endif %}
@@ -33,139 +223,5 @@
       </div>
     </div>
   </div>
-  {% if data['isMember']==false %}
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Username:</div>
-			<input disabled value="{{data['user'].getUsername()}}"/>
-		</div>
-	{% else %}
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Code:</div>
-			<input disabled value="{{data['user'].getCode()}}"/>
-		</div>
-	{% endif %}
-	<div class="InputAddOn">
-		<div class="InputAddOn-item" >Firstname:</div>
-    	<input disabled value="{{data['user'].getFirstName()}}"/>
-	</div>
-	<div class="InputAddOn">
-		<div class="InputAddOn-item" >Lastname:</div>
-    	<input disabled value="{{data['user'].getLastName()}}"/>
-	</div>
-	<div class="InputAddOn">
-		<div class="InputAddOn-item" >Email:</div>
-    	<input disabled value="{{data['user'].getEmail()}}"/>
-	</div>
-	<div class="InputAddOn">
-		<div class="InputAddOn-item" >Gender:</div>
-    	<input disabled value="{{data['user'].getGender()}}"/>
-	</div>
-	<div class="InputAddOn">
-		<div class="InputAddOn-item" >City:</div>
-    	<input disabled value="{{data['user'].getAddress().getCity()}}"/>
-	</div>
-	<div class="InputAddOn">
-		<div class="InputAddOn-item" >Postal code:</div>
-    	<input disabled value="{{data['user'].getAddress().getPostalCode()}}"/>
-	</div>
-	<div class="InputAddOn">
-		<div class="InputAddOn-item" >Street:</div>
-    	<input disabled value="{{data['user'].getAddress().getStreet()}}"/>
-	</div>
-	{% if data['isMember']==false %}
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Tel:</div>
-			<input disabled value="{{data['user'].getTel()}}"/>
-		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Hire date:</div>
-			<input disabled value="{{data['user'].getHireDate()|date('Y-m-d')}}"/>
-		</div>
-	{% else %}
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >National ID:</div>
-			<input disabled value="{{data['user'].getNationalId()}}"/>
-		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Civil situation:</div>
-			<input disabled value="{{data['user'].getCivilSituation()}}"/>
-		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Date of birth:</div>
-			<input disabled value="{{data['user'].getDob()|date('Y-m-d')}}"/>
-		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Tel mobile:</div>
-			<input disabled value="{{data['user'].getTelMobile()}}"/>
-		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Tel home:</div>
-			<input disabled value="{{data['user'].getTelHome()}}"/>
-		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Tel ref:</div>
-			<input disabled value="{{data['user'].getTelRef()}}"/>
-		</div>
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Entry date:</div>
-			<input disabled value="{{data['user'].getEntryDate()|date('Y-m-d')}}"/>
-		</div>
-		{% if data['user'].getStudent() %}
-			<div class="InputAddOn">
-				<div class="InputAddOn-item" >Major:</div>
-				<input disabled value="{{data['user'].getMajor().getName()}}"/>
-			</div>
-			<div class="InputAddOn">
-				<div class="InputAddOn-item" >Degree:</div>
-				<input disabled value="{{data['user'].getDegree().getName()}}"/>
-			</div>
-			<div class="InputAddOn">
-				<div class="InputAddOn-item" >Degree year:</div>
-				<input disabled value="{{data['user'].getDegreeYear().getYear()}}"/>
-			</div>
-		{% else %}
-			<div class="InputAddOn">
-				<div class="InputAddOn-item" >Function:</div>
-				<input disabled value="{{data['user'].getFunction().getName()}}"/>
-			</div>
-		{% endif %}
-		<div class="InputAddOn">
-			<div class="InputAddOn-item" >Faculty:</div>
-			<input disabled value="{{data['user'].getFaculty().getName()}}"/>
-		</div>
-	{% endif %}
-	{% if data['isAdmin'] %}
-		{% if data['isMember'] == false %}
-			{% if data['user'].getUsername() != app.session.get('user').getUsername() %}
-				{% if data['user'].getDisable()==0 %}
-					<div class="InputAddOn">	
-						<a href="/admin/disable_user/
-							{{data['user'].getUsername()}}
-						"><button class="InputAddOn-item">Disable</button></a>
-					</div>	
-				{% else %}
-					<div class="InputAddOn">	
-						<a href="/admin/reactivate_user/
-							{{data['user'].getUsername()}}
-						"><button class="InputAddOn-item">Reactivate</button></a>
-					</div>
-				{% endif %}
-			{% endif %}
-		{% else %}
-			{% if data['user'].getDisable()==0 %}
-				<div class="InputAddOn">	
-					<a href="/admin/disable_user/
-						{{data['user'].getCode()}}
-					"><button class="InputAddOn-item">Disable</button></a>
-				</div>	
-			{% else %}
-				<div class="InputAddOn">	
-					<a href="/admin/reactivate_user/
-						{{data['user'].getCode()}}
-					"><button class="InputAddOn-item">Reactivate</button></a>
-				</div>
-			{% endif %}
-		{% endif %}
-	{% endif %}
 </div>
 {% endblock %}

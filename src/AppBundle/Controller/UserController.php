@@ -25,7 +25,7 @@ class UserController extends Controller
      */
     public function loginAction(Request $request)
     {
-	// replace this example code with whatever you need
+        // replace this example code with whatever you need
         return $this->render('user/login.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
         ]);
@@ -149,14 +149,14 @@ class UserController extends Controller
 					if($code == $session->get('user')->getUsername()){
 						$id = 'Lib-'.$user->getUsername();
 						$form = $this->createFormBuilder($user)
-							->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null))
-							->add('save', SubmitType::class,array('label' => 'Save',
-															'attr'=> array('class'=>'btn btn-primary'),
-															));
+                              ->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null, 'attr'=>array('class'=>'center-block')))
+                              ->add('save', SubmitType::class,array('label' => 'Save',
+                                                                    'attr'=> array('class'=>'btn btn-primary center-block'),
+                              ));
 						$canReadForm = true;									
 					}
 				}else{
-				echo 'test3';
+                    echo 'test3';
 					$isMember = true;
 					$user = $memb_rep->find($code);
 				}
@@ -169,10 +169,10 @@ class UserController extends Controller
 					if($code == $session->get('user')->getCode()){
 						$id = 'Member-'.$user->getCode();
 						$form = $this->createFormBuilder($user)
-							->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null))
-							->add('save', SubmitType::class,array('label' => 'Save',
-																  'attr'=> array('class'=>'InputAddOn-item'),
-																));
+                              ->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null))
+                              ->add('save', SubmitType::class,array('label' => 'Save',
+                                                                    'attr'=> array('class'=>'InputAddOn-item'),
+                              ));
 						$canReadForm = true;
 					}
 				}
@@ -304,8 +304,8 @@ class UserController extends Controller
 					$em->flush();
 				}
 				return $this->render('user/booking.html.twig', [
-				'transaction' => $transaction,
-				'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+                    'transaction' => $transaction,
+                    'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
 			}else{
 				return $this->redirect($this->generateUrl('home'));
