@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Note;
 use AppBundle\Entity\Logs;
+use AppBundle\Entity\Comments;
+use Symfony\Component\HttpFoundation\Response;
 
 class ItemController extends Controller
 {
@@ -174,11 +176,13 @@ class ItemController extends Controller
 			$type = $em->getRepository('AppBundle:Type')->findAll();
 			$category = $em->getRepository('AppBundle:Category')->findAllCategories();
 			$language = $em->getRepository('AppBundle:Languages')->findAll();
+			$comments = $em->getRepository('AppBundle:Comments')->findAll();
 			return $this->render('item/read.html.twig',[
 				   'item' => $item,
 				   'types' => $type,
 				   'languages' => $language,
 				   'categories' => $category,
+				   'comments' => $comments,
 				   'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 			]);
 		}
@@ -390,12 +394,22 @@ class ItemController extends Controller
 			$comment = $request->request->get('comment');
 			if(($user = $em->getRepository('AppBundle:Librarian')->find($user_code)) == NULL){
 				$user = $em->getRepository('AppBundle:Member')->find($user_code);
+			}else{
+				$user = $em->getRepository('AppBundle:Librarian')->find($user_code);
 			}
-			$response = 'SUCCESS';
+			$avatar_path = $user->getAvatarPath();
+			$new_comment = new Comments();
+			$new_comment->setMember($user);
+			$new_comment->setItem($em->getRepository('AppBundle:Item')->find($item_code));
+			$new_comment->setComment($comment);
+			
+			$em->persist($new_comment);
+			$em->flush();
+			
+			return $this->redirect($this->generateUrl('readitem',['id'=>$item_code]));
 		}else{
-			$response = 'NOT_CONNECTED';
+			return $this->redirect($this->generateUrl('login'));
 		}
-		return new JsonResponse(array('response' => $response, 'comment' => $comment, 'user' => $user, 'item_code' => $item_code));
 	}
 }
 

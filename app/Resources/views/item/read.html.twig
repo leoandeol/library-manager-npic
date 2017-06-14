@@ -136,68 +136,27 @@
 
 
   
-  <ul class="media-list col-md-12 col-xs-12">
-    <li class="media thumbnail">
-      <a class="pull-left" href="#">
-        <img class="media-object" src="images/ico01.png">
-      </a>
-      <div class="media-body">
-        <h4 class="media-heading">Suggestion</h4>
-        <p>Je pense souhaitable d'interdire la chasse au tigre pour préserver l'espèce !</p>
-        <div class="media thumbnail">
-          <a class="pull-left" href="#">
-            <img class="media-object" src="images/ico02.png">
-          </a>
-          <div class="media-body">
-            <h4 class="media-heading">Animaux dangereux</h4>
-            <p>Tu délires complètement, ce sont des animaux trop dangereux pour les laisser vivre.</p>
-            <div class="media thumbnail">
-              <a class="pull-left" href="#">
-                <img class="media-object" src="images/ico01.png">
-              </a>
-              <div class="media-body">
-                <h4 class="media-heading">Quel délire !</h4>
-                <p>C'est toi qui délires ! Il faut préserver la bio-diversité. Les tigres ne sont pas vraiment dangereux, c'est l'homme qui l'est !</p>
-              </div>
-            </div>
-          </div>
-          <div class="media">
-            <a class="pull-left" href="#">
-              <img class="media-object" src="images/ico02.png">
-            </a>
-            <div class="media-body">
-              <h4 class="media-heading">Quel courage !</h4>
-              <p>J'aimerais te voir face à un tigre toi !</p>
-            </div>
-          </div>
-        </div>
-        <div class="media thumbnail">
-          <a class="pull-left" href="#">
-            <img class="media-object" src="images/ico03.png">
-          </a>
-          <div class="media-body">
-            <h4 class="media-heading">Un peu de calme</h4>
-            <p>Je suis favorable à la préservation de l'espèce mais dans des sites protégés.</p>
-            <div class="media thumbnail">
-              <a class="pull-left" href="#">
-                <img class="media-object" src="images/ico04.png">
-              </a>
-              <div class="media-body">
-                <h4 class="media-heading">Tu as vu ta tête !</h4>
-                <p>Avec la tête que tu as tu ferais même peur à un tigre toi !</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
+  <ul class="media-list col-md-12 col-xs-12 commentContainer">
+	{% for com in comments %}
+		<li class="media thumbnail">
+		  <a class="pull-left" href="/user/account/{{com.getMember().getCode()}}">
+			<img style="height:80px; width:80px;" class="media-object" src={{ asset('uploads/avatars/' ~ com.getMember().getAvatarPath() ) }}>
+		  </a>
+		  <div class="media-body">
+			<p>{{ com.getComment() }}</p>
+		  </div>
+		</li>
+	{% endfor %}
+	{% if app.session.get('connected') %}
+		<form method="post" action="/item/comment/{{item.getCode()}}/{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}" >
+			<input type="text" name="comment" placeholder="Write your comment here">
+			<input hidden name="item_code" value="{{item.getCode()}}">
+			<input hidden name="user_code" value="{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}">
+			<button type="submit" >Post</button>
+		</form>
+	{% endif %}
   </ul>
-  <form class="commentForm" action="item/comment/{{item.getCode()}}/{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}" >
-	<input type="text" name="comment" placeholder="Write your comment here">
-	<input hidden name="item_code" value="{{item.getCode()}}">
-	<input hidden name="user_code" value="{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}">
-	<button type="submit" >Post</button>
-  </form>
+ 
 
 </div>
 {% endblock %}
