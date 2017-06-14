@@ -150,7 +150,7 @@ class UserController extends Controller
 						$form = $this->createFormBuilder($user)
 							->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null))
 							->add('save', SubmitType::class,array('label' => 'Save',
-															'attr'=> array('class'=>'InputAddOn-item'),
+															'attr'=> array('class'=>'btn btn-primary'),
 															));
 						$canReadForm = true;									
 					}

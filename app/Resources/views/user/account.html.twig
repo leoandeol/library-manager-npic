@@ -2,47 +2,42 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<article class="article-text-block">
-  <div class="profil-picture">
-	<img src="{{ asset('uploads/avatars/' ~  data['avatar']) }}"  width="280px;" height="280px;"/>
+<div class="container">
+  <div class="col-xs-12 col-md-8 center-block">
+    <div class="row">
+      <div class="col-md-12 col-xs-12 center-block">
+	<img src="{{ asset('uploads/avatars/' ~  data['avatar']) }}"  width="280px;" height="280px;" class="center-block img-responsive img-rounded"/>
 	{% if attribute(data, "form") is defined %}
-		{{ form_start(data['form']) }}
-		{{ form_widget(data['form']) }}
-		{{ form_end(data['form']) }}
+	{{ form_start(data['form']) }}
+	{{ form_widget(data['form']) }}
+	{{ form_end(data['form']) }}
 	{% endif %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 col-xs-12 col-md-offset-1">
+	<a href="/user/general_infos/{% if data['isMember'] %}{{ data['user'].getCode() }}
+		 {% else %}{{ data['user'].getUsername() }}
+		 {% endif %}
+		 "><button class="btn btn-primary">General informations</button></a>
+      </div>  
+      {% if app.session.get('isAdmin') == false %}
+      <div class="col-md-3 col-xs-12 col-md-offset-1">
+	<a href="/user/bookings/{{data['user'].getCode()}}"><button class="btn btn-primary">Check my bookings</button></a>
+      </div>
+      {% else %}
+      <div class="col-md-3 col-xs-12 col-md-offset-1">
+	<a href="/admin/{% if data['isMember'] %}add_user
+		{% else %}add_admin{% endif %}/update/
+		{% if data['isMember'] %}{{ data['user'].getCode() }}
+		{% else %}{{ data['user'].getUsername() }}
+		 {% endif %}"><button class="btn btn-primary">Update informations</button></a>
+      </div>
+      {% endif %}
+      <div class="col-md-3 col-xs-12 col-md-offset-1">
+	<a href="/user/changepass"><button class="btn btn-primary">Change my password</button></a>
+      </div>
+    </div>
   </div>
-  <div class="InputAddOn">
-    <a href="/user/general_infos/
-		{% if data['isMember'] %}
-			{{ data['user'].getCode() }}
-		{% else %}
-			{{ data['user'].getUsername() }}
-		{% endif %}
-	"><button class="InputAddOn-item">General informations</button></a>
-  </div>  
-{% if app.session.get('isAdmin') == false %}
-	<div class="InputAddOn">
-		<a href="/user/bookings/{{data['user'].getCode()}}"><button class="InputAddOn-item">Check my bookings</button></a>
-	</div>
-{% else %}
-	<div class="InputAddOn">
-		<a href="/admin/
-		{% if data['isMember'] %}
-			add_user
-		{% else %}
-			add_admin
-		{% endif %}
-		/update/
-		{% if data['isMember'] %}
-			{{ data['user'].getCode() }}
-		{% else %}
-			{{ data['user'].getUsername() }}
-		{% endif %}
-		"><button class="InputAddOn-item">Update informations</button></a>
-	</div>
-{% endif %}
-	<div class="InputAddOn">
-    <a href="/user/changepass"><button class="InputAddOn-item">Change my password</button></a>
-  </div>
-</article>
+</div>
 {% endblock %}

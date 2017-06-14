@@ -1,64 +1,96 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<article class="article-text-block" >
+<div class="container" >
   <h1>
-	{% if mode == 'add' %}
-		Add new administrator
-	{% else %}
-		Update administrator {{code}}
-	{% endif %}
+    {% if mode == 'add' %}
+    Add new administrator
+    {% else %}
+    Update administrator {{code}}
+    {% endif %}
   </h1>
-  <form action="/admin/added_admin/{{mode}}/{{code}}" method="post" class="big-form" onsubmit="return checkForm(this)">
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" for="fname">First Name :</div>
-      <input required type="text" id="fname" name="fname" onchange="testName(this)" class="InputAddOn-field" />
-    </div>
-	{% if mode == 'add' %}
-		<div class="InputAddOn">
-		  <div class="InputAddOn-item" for="username">Username :</div>
-		  <input required type="text" id="username" name="username" onchange="testCode(this)" class="InputAddOn-field" />
-		</div>
-	{% endif %}
-	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="lname">Last name :</div>
-      <input required type="text" id="lname" name="lname" onchange="testName(this)" class="InputAddOn-field" />
-    </div><div class="InputAddOn">
-      <div class="InputAddOn-item" for="gender">Gender :</div>
-      <div class="InputAddOn-field InputAddOn-field-radio">Male : <input type="radio" id="gender" name="gender" value="M"/>Female : <input type="radio" id="gender" name="gender" value="F" /></div>
-    </div>
-	
-	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="city">City :</div>
-      <input required type="text" id="city" name="city" onchange="testCity(this)" class="InputAddOn-field" />
-    </div>
-	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="phone">Phone :</div>
-      <input required type="text" id="phone" name="phone" class="InputAddOn-field" />
-    </div>
-	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="street">Street :</div>
-      <input required type="text" id="street" name="street" class="InputAddOn-field" />
-    </div>
-	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="email">Email :</div>
-      <input required type="text" id="email" onchange="testMail(this)" name="email" class="InputAddOn-field" />
+  <form action="/admin/added_admin/{{mode}}/{{code}}" method="post" class="center-block" onsubmit="return checkForm(this)">
+    <div class="row">
+      <div class="form-group">
+	<div class="input-group">
+	  <span class="input-group-addon" for="fname">First Name :</span>
+	  <input required type="text" id="fname" name="fname" onchange="testName(this)" class="form-control" />
 	</div>
-	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="pcode">Postal code :</div>
-      <input required type="text" onchange="testPostCode(this)" id="pcode" name="pcode" class="InputAddOn-field" />
-    </div>	
-	{% if mode == 'add' %}
-		<div class="InputAddOn">
-		  <div class="InputAddOn-item" for="password">Password :</div>
-		  <input required type="text" id="password" name="password" class="InputAddOn-field" />
-		</div>
-	{% endif %}
-	
-    <div class="InputAddOn submit-login">
-      <button type="submit" class="InputAddOn-item">Submit</button>
+      </div>
+      {% if mode == 'add' %}
+      <div class="form-group">
+	<div class="input-group">
+	  <span class="input-group-addon" for="username">Username :</span>
+	  <input required type="text" id="username" name="username" onchange="testCode(this)" class="form-control" />
+	</div>
+      </div>
+      {% endif %}
     </div>
-	
+    <div class="row">
+      <div class="form-group">
+	<div class="input-group">
+	  <span class="input-group-addon" for="lname">Last name :</span>
+	  <input required type="text" id="lname" name="lname" onchange="testName(this)" class="form-control" />
+	</div>
+      </div>
+      <div class="form-group">
+	<div class="input-group">
+	  <div class="input-group-addon" for="gender">Gender :</div>
+	  <div class="form-control"><label class="radio-inline"><input type="radio" id="gender" name="gender" value="M" />Male</label><label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label></div>
+	</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+	<div class="input-group">
+	  <div class="input-group-addon" for="city">City :</div>
+	  <input required type="text" id="city" name="city" onchange="testCity(this)" class="form-control" />
+	</div>
+      </div>
+      <div class="form-group">
+	<div class="input-group">
+	  <div class="input-group-addon" for="phone">Phone :</div>
+	  <input required type="text" id="phone" name="phone" class="form-control" />
+	</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+	<div class="input-group">
+	  <div class="input-group-addon" for="street">Street :</div>
+	  <input required type="text" id="street" name="street" class="form-control" />
+	</div>
+      </div>
+      <div class="form-group">
+	<div class="input-group">
+	  <div class="input-group-addon" for="email">Email :</div>
+	  <input required type="text" id="email" onchange="testMail(this)" name="email" class="form-control" />
+	</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+	<div class="input-group">
+	  <div class="input-group-addon" for="pcode">Postal code :</div>
+	  <input required type="text" onchange="testPostCode(this)" id="pcode" name="pcode" class="form-control" />
+	</div>
+      </div>
+      {% if mode == 'add' %}
+      <div class="form-group">
+	<div class="input-group">
+	  <div class="input-group-addon" for="password">Password :</div>
+	  <input required type="text" id="password" name="password" class="form-control" />
+	</div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="row">
+      <div class="form-group">
+	<div class="input-group">
+	  <button type="submit" class="btn btn-primary">Submit</button>
+	</div>
+      </div>
+    </div>
   </form>
 </article>
 {% endblock %}
