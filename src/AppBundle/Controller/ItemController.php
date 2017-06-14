@@ -276,6 +276,12 @@ class ItemController extends Controller
 										$user->setCurrentBorrowedBooksNb($user->getCurrentBorrowedBooksNb()+1);
 										$item->setBookedUnit($item->getBookedUnit()+1);
 										
+										$libs = $em->getRepository('AppBundle:Librarian')->findAll();
+										foreach($libs as $lib){
+											$this->get('my.mailer')->sendTemplateMessage($lib->getEmail(),"NPIC Library new transaction","email/bookedItem.html.twig",
+											array('memb_id' => $user->getCode(), 'trans_id' => $new_transaction->getId(), 'item_id' => $item->getCode()));	
+										}
+										
 										$em->persist($new_transaction);
 										$em->flush();
 										

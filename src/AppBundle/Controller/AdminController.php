@@ -610,7 +610,11 @@ class AdminController extends Controller
 						}
 					}
 					$trans->setState($state);
-					$trans->setFineCostPerDay($request->request->get('fineCost'));
+					if($request->request->get('fineCost') == null){
+						$trans->setFineCostPerDay($trans->getFineCostPerDay());
+					}else{
+						$trans->setFineCostPerDay($request->request->get('fineCost'));
+					}
 					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
 					$new_log = new Logs();
 					$new_log->setLib($lib);
