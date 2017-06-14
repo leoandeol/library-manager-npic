@@ -11,14 +11,14 @@
   </h1>
   <form action="/admin/added_admin/{{mode}}/{{code}}" method="post" class="center-block" onsubmit="return checkForm(this)">
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <span class="input-group-addon" for="fname">First Name :</span>
 	  <input required type="text" id="fname" name="fname" onchange="testName(this)" class="form-control" />
 	</div>
       </div>
       {% if mode == 'add' %}
-      <div class="form-group">
+      <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <span class="input-group-addon" for="username">Username :</span>
 	  <input required type="text" id="username" name="username" onchange="testCode(this)" class="form-control" />
@@ -27,13 +27,13 @@
       {% endif %}
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <span class="input-group-addon" for="lname">Last name :</span>
 	  <input required type="text" id="lname" name="lname" onchange="testName(this)" class="form-control" />
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="gender">Gender :</div>
 	  <div class="form-control"><label class="radio-inline"><input type="radio" id="gender" name="gender" value="M" />Male</label><label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label></div>
@@ -41,13 +41,13 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="city">City :</div>
 	  <input required type="text" id="city" name="city" onchange="testCity(this)" class="form-control" />
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="phone">Phone :</div>
 	  <input required type="text" id="phone" name="phone" class="form-control" />
@@ -55,13 +55,13 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="street">Street :</div>
 	  <input required type="text" id="street" name="street" class="form-control" />
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="email">Email :</div>
 	  <input required type="text" id="email" onchange="testMail(this)" name="email" class="form-control" />
@@ -69,14 +69,14 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="pcode">Postal code :</div>
 	  <input required type="text" onchange="testPostCode(this)" id="pcode" name="pcode" class="form-control" />
 	</div>
       </div>
       {% if mode == 'add' %}
-      <div class="form-group">
+      <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="password">Password :</div>
 	  <input required type="text" id="password" name="password" class="form-control" />
@@ -85,7 +85,7 @@
       {% endif %}
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-md-1 col-xs-4 center-block">
 	<div class="input-group">
 	  <button type="submit" class="btn btn-primary">Submit</button>
 	</div>

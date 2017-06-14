@@ -2,26 +2,38 @@
 
 {% block body %}
 {{ parent () }}
-<article class="article-text-block">
+<div class="container">
   <h1>Password update</h1>
-  <form method="post" id="changePassForm" action="/user/changedpass" class="login-block">
-    <div class="InputAddOn">
-      <div class="InputAddOn-item">Current password</div>
-      <input class="InputAddOn-field" name="curpass" type="password">
+  <form method="post" id="changePassForm" action="/user/changedpass">
+    <div class="row">
+      <div class="form-group col-md-6 col-xs-12">
+	<div class="input-group">
+	  <div class="input-group-addon">Current password</div>
+	  <input class="form-control" name="curpass" type="password">
+	</div>
+      </div>
+      <div class="form-group col-md-6 col-xs-12">
+	<div class="input-group">
+	  <div class="input-group-addon">New password</div>
+	  <input class="form-control" name="newpass" type="password">
+	</div>
+      </div>
     </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item">New password</div>
-      <input class="InputAddOn-field" name="newpass" type="password">
-    </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item">Repeat password</div>
-      <input class="InputAddOn-field" name="newpassbis" type="password">
-    </div>
-    <div class="InputAddOn submit-login">
-      <button class="InputAddOn-item" type="submit">Submit</button>
+    <div class="row">
+      <div class="form-group col-md-6 col-xs-12">
+	<div class="input-group">
+	  <span class="input-group-addon">Repeat password</span>
+	  <input class="form-control" name="newpassbis" type="password">
+	</div>
+      </div>
+      <div class="form-group col-md-6 col-xs-12">
+	<div class="input-group">
+	  <button class="btn btn-primary" type="submit">Submit</button>
+	</div>
+      </div>
     </div>
   </form>
-</article>
+</div>
 {% endblock %}
 
 {% block javascripts %}
