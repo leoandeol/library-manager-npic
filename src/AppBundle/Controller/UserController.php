@@ -140,6 +140,7 @@ class UserController extends Controller
 		$session = $request->getSession();
 		$memb_rep = $em->getRepository('AppBundle:Member');
 		$lib_rep = $em->getRepository('AppBundle:Librarian');
+		
 		if($session->get('connected')){
 			$canReadForm = false;
 			if($session->get('isAdmin')){
