@@ -1,4 +1,8 @@
 $(document).ready(function(){
+	$('.container').on('click','.deleteMotdButton',function(e){
+		e.stopPropagation();
+	});
+	
 	$('.table').on('mouseenter','.toSelect',function(e){
 		e.stopPropagation()
 		e.preventDefault();
@@ -11,15 +15,18 @@ $(document).ready(function(){
 		$(this).css("backgroundColor","");
 	});
 	
-	$('.table').on('click','.toSelectItem',function(){
+	$('.table').on('click','.toSelectItem',function(e){
+		e.stopPropagation()
 		window.location=Routing.generate('readitem', {'id': this.id});
 	});
 	
-	$('.table').on('click','.toSelectUser',function(){
+	$('.table').on('click','.toSelectUser',function(e){
+		e.stopPropagation()
 		window.location=Routing.generate('account', {'code': this.id});
 	});
 	
-	$('.table').on('click','.toSelectTrans',function(){
+	$('.table').on('click','.toSelectTrans',function(e){
+		e.stopPropagation()
 		window.location=Routing.generate('bookingDetail', {'id': this.id, 'code':$('#memberCodeTransaction').val()});
 	});	
 	

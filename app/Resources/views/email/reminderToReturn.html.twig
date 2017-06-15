@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<p style="margin:auto;font-size:40px;">
+
+  Your borrow number {{ trans_id }} ends in {{ days|date('d') }} days please return it before {{ date|date('d-m-Y')  }}.<br/>
+  If you return it later you will have to pay fees.<br/>
+  <br/>
+  Link to the transaction : <a href="{{ app.request.schemeAndHttpHost }}/user/booking/{{trans_id}}-{{member_id}}">click here</a><br/>
+  <br/>
+  The NPIC Library.
+</p>
+
+{% endblock %}

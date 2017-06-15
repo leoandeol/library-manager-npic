@@ -4,7 +4,7 @@
 {% block body %}
 
 <div class="navbar navbar-inverse navbar-static-top" style="margin-top:-20px;">
-  <div class="container">
+  <div class="container ">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar2" aria-expanded="false" aria-controls="navbar2">
         <span class="sr-only">Toggle navigation</span>
@@ -55,7 +55,7 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container well well-md">
   <input hidden value="{{app.session.get('isAdmin')}}" id='isAdmin'>
   <input hidden value="{{item.getCode()}}" id='itemCode'>
   <div class="row">
@@ -85,7 +85,6 @@
       <button value={{item.getCode()}} class="btn btn-primary bookingButton">Book</button>
       {% endif %}   
     </div>
-
 
 
     {% if app.session.get('isAdmin') %}
@@ -156,10 +155,12 @@
       {% endfor %}
       {% if app.session.get('connected') %}
       <form method="post" action="/item/comment/{{item.getCode()}}/{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}" >
-	<input type="text" name="comment" placeholder="Write your comment here">
+	  <div class="input-group">
+		<input type="text" class="form-control" name="comment" placeholder="Write your comment here">
+		<span class="input-group-btn"><button type="submit" id="submit" class="btn btn-success">Post</button></span>
+	  </div>
 	<input hidden name="item_code" value="{{item.getCode()}}">
 	<input hidden name="user_code" value="{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}">
-	<button type="submit" >Post</button>
       </form>
       {% endif %}
     </ul>

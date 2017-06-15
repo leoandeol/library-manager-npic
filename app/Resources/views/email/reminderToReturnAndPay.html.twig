@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<p style="margin:auto;font-size:40px;">
+
+  Your borrow number {{ trans_id }} has ended since {% if days == 0 %} today {% else %} {{days|date('d')}} days{% endif %}.<br/?
+  If you don't return it as soon as possible you will have to pay {{ fcpd }} each day.<br/>
+  Currently you have {{ toPay }} USD to pay.<br/>
+  <br/>
+  Link to the transaction : <a href="{{ app.request.schemeAndHttpHost }}/user/booking/{{trans_id}}-{{member_id}}">click here</a><br/>
+  <br/>
+  The NPIC Library.
+</p>
+
+{% endblock %}
