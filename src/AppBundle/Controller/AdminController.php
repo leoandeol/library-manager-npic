@@ -200,7 +200,7 @@ class AdminController extends Controller
 				if($mode != 'add'){
 					$user = $em->getRepository('AppBundle:Member')->find($code);
 				}else{
-					$suer = null;
+					$user = null;
 				}
 				return $this->render('admin/add_user.html.twig',[
 					'user' => $user,

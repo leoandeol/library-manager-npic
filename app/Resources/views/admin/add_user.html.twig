@@ -135,7 +135,7 @@
 	<div class="input-group">
 	  <div class="input-group-addon" for="civsitu">Civil Situation :</div>
 	  <select required id="civsitu" name="civsitu" class="form-control">
-	    {% if app != 'add' %}
+	    {% if mode != 'add' %}
 	    <option {% if user.getCivilSituation() == 'Single' %} selected {% endif %} value="single" >Single</option>
 	    <option {% if user.getCivilSituation() == 'Married' %} selected {% endif %} value="married">Married</option>
 	    <option {% if user.getCivilSituation() == 'Widower' %} selected {% endif %} value="widower">Widower</option>
@@ -180,7 +180,6 @@
 	  </select>
 	</div>
       </div>
-
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon">Position :</div>
@@ -232,8 +231,11 @@
 	      <select id="dyear" name="degree_year" class="form-control">
 		{% for y in degYears %}
 		<option value='{{y.getId()}}'>{{y.getYear()}}</option>
-		{% endfor 
+		{% endfor %}
+	      </select>
 	    </div>
+	  </div>
+	</div>
       </fieldset>
 
       <fieldset id="staff_form" disabled  class="col-md-6 col-xs-12">
@@ -246,10 +248,7 @@
 	      {% endfor %}
 	    </select>
 	  </div>
-	</div>%}
-      </select>
-      </div>
-      </div>
+	</div>
       </fieldset>
     </div>
     <div class="row">
