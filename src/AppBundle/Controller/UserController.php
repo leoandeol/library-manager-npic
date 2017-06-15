@@ -149,9 +149,9 @@ class UserController extends Controller
 					if($code == $session->get('user')->getUsername()){
 						$id = 'Lib-'.$user->getUsername();
 						$form = $this->createFormBuilder($user)
-                              ->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null, 'attr'=>array('class'=>'center-block')))
+                              ->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null, 'attr'=>array('class'=>'center-block col-xs-12 col-md-8')))
                               ->add('save', SubmitType::class,array('label' => 'Save',
-                                                                    'attr'=> array('class'=>'btn btn-primary center-block'),
+                                                                    'attr'=> array('class'=>'btn btn-primary center-block', 'style'=>'margin-top:10px;'),
                               ));
 						$canReadForm = true;									
 					}

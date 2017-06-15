@@ -7,30 +7,30 @@
     <h1 class="text-center">
       General informations
     </h1>
-	<div class="row">
-		<div class="form-group">
-			<div class="input-group">
-				<div class="input-group-addon">
-					Number of items that have to be returned today
-				</div>
-				<div class="form-control">
-					{{toRetToday[0][1]}}
-				</div>
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="input-group">
-				<div class="input-group-addon">
-					Number of items that have to be returned tomorrow
-				</div>
-				<div class="form-control">
-					{{toRetTomor[0][1]}}
-				</div>
-			</div>
-		</div>
+    <div class="row">
+      <div class="form-group col-xs-12 col-md-6">
+	<div class="input-group">
+	  <div class="input-group-addon">
+	    Number of items that have to be returned today
+	  </div>
+	  <div class="form-control">
+	    {{toRetToday[0][1]}}
+	  </div>
+	</div>
+      </div>
+      <div class="form-group col-xs-12 col-md-6">
+	<div class="input-group">
+	  <div class="input-group-addon">
+	    Number of items that have to be returned tomorrow
+	  </div>
+	  <div class="form-control">
+	    {{toRetTomor[0][1]}}
+	  </div>
+	</div>
+      </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of items
@@ -40,7 +40,7 @@
 	  </div>
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of units
@@ -51,22 +51,22 @@
 	</div>
       </div>
     </div>
-	<div class="row">
-		{% for itemPack in nbPerCateg %}
-			<div class="form-group">
-				<div class="input-group">
-					<div class="input-group-addon">
-						Number of items in category {{ itemPack.categName }}
-					</div>
-					<div class="form-control">
-						{{itemPack.nbItem}}
-					</div>
-				</div>
-			</div>
-		{% endfor %}
+    <div class="row">
+      {% for itemPack in nbPerCateg %}
+      <div class="form-group col-xs-12 col-md-6">
+	<div class="input-group">
+	  <div class="input-group-addon">
+	    Number of items in category {{ itemPack.categName }}
+	  </div>
+	  <div class="form-control">
+	    {{itemPack.nbItem}}
+	  </div>
+	</div>
+      </div>
+      {% endfor %}
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of booked items
@@ -76,7 +76,7 @@
 	  </div>
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of borrowed items
@@ -88,7 +88,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of lost items
@@ -98,7 +98,7 @@
 	  </div>
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of disabled items
@@ -110,7 +110,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of members
@@ -120,7 +120,7 @@
 	  </div>
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of disabled members
@@ -132,7 +132,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of librarians
@@ -142,7 +142,7 @@
 	  </div>
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of disabled librarians
@@ -154,7 +154,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of categories
@@ -164,7 +164,7 @@
 	  </div>
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of disabled categories
@@ -176,7 +176,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of types
@@ -186,7 +186,7 @@
 	  </div>
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of member connected this day
@@ -198,7 +198,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of member connected this month
@@ -208,7 +208,7 @@
 	  </div>
 	</div>
       </div>
-      <div class="form-group">
+      <div class="form-group col-xs-12 col-md-6">
 	<div class="input-group">
 	  <div class="input-group-addon">
 	    Number of member connected this year
