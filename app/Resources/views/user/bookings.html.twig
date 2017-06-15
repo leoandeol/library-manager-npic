@@ -2,107 +2,129 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-
-<nav class="menu-list">
-  <form class="menu-list-search MemberBookingsForm" action="/user/bookings/{{member_code}}" method="post">
-	<input hidden value="{{ member_code }}" name='member_code'>
-	<div class="menu-list-element">
-      <input class="InputAddOn-field" placeholder="Item title" type="text" name="title">
-	</div>
-	<div class="menu-list-element">
-		State : <br/>
-		<select name="state">
-			<option value="" selected>All</option>
-			<option value="Booked">Booked</option>
-			<option value="Borrowed">Borrowed</option>
-			<option value="Lost">Lost</option>
-			<option value="Finished">Finished</option>
-		</select>
-	</div>
-    <div class="InputAddOn-item" for="from">Borrow/Booked date :</div>
-	<div class="InputAddOn">
-	  <div class="InputAddOn-item"for="day">Day:</div>
-        <select class="InputAddOn-field" id="day" name="day">
-        </select>
-	</div>	
-	<div class="InputAddOn">
-      <div class="InputAddOn-item" for="month">Month:</div>
-        <select class="InputAddOn-field" id="month" name="month">
-          <option selected>01</option>
-          <option>02</option>
-          <option>03</option>
-          <option>04</option>
-          <option>05</option>
-          <option>06</option>
-          <option>07</option>
-          <option>08</option>
-          <option>09</option>
-          <option>10</option>
-          <option>11</option>
-          <option>12</option>
-        </select>
-	</div>	
-	<div class="InputAddOn">
-		<div class="InputAddOn-item" for="year">Year:</div>
-        <select class="InputAddOn-field" id="year" name="year">
-        </select>
-	</div>
-	<div class="menu-list-element">
-      <button class="InputAddOn-item" type="submit">Search</button>
-	</div>
-  </form>
-</nav>
-
-<div class="tableBookings table" id="table">
-    <div class="row header">
-      <div class="cell">
-        Transaction ID
-      </div>
-      <div class="cell">
-        Item title
-      </div>
-      <div class="cell">
-        Booked date
-      </div>
-      <div class="cell">
-        Borrow date
-      </div>
-	  <div class="cell">
-		State
-	  </div>
+<div class="navbar navbar-inverse navbar-static-top " style="margin-top:-20px;">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar2" aria-expanded="false" aria-controls="navbar2">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/item/list">List of Documents</a>
     </div>
-	{% for transaction in bookings %}
-	<div class="row toSelect toSelectTrans" id={{transaction.getId()}}>
-		<option hidden id="memberCodeTransaction" value="{{transaction.getMember().getCode()}}"></option>
-		<div class="cell">
-			{{transaction.getId()}}
-		</div>
-		<div class="cell">
-			{{transaction.getItem().getTitle()}}
-		</div>
-		<div class="cell">
-			{{transaction.getBookedDate()|date('d-m-Y')}}
-		</div>
-		<div class="cell">
-			{% if transaction.getBorrowDate() == NULL %}
-			Not borrowed yet
-			{% else %}
-			{{transaction.getBorrowDate()|date("d-m-Y") }}
-			{% endif %}
-		</div>
-		<div class="cell">
-			{{transaction.getState()}}
-		</div>
-	</div>
-{% endfor %}
+    <div id="navbar2" class="collapse navbar-collapse">
+      <form class="navbar-form navbar-right inline-form  MemberBookingsForm" action="/user/bookings/{{member_code}}" method="post">
+	<div class="form-group">
+	  <input hidden value="{{ member_code }}" name='member_code'>
+	  <div class="input-group-addon">
+	    <input class="form-control" placeholder="Item title" type="text" name="title">
+	  </div>
+	  <div class="input-group-addon">
+	    State : <br/>
+	    <select name="state" class="form-controller">
+	      <option value="" selected>All</option>
+	      <option value="Booked">Booked</option>
+	      <option value="Borrowed">Borrowed</option>
+	      <option value="Lost">Lost</option>
+	      <option value="Finished">Finished</option>
+	    </select>
+	  </div>
+	  <div class="input-group-addon">
+	    <div class="input-group-addon" for="from">Borrow/Booked date :</div>
+	    <div class="input-group-addon" for="day">Day:</div>
+            <select class="form-control" id="day" name="day">
+            </select>	
+	    <div class="input-group-addon" for="month">Month:</div>
+            <select class="form-control" id="month" name="month">
+              <option selected>01</option>
+              <option>02</option>
+              <option>03</option>
+              <option>04</option>
+              <option>05</option>
+              <option>06</option>
+              <option>07</option>
+              <option>08</option>
+              <option>09</option>
+              <option>10</option>
+              <option>11</option>
+              <option>12</option>
+            </select>
+	    <div class="input-group-addon" for="year">Year:</div>
+            <select class="form-control" id="year" name="year">
+            </select>
+	  </div>
+	  <div class="input-group">
+	    <button class="btn btn-primary" type="submit">Search</button>
+	  </div>
+      </form>
+    </div>
+  </div>
 </div>
-
-{% if page>1 %}
-	<button id="prev" value="{{page-1}}" class="InputAddOn-item checkMemberBookingsButton" type="submit">Previous</button>
-{% endif %}
-{% if page<page_max %}
-	<button id="next" value="{{page+1}}" class="InputAddOn-item checkMemberBookingsButton" type="submit">Next</button>
-{% endif %}
+</div>
+<div class="container">
+  <div class="panel panel-default table-responsive">
+    <div class="panel-heading">
+      <h3 class="panel-title">List of documents</h3>
+    </div>
+    <table class="tableBookings table table-striped table-condensed panel-body">
+      <thead>
+	<tr>
+	  <td>
+            Transaction ID
+	  </td>
+	  <td>
+            Item title
+	  </td>
+	  <td>
+            Booked date
+	  </td>
+	  <td>
+            Borrow date
+	  </td>
+	  <td>
+	    State
+	  </td>
+	</tr>
+      </thead>
+      <tbody>
+	{% for transaction in bookings %}
+	<tr class="toSelect toSelectTrans" id={{transaction.getId()}}>
+	  <option hidden id="memberCodeTransaction" value="{{transaction.getMember().getCode()}}"></option>
+	  <td>
+	    {{transaction.getId()}}
+	  </td>
+	  <td>
+	    {{transaction.getItem().getTitle()}}
+	  </td>
+	  <td>
+	    {{transaction.getBookedDate()|date('d-m-Y')}}
+	  </td>
+	  <td>
+	    {% if transaction.getBorrowDate() == NULL %}
+	    Not borrowed yet
+	    {% else %}
+	    {{transaction.getBorrowDate()|date("d-m-Y") }}
+	    {% endif %}
+	  </td>
+	  <td>
+	    {{transaction.getState()}}
+	  </td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+    <div class="panel-footer clearfix">
+      <div class="ajaxButtons">
+	{% if page>1 %}
+	<button value="{{page-1}}" class="btn btn-primary center-block sortingButton previous"><span class="glyphicon glyphicon-backward"></span> Previous</button>
+	{% endif %}	
+	{% if page<page_max %}
+			    <button value="{{page+1}}" class="btn btn-primary center-block sortingButton next"><span class="glyphicon glyphicon-forward"></span> Next</button>{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block javascripts %}
