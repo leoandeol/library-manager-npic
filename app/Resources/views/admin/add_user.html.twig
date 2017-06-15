@@ -37,18 +37,18 @@
 	<div class="input-group">
 	  <div class="input-group-addon" for="gender">Gender :</div>
 	  <div class="form-control">
-	  {% if mode != 'add' %}
-		{% if user.getGender() == 'M' %}
-			<label class="radio-inline"><input type="radio" selected id="gender" name="gender" value="M"/>Male</label>
-			<label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label>
-		{% else %}
-			<label class="radio-inline"><input type="radio" id="gender" name="gender" value="M"/>Male</label>
-			<label class="radio-inline"><input type="radio" selected id="gender" name="gender" value="F" />Female</label>
-		{% endif %}
-	  {% else %}
-		<label class="radio-inline"><input type="radio" selected id="gender" name="gender" value="M"/>Male</label>
-		<label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label>
-	  {% endif %}
+	    {% if mode != 'add' %}
+	    {% if user.getGender() == 'M' %}
+	    <label class="radio-inline"><input type="radio" selected id="gender" name="gender" value="M"/>Male</label>
+	    <label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label>
+	    {% else %}
+	    <label class="radio-inline"><input type="radio" id="gender" name="gender" value="M"/>Male</label>
+	    <label class="radio-inline"><input type="radio" selected id="gender" name="gender" value="F" />Female</label>
+	    {% endif %}
+	    {% else %}
+	    <label class="radio-inline"><input type="radio" selected id="gender" name="gender" value="M"/>Male</label>
+	    <label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label>
+	    {% endif %}
 	  </div>
 	</div>
       </div>
@@ -135,19 +135,19 @@
 	<div class="input-group">
 	  <div class="input-group-addon" for="civsitu">Civil Situation :</div>
 	  <select required id="civsitu" name="civsitu" class="form-control">
-	  {% if app != 'add' %}
-		<option {% if user.getCivilSituation() == 'Single' %} selected {% endif %} value="single" >Single</option>
-		<option {% if user.getCivilSituation() == 'Married' %} selected {% endif %} value="married">Married</option>
-		<option {% if user.getCivilSituation() == 'Widower' %} selected {% endif %} value="widower">Widower</option>
-		<option {% if user.getCivilSituation() == 'Divorced' %} selected {% endif %} value="divorced">Divorced</option>
-		<option {% if user.getCivilSituation() == 'Other' %} selected {% endif %} value="other">Other</option>
-	  {% else %}
-		<option value="single" selected>Single</option>
-		<option value="married">Married</option>
-		<option value="widower">Widower</option>
-		<option value="divorced">Divorced</option>
-		<option value="other">Other</option>
-	  {% endif %}	    
+	    {% if app != 'add' %}
+	    <option {% if user.getCivilSituation() == 'Single' %} selected {% endif %} value="single" >Single</option>
+	    <option {% if user.getCivilSituation() == 'Married' %} selected {% endif %} value="married">Married</option>
+	    <option {% if user.getCivilSituation() == 'Widower' %} selected {% endif %} value="widower">Widower</option>
+	    <option {% if user.getCivilSituation() == 'Divorced' %} selected {% endif %} value="divorced">Divorced</option>
+	    <option {% if user.getCivilSituation() == 'Other' %} selected {% endif %} value="other">Other</option>
+	    {% else %}
+	    <option value="single" selected>Single</option>
+	    <option value="married">Married</option>
+	    <option value="widower">Widower</option>
+	    <option value="divorced">Divorced</option>
+	    <option value="other">Other</option>
+	    {% endif %}	    
 	  </select>
 	</div>
       </div>
@@ -163,19 +163,19 @@
 	<div class="input-group">
 	  <div class="input-group-addon" for="fac">Faculty :</div>
 	  <select required id="fac" name="fac" class="form-control">
-	  {% if mode != 'add' %}
-		{% for f in faculties %}
-			{% if f.id == user.getFaculty().getId() %}
-				<option selected value='{{user.getFaculty().getId()}}'>{{user.getFaculty().getName()}}</option>
-			{% else %}
-				<option value='{{f.id}}'>{{f.name}}</option>
-			{% endif %}
+	    {% if mode != 'add' %}
+	    {% for f in faculties %}
+	    {% if f.id == user.getFaculty().getId() %}
+	    <option selected value='{{user.getFaculty().getId()}}'>{{user.getFaculty().getName()}}</option>
+	    {% else %}
+	    <option value='{{f.id}}'>{{f.name}}</option>
+	    {% endif %}
 	    {% endfor %}
-	  {% else %} 
-		{% for f in faculties %}
-			<option value='{{f.id}}'>{{f.name}}</option>
+	    {% else %} 
+	    {% for f in faculties %}
+	    <option value='{{f.id}}'>{{f.name}}</option>
 	    {% endfor %}
-	  {% endif %}
+	    {% endif %}
 	    
 	  </select>
 	</div>
@@ -185,82 +185,82 @@
 	<div class="input-group">
 	  <div class="input-group-addon">Position :</div>
 	  <div class="form-control">
-	  {% if mode != 'add' %}
-		{% if user.getStudent() == 1 %}
-			<label class="radio-inline"><input type="radio" id="student" name="position" value="student" checked="checked"/>Student</label>
-			<label class="radio-inline"><input type="radio" id="staff" name="position" value="staff" />Staff</label>
-		{% else %}
-			<label class="radio-inline"><input type="radio" id="student" name="position" value="student"/>Student</label>
-			<label class="radio-inline"><input type="radio" id="staff" name="position" value="staff" checked="checked"/>Staff</label>
-		{% endif %}
-	  {% else %}
-		<label class="radio-inline"><input type="radio" id="student" name="position" value="student" checked="checked"/>Student</label>
-		<label class="radio-inline"><input type="radio" id="staff" name="position" value="staff" />Staff</label>
-	  {% endif %}
+	    {% if mode != 'add' %}
+	    {% if user.getStudent() == 1 %}
+	    <label class="radio-inline"><input type="radio" id="student" name="position" value="student" checked="checked"/>Student</label>
+	    <label class="radio-inline"><input type="radio" id="staff" name="position" value="staff" />Staff</label>
+	    {% else %}
+	    <label class="radio-inline"><input type="radio" id="student" name="position" value="student"/>Student</label>
+	    <label class="radio-inline"><input type="radio" id="staff" name="position" value="staff" checked="checked"/>Staff</label>
+	    {% endif %}
+	    {% else %}
+	    <label class="radio-inline"><input type="radio" id="student" name="position" value="student" checked="checked"/>Student</label>
+	    <label class="radio-inline"><input type="radio" id="staff" name="position" value="staff" />Staff</label>
+	    {% endif %}
 	  </div>
 	</div>
       </div>
     </div>
     <div class="row">
       <fieldset id="student_form" class="col-md-6 col-xs-12">
-		<div class="row">
-		  <div class="form-group col-md-12 col-xs-12">
-			<div class="input-group">
-			  <div class="input-group-addon">Major :</div>
-			  <select id="major" name="major" class="form-control">
-			{% for m in majors %}
-			<option value='{{m.getId()}}'>{{m.getName()}}</option>
-			{% endfor %}
-			  </select>
-			</div>
-		  </div>
-		  <div class="form-group col-md-12 col-xs-12">
-			<div class="input-group">
-			  <div class="input-group-addon">Degree :</div>
-			  <select id="degree" name="degree" class="form-control">
-			{% for d in degrees %}
-			<option value='{{d.getId()}}'>{{d.getName()}}</option>
-			{% endfor %}
-			  </select>
-			</div>
-		  </div>
-		</div>
-		<div class="row">
-		  <div class="form-group col-md-12 col-xs-12">
-			<div class="input-group">
-			  <div class="input-group-addon">Year :</div>
-			  <select id="dyear" name="degree_year" class="form-control">
-			{% for y in degYears %}
-			<option value='{{y.getId()}}'>{{y.getYear()}}</option>
-			{% endfor 
-		</div>
+	<div class="row">
+	  <div class="form-group col-md-12 col-xs-12">
+	    <div class="input-group">
+	      <div class="input-group-addon">Major :</div>
+	      <select id="major" name="major" class="form-control">
+		{% for m in majors %}
+		<option value='{{m.getId()}}'>{{m.getName()}}</option>
+		{% endfor %}
+	      </select>
+	    </div>
+	  </div>
+	  <div class="form-group col-md-12 col-xs-12">
+	    <div class="input-group">
+	      <div class="input-group-addon">Degree :</div>
+	      <select id="degree" name="degree" class="form-control">
+		{% for d in degrees %}
+		<option value='{{d.getId()}}'>{{d.getName()}}</option>
+		{% endfor %}
+	      </select>
+	    </div>
+	  </div>
+	</div>
+	<div class="row">
+	  <div class="form-group col-md-12 col-xs-12">
+	    <div class="input-group">
+	      <div class="input-group-addon">Year :</div>
+	      <select id="dyear" name="degree_year" class="form-control">
+		{% for y in degYears %}
+		<option value='{{y.getId()}}'>{{y.getYear()}}</option>
+		{% endfor 
+	    </div>
       </fieldset>
 
       <fieldset id="staff_form" disabled  class="col-md-6 col-xs-12">
-		<div class="form-group">
-		  <div class="input-group">
-			<div class="input-group-addon">Function :</div>
-			<select id="function" name="function" class="form-control">
-			  {% for f in functions %}
-			  <option value='{{f.getId()}}'>{{f.getName()}}</option>
-			  {% endfor %}
-			</select>
-		  </div>
-		</div>%}
-			  </select>
-			</div>
-		  </div>
+	<div class="form-group">
+	  <div class="input-group">
+	    <div class="input-group-addon">Function :</div>
+	    <select id="function" name="function" class="form-control">
+	      {% for f in functions %}
+	      <option value='{{f.getId()}}'>{{f.getName()}}</option>
+	      {% endfor %}
+	    </select>
+	  </div>
+	</div>%}
+      </select>
+      </div>
+      </div>
       </fieldset>
-		</div>
-		<div class="row">
-		  <div class="form-group col-md-1 col-xs-4 center-block">
-		<div class="input-group">
-		  <button type="submit" class="btn btn-primary">Submit</button>
-		</div>
-		  </div>
-		</div>
-	  </form>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-1 col-xs-4 center-block">
+	<div class="input-group">
+	  <button type="submit" class="btn btn-primary">Submit</button>
 	</div>
+      </div>
+    </div>
+  </form>
+</div>
 {% endblock %}
 
 {% block javascripts %}
