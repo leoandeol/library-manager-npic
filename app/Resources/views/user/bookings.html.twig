@@ -11,18 +11,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/item/list">List of Documents</a>
+      <a class="navbar-brand" href="/user/bookings">List of Transactions</a>
     </div>
     <div id="navbar2" class="collapse navbar-collapse">
       <form class="navbar-form navbar-right inline-form  MemberBookingsForm" action="/user/bookings/{{member_code}}" method="post">
 	<div class="form-group">
 	  <input hidden value="{{ member_code }}" name='member_code'>
-	  <div class="input-group-addon">
+	  <div class="input-group">
 	    <input class="form-control" placeholder="Item title" type="text" name="title">
 	  </div>
-	  <div class="input-group-addon">
-	    State : <br/>
-	    <select name="state" class="form-controller">
+	  <div class="input-group">
+	    <span class="input-group-addon">State :</span>
+	    <select name="state" class="form-control">
 	      <option value="" selected>All</option>
 	      <option value="Booked">Booked</option>
 	      <option value="Borrowed">Borrowed</option>
@@ -30,7 +30,7 @@
 	      <option value="Finished">Finished</option>
 	    </select>
 	  </div>
-	  <div class="input-group-addon">
+	  <div class="input-group">
 	    <div class="input-group-addon" for="from">Borrow/Booked date :</div>
 	    <div class="input-group-addon" for="day">Day:</div>
             <select class="form-control" id="day" name="day">
@@ -58,14 +58,14 @@
 	    <button class="btn btn-primary" type="submit">Search</button>
 	  </div>
       </form>
+      </div>
     </div>
   </div>
-</div>
 </div>
 <div class="container">
   <div class="panel panel-default table-responsive">
     <div class="panel-heading">
-      <h3 class="panel-title">List of documents</h3>
+      <h3 class="panel-title">List of Transactions</h3>
     </div>
     <table class="tableBookings table table-striped table-condensed panel-body">
       <thead>
