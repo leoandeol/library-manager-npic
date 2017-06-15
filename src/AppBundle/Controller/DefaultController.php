@@ -16,12 +16,14 @@ class DefaultController extends Controller
     {
         $locale = $this->get('translator')->getLocale();
 
-		$rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
-		$top = $rep->findTop5PopularBooks();
+		$rep  = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
+		$top  = $rep->findTop5PopularBooks();
 		$last = $rep->findLast5BooksAdded();
-		$pop = $rep->find5MostPopularBooks();
+		$pop  = $rep->find5MostPopularBooks();
+		$motd = $em->getParameter('motd');
 
         return $this->render('default/index.html.twig', [
+			"motd" => $motd,
 			"tops" => $top,
 			"lasts" => $last,
 			"pops" =>$pop,
