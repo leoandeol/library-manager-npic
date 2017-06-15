@@ -56,90 +56,89 @@
 </div>
 
 <div class="container">
-  <input hidden value="{{app.session.get('isAdmin')}}" id='isAdmin'></input>
-  <input hidden value="{{item.getCode()}}" id='itemCode'></input>
-  <div class="col-md-6 col-xs-12">
-    <h1>{{ item.getTitle() }}</h1>
-    <p><strong>Date of publication :</strong> {{ item.getPublicationYear() }}</p>
-    <p><strong>Author :</strong> {{ item.getAuthor() }}</p>
-    <p><strong>Publisher :</strong> {{ item.getPublisher() }}</p>
-    <p><strong>Category :</strong> {{ item.getCategory().getSubject() }}</p>
-    <p><strong>Disponibility :</strong> <span class={% if item.getBookable() == 'Available' %}"label label-success">Available{% else %}"label label-warning">Not Available{% endif %}</span></p>
-    {% if app.session.get('isAdmin') == false %}
-    {% if app.session.get('connected') %}
-    <div class="item-info" onmouseout="GestionHover('{{item.getCode()}}',-1,5)">Note this item :
-      <ul class="listeEtoile" style="list-style-type : none;">
-	{% for i in range(1,5) %}
-	<li>
-	  <a onclick="note('{{item.getCode()}}',{{i}},event)" onmouseover="GestionHover('{{item.getCode()}}',{{i}},5)">
-	    <img id="staroff-{{i}}" src="{{ asset('img/staroff.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: block;">
-	    <img id="staron-{{i}}" src="{{ asset('img/staron.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: none;">
-	  </a>
-	</li>
-	{% endfor %}
-      </ul>
+  <input hidden value="{{app.session.get('isAdmin')}}" id='isAdmin'>
+  <input hidden value="{{item.getCode()}}" id='itemCode'>
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <h1>{{ item.getTitle() }}</h1>
+      <p><strong>Date of publication :</strong> {{ item.getPublicationYear() }}</p>
+      <p><strong>Author :</strong> {{ item.getAuthor() }}</p>
+      <p><strong>Publisher :</strong> {{ item.getPublisher() }}</p>
+      <p><strong>Category :</strong> {{ item.getCategory().getSubject() }}</p>
+      <p><strong>Disponibility :</strong> <span class={% if item.getBookable() == 'Available' %}"label label-success">Available{% else %}"label label-warning">Not Available{% endif %}</span></p>
+      {% if app.session.get('isAdmin') == false %}
+      {% if app.session.get('connected') %}
+      <div class="row" onmouseout="GestionHover('{{item.getCode()}}',-1,5)">
+	<ul style="list-style-type : none;display:flex;flex-direction:row;">
+	  <li><span><strong>Note :</strong></span></li>
+	  {% for i in range(1,5) %}
+	  <li>
+	    <a onclick="note('{{item.getCode()}}',{{i}},event)" onmouseover="GestionHover('{{item.getCode()}}',{{i}},5)">
+	      <img id="staroff-{{i}}" src="{{ asset('img/staroff.png') }}" border="0" title="{{i}}" style="height: 20px; width:20px; border-width: 0px; display: block;">
+	      <img id="staron-{{i}}" src="{{ asset('img/staron.png') }}" border="0" title="{{i}}" style="height: 20px; width:20px; border-width: 0px; display: none;">
+	    </a>
+	  </li>
+	  {% endfor %}
+	</ul>
+      </div>
+      {% endif %}
+      <button value={{item.getCode()}} class="btn btn-primary bookingButton">Book</button>
+      {% endif %}   
+    </div>
+
+
+
+    {% if app.session.get('isAdmin') %}
+    <div class="col-md-6 col-xs-12">
+      <h1>Administrator actions</h1>
+      <div class="col-md-6 col-xs-12">
+	<p><strong>Total units :</strong> {{ item.getTotalUnit() }} </p>
+	<p><strong>Borrowed units :</strong> {{ item.getBorrowedUnit() }} </p>
+	<p><strong>Disabled :</strong> {% if item.getDisable()==0 %}<span class="label label-success">No{% else %}<span class="label label-warning">Yes{% endif %}</span></p>
+      </div>
+      <div class="col-md-6 col-xs-12">
+	<p><strong>Lost units :</strong> {{ item.getLostUnit() }} </p>
+	<p><strong>Cost :</strong> {{ item.getCost() }} $ </p>
+	{% if item.getDisable()==0 %}
+	<a href="/admin/disable_item/{{item.getCode()}}
+	   "><button class="btn btn-primary">Disable</button></a>
+	{% else %}
+	<a href="/admin/reactivate_item/{{item.getCode()}}
+	   "><button class="btn btn-primary">Reactivate</button></a>
+	{% endif %}
+      </div>
+      
+      <form action="/item/add_units/{{item.getCode()}}" method="post" onsubmit="return testForm(this)" class="col-xs-12 col-md-6">
+	<div class="form-group">
+	  <div class="input-group">
+	    <input type="number" id="amount" onchange="testAmount(this)" name="amount" class="form-control">
+	    <span class="input-group-btn"><button type="submit" id="submit" class="btn btn-success">Add units</button></span>
+	  </div>
+	</div>
+      </form>
+      <form action="/item/add_lost_units/{{item.getCode()}}" method="post" onsubmit="return testForm(this)" class="col-xs-12 col-md-6">
+	<div class="form-group">
+	  <div class="input-group">
+	    <input type="number" id="amount" onchange="testAmount(this)" name="amount" class="form-control">
+	    <span class="input-group-btn"><button type="submit" id="submit" class="btn btn-warning">Add LOST units</button></span>
+	  </div>
+	</div>
+      </form>
+      <div class="col-xs-12 col-md-12">
+	<a href="/item/create/update/{{item.getCode()}}"><button class="btn btn-primary">Update informations</button></a>
+      </div>
     </div>
     {% endif %}
-    <button value={{item.getCode()}} class="btn btn-primary bookingButton">Book</button>
-    {% endif %}   
   </div>
-
-
-
-  {% if app.session.get('isAdmin') %}
-  <div class="col-md-6 col-xs-12">
-    <h1>Administrator actions</h1>
-    <div class="col-md-6 col-xs-12">
-      <p><strong>Total units :</strong> {{ item.getTotalUnit() }} </p>
-      <p><strong>Borrowed units :</strong> {{ item.getBorrowedUnit() }} </p>
-      <p><strong>Disabled :</strong> {% if item.getDisable()==0 %}<span class="label label-success">No{% else %}<span class="label label-warning">Yes{% endif %}</span></p>
-    </div>
-    <div class="col-md-6 col-xs-12">
-      <p><strong>Lost units :</strong> {{ item.getLostUnit() }} </p>
-      <p><strong>Cost :</strong> {{ item.getCost() }} $ </p>
-      {% if item.getDisable()==0 %}
-      <a href="/admin/disable_item/{{item.getCode()}}
-	 "><button class="btn btn-primary">Disable</button></a>
-      {% else %}
-      <a href="/admin/reactivate_item/{{item.getCode()}}
-	 "><button class="btn btn-primary">Reactivate</button></a>
-      {% endif %}
-    </div>
-    
-    <form action="/item/add_units/{{item.getCode()}}" method="post" onsubmit="return testForm(this)" class="col-xs-12 col-md-6">
-      <div class="form-group">
-	<div class="input-group">
-	  <input type="number" id="amount" onchange="testAmount(this)" name="amount" class="form-control">
-	  <span class="input-group-btn"><button type="submit" id="submit" class="btn btn-success">Add units</button></span>
-	</div>
-      </div>
-    </form>
-    <form action="/item/add_lost_units/{{item.getCode()}}" method="post" onsubmit="return testForm(this)" class="col-xs-12 col-md-6">
-      <div class="form-group">
-	<div class="input-group">
-	  <input type="number" id="amount" onchange="testAmount(this)" name="amount" class="form-control">
-	  <span class="input-group-btn"><button type="submit" id="submit" class="btn btn-warning">Add LOST units</button></span>
-	</div>
-      </div>
-    </form>
-    <div class="col-xs-12 col-md-12">
-      <a href="/item/create/update/{{item.getCode()}}"><button class="btn btn-primary">Update informations</button></a>
-    </div>
-  </div>
-  {% endif %}
   
-
-
-
-
-
-  
-  <ul class="media-list col-md-12 col-xs-12 commentContainer">
-    {% for com in comments %}
-    <li class="media thumbnail">
-      {% if com.getLibrarian() == null %}
-      <a class="pull-left" href="/user/account/{{com.getMember().getCode()}}">
-	<img style="height:80px; width:80px;" class="media-object" src={{ asset('uploads/avatars/' ~ com.getMember().getAvatarPath() ) }}>
+  <div class="row" style="padding-top:20px">
+    <ul class="media-list col-md-12 col-xs-12 commentContainer">
+      {% for com in comments %}
+      <li class="media thumbnail">
+	{% if com.getLibrarian() == null %}
+	<a class="pull-left" href="/user/account/{{com.getMember().getCode()}}">
+	  <img style="height:80px; width:80px;" class="media-object" src={{ asset('uploads/avatars/' ~ com.getMember().getAvatarPath() ) }}>
+	</a>
 	{% else %}
 	<a class="pull-left" href="/user/account/{{com.getLibrarian().getUsername()}}">
 	  <img style="height:80px; width:80px;" class="media-object" src={{ asset('uploads/avatars/' ~ com.getLibrarian().getAvatarPath() ) }}>
@@ -147,25 +146,24 @@
 	</a>
 	<div class="media-body">			
 	  {% if com.getLibrarian() == null %}
-	  <label class="label label-default"> member {{com.getMember().getCode()}}</label>
+	  <label class="label label-default"> Member {{com.getMember().getCode()}}</label>
 	  {% else %}				
-	  <label class="label label-default"> administrator {{com.getLibrarian().getUsername()}} </label>
+	  <label class="label label-primary"> Librarian {{com.getLibrarian().getUsername()}} </label>
 	  {% endif %}
 	  <p>{{ com.getComment() }}</p>
 	</div>
-    </li>
-    {% endfor %}
-    {% if app.session.get('connected') %}
-    <form method="post" action="/item/comment/{{item.getCode()}}/{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}" >
-      <input type="text" name="comment" placeholder="Write your comment here">
-      <input hidden name="item_code" value="{{item.getCode()}}">
-      <input hidden name="user_code" value="{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}">
-      <button type="submit" >Post</button>
-    </form>
-    {% endif %}
-  </ul>
-  
-
+      </li>
+      {% endfor %}
+      {% if app.session.get('connected') %}
+      <form method="post" action="/item/comment/{{item.getCode()}}/{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}" >
+	<input type="text" name="comment" placeholder="Write your comment here">
+	<input hidden name="item_code" value="{{item.getCode()}}">
+	<input hidden name="user_code" value="{% if app.session.get('isAdmin') %}{{ app.session.get('user').getUsername() }}{% else %}{{ app.session.get('user').getCode()}}{% endif %}">
+	<button type="submit" >Post</button>
+      </form>
+      {% endif %}
+    </ul>
+  </div>
 </div>
 {% endblock %}
 

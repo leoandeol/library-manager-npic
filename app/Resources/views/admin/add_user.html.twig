@@ -2,14 +2,14 @@
 
 {% block body %}
 <div class="container">
-  <h1 class="col-xs-12 col-md-6 center-block text-center">
+  <h1 class="col-xs-12 col-md-8 center-block text-center">
     {% if mode == 'add' %}
     Add new member
     {% else %}
     Update member {{code}}
     {% endif %}
   </h1>
-  <form action="/admin/added_user/{{mode}}/{{code}}" method="post" onsubmit="return checkForm(this)" class="col-xs-12 col-md-9 center-block">
+  <form action="/admin/added_user/{{mode}}/{{code}}" method="post" onsubmit="return checkForm(this)" class="col-xs-12 col-md-10 center-block">
     <div class="row">
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
@@ -63,7 +63,7 @@
       
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
-	  <div class="input-group-addon" for="dob">Date of birth :</div>
+	  <div class="input-group-addon" for="dob">DOB :</div>
 	  <div class="input-group-addon"for="day">Day:</div>
 	  <select class="form-control" id="day" name="day">
 	  </select>
@@ -393,4 +393,5 @@
     r_sta.onclick=function(){ stud.disabled=true; staff.disabled=false; };
   </script>
   <script src="{{ asset('js/testForms.js') }}"></script>
+    <script src="{{ asset('js/dates.js') }}"></script>
   {% endblock %}
