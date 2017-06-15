@@ -2,143 +2,156 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<article class="article-text-block">
-  <div class="InputAddOn">
-	<div class="table" id="table">
-		<div class="header row">
-			<div class="cell">
-				General informations
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of items
-			</div>
-			<div class="cell">
-				{{itemNumber[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of units
-			</div>
-			<div class="cell">
-				{{itemUnits[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of booked items
-			</div>
-			<div class="cell">
-				{{bookItemNumb[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of borrowed items
-			</div>
-			<div class="cell">
-				{{bItemNumber[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of lost items
-			</div>
-			<div class="cell">
-				{{lItemNumber[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of disabled items
-			</div>
-			<div class="cell">
-				{{dItemNumber[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of members
-			</div>
-			<div class="cell">
-				{{membNumber[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of disabled members
-			</div>
-			<div class="cell">
-				{{dMembNumber[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of librarians
-			</div>
-			<div class="cell">
-				{{libNumber[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of disabled librarians
-			</div>
-			<div class="cell">
-				{{dLibNumb[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of categories
-			</div>
-			<div class="cell">
-				{{categNumb[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of disabled categories
-			</div>
-			<div class="cell">
-				{{dCategNumb[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of types
-			</div>
-			<div class="cell">
-				{{typeNumber[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of member connected this day
-			</div>
-			<div class="cell">
-				{{coDay[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of member connected this month
-			</div>
-			<div class="cell">
-				{{coMonth[0][1]}}
-			</div>
-		</div>
-		<div class="row">
-			<div class="cell">
-				Number of member connected this year
-			</div>
-			<div class="cell">
-				{{coYear[0][1]}}
-			</div>
-		</div>
+<div class="container">
+  <div class="col-md-8 col-xs-12 center-block">
+    <h1 class="text-center">
+      General informations
+    </h1>
+    <div class="row">
+      <div class="input-group">
+	<div class="input-group-addon">
+	  Number of items
 	</div>
+	<div class="form-control">
+	  {{itemNumber[0][1]}}
+	</div>
+      </div>
+      <div class="input-group">
+	<div class="input-group-addon">
+	  Number of units
+	</div>
+	<div class="form-control">
+	  {{itemUnits[0][1]}}
+	</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-group">
+	<div class="input-group-addon">
+	  Number of booked items
+	</div>
+	<div class="form-control">
+	  {{bookItemNumb[0][1]}}
+	</div>
+      </div>
+      <div class="input-group">
+	<div class="input-group-addon">
+	  Number of borrowed items
+	</div>
+	<div class="form-control">
+	  {{bItemNumber[0][1]}}
+	</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-group">
+	<div class="input-group-addon">
+	  Number of lost items
+	</div>
+	<div class="form-control">
+	  {{lItemNumber[0][1]}}
+	</div>
+      </div>
+      <div class="input-group">
+      <div class="input-group-addon">
+	Number of disabled items
+      </div>
+      <div class="form-control">
+	{{dItemNumber[0][1]}}
+      </div>
+    </div>
   </div>
-</article>
+  <div class="row">
+    <div class="input-group">
+      <div class="input-group-addon">
+	Number of members
+      </div>
+      <div class="form-control">
+	{{membNumber[0][1]}}
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-group-addon">
+	Number of disabled members
+      </div>
+      <div class="form-control">
+	{{dMembNumber[0][1]}}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-group">
+      <div class="input-group-addon">
+	Number of librarians
+      </div>
+      <div class="form-control">
+	{{libNumber[0][1]}}
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-group-addon">
+	Number of disabled librarians
+      </div>
+      <div class="form-control">
+	{{dLibNumb[0][1]}}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-group">
+      <div class="input-group-addon">
+	Number of categories
+      </div>
+      <div class="form-control">
+	{{categNumb[0][1]}}
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-group-addon">
+	Number of disabled categories
+      </div>
+      <div class="form-control">
+	{{dCategNumb[0][1]}}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-group">
+      <div class="input-group-addon">
+	Number of types
+      </div>
+      <div class="form-control">
+	{{typeNumber[0][1]}}
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-group-addon">
+	Number of member connected this day
+      </div>
+      <div class="form-control">
+	{{coDay[0][1]}}
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="input-group">
+      <div class="input-group-addon">
+	Number of member connected this month
+      </div>
+      <div class="form-control">
+	{{coMonth[0][1]}}
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-group-addon">
+	Number of member connected this year
+      </div>
+      <div class="form-control">
+	{{coYear[0][1]}}
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
 {% endblock %}
