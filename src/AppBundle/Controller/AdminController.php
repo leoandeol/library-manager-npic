@@ -131,7 +131,7 @@ class AdminController extends Controller
 				$dCategNumb   = $cateRep->getDisabledNumber();
 				$typeNumber   = $typeRep->getTypeNumber();
 				
-				$dateParsed   = split('-',date('Y-m-d'));
+				$dateParsed   = explode('-',date('Y-m-d'));
 				$thisMonth	  = $dateParsed[0].'-'.$dateParsed[1].'-01';
 				$thisYear	  = $dateParsed[1].'01-01';
 				$coDay		  = $logsRep->getCo(date('Y-m-d'));
