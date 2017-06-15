@@ -3,23 +3,28 @@
 
 {% block body %}
 
-<article class="item-list">
-
-<div class="table" id="table">
-    <div class="row header">
-      <div class="cell">
-        Code
-      </div>
-      <div class="cell">
-        First name
-      </div>
-      <div class="cell">
-        Last name
-      </div>
-      <div class="cell">
-        Activity
-      </div>
+<div class="container">
+  <div class="panel panel-default table-responsive">
+    <div class="panel-heading">
+      <h3 class="panel-title">List of users</h3>
     </div>
+    <table class="table table-striped table-condensed panel-body">
+      <thead>
+	<tr>
+      <td>
+        Code
+      </td>
+      <td>
+        First name
+      </td>
+      <td>
+        Last name
+      </td>
+      <td>
+        Activity
+      </td>
+      </tr>
+      </thead>
 	{% for member in members %}
 	<div class="row toSelect toSelectUser" id={{member.code}}>
 		<div class="cell">
@@ -53,7 +58,7 @@
 {% endif %}
 
 
-</article>
+</div>>
 {% endblock %}
 
 {% block javascripts %}

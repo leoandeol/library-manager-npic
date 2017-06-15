@@ -1,6 +1,6 @@
 <?php
-
 namespace AppBundle\Controller;
+
 use AppBundle\Entity\Member;
 use AppBundle\Entity\Student;
 use AppBundle\Entity\Staff;
