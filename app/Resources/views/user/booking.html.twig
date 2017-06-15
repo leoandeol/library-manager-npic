@@ -4,59 +4,59 @@
 {% block body %}
 
 <div class="container">
-  <h1>Details of transaction</h1>
+  <h1 class="col-md-4 center-block">Details of transaction</h1>
   <input hidden value="{{app.session.get('isAdmin')}}" id='isAdmin'></input>
-  <div class="item-info-list">
+  <div class="col-xs-12 col-md-8 center-block  well well-md">
     
-    <div class="item-info">Transaction ID : {{ transaction.getId() }}</div>
-    <div class="item-info">Item Id :<a href="/item/read/{{ transaction.getItem().getCode() }}">{{ transaction.getItem().getCode() }}</a></div>
-    <div class="item-info">Member Id :<a href="/user/account/{{ transaction.getMember().getCode() }}">{{ transaction.getMember().getCode() }}</a></div>
-    <div class="item-info">Borrow date : 
+    <div class="col-xs-12 col-md-6">Transaction ID : {{ transaction.getId() }}</div>
+    <div class="col-xs-12 col-md-6">Item Id :<a href="/item/read/{{ transaction.getItem().getCode() }}">{{ transaction.getItem().getCode() }}</a></div>
+    <div class="col-xs-12 col-md-6">Member Id :<a href="/user/account/{{ transaction.getMember().getCode() }}">{{ transaction.getMember().getCode() }}</a></div>
+    <div class="col-xs-12 col-md-6">Borrow date : 
       {% if transaction.getBorrowDate() == NULL %}
       Not borrowed yet
       {% else %}
       {{transaction.getBorrowDate()|date('d-m-Y')}}
       {% endif %}
     </div>
-    <div class="item-info">To Return date :
+    <div class="col-xs-12 col-md-6">To Return date :
       {% if transaction.getToReturnDate() == NULL %}
       Not borrowed yet
       {% else %}
       {{transaction.getToReturnDate()|date("d-m-Y") }}
       {% endif %}
     </div>
-    <div class="item-info">Return date :
+    <div class="col-xs-12 col-md-6">Return date :
       {% if transaction.getReturnDate() == NULL %}
       Not gave back yet
       {% else %}
       {{transaction.getReturnDate()|date("d-m-Y") }}
       {% endif %}
     </div>
-    <div class="item-info">Librarian who processed the borrow : 
+    <div class="col-xs-12 col-md-6">Librarian who processed the borrow : 
       {% if transaction.getLibForBorrow() == NULL %}
       Not borrowed yet
       {% else %}
       <a href="/user/account/{{ transaction.getLibForBorrow().getUsername() }}">{{transaction.getLibForBorrow().getUsername() }}</a>
       {% endif %}
     </div>
-    <div class="item-info">Librarian who processed the return : 
+    <div class="col-xs-12 col-md-6">Librarian who processed the return : 
       {% if transaction.getLibForReturn() == NULL %}
       Not gave back yet
       {% else %}
       <a href="/user/account/{{ transaction.getLibForReturn().getUsername() }}">{{transaction.getLibForReturn().getUsername() }}</a>
       {% endif %}
     </div>
-    <div class="item-info">Fine to pay : {{ transaction.getFineToPay() }} USD</div>
-    <div class="item-info">State : {{ transaction.getState() }}</div>
+    <div class="col-xs-12 col-md-6">Fine to pay : {{ transaction.getFineToPay() }} USD</div>
+    <div class="col-xs-12 col-md-6">State : {{ transaction.getState() }}</div>
     {% if transaction.getNote() != '' %}
-    <div class="item-info">Comment : {{ transaction.getNote() }}</div>
+    <div class="col-xs-12 col-md-6">Comment : {{ transaction.getNote() }}</div>
     {% endif %}
     {% if app.session.get('isAdmin') %}
-    <form action="/admin/changeTransactionState/{{transaction.getId()}}" method="post" onsubmit="return testForm(this)" class="big-form">
-      <div class="InputAddOn">
-	<div class="InputAddOn-item" >Change State :</div> 
-	<div class="InputAddOn-field">
-	  <select name="state">
+    <form action="/admin/changeTransactionState/{{transaction.getId()}}" method="post" onsubmit="return testForm(this)" class="inline-form">
+      <div class="form-group">
+	<div class="input-group">
+	  <div class="input-group-addon" >Change State :</div>
+	  <select name="state" class="form-control">
 	    <option value="Lost">Lost</option>
 	    <option value="Booked">Booked</option>
 	    <option value="Borrowed">Borrowed</option>
@@ -64,12 +64,16 @@
 	  </select>
 	</div>
       </div>
-      <div class="InputAddOn">
-	<div class="InputAddOn-item" >Fine cost per day (in $)</div>
-	<div class="InputAddOn-field"><input type="number" name="fineCost"></div>
+      <div class="form-group">
+	<div class="input-group">
+	  <div class="input-group-addon" >Fine cost per day (in $)</div>
+	  <input type="number" name="fineCost" class="form-control">
+	</div>
       </div>
-      <div class="InputAddOn submit-login">
-	<button type="submit" id="submit" class="InputAddOn-item">Submit</button>
+      <div class="form-group">
+	<div class="input-group">
+	  <button type="submit" id="submit" class="btn btn-primary">Submit</button>
+	</div>
       </div>
     </form>
     {% endif %}
