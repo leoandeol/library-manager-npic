@@ -9,6 +9,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
+	
+	/********MOTD********/
+	
+	public static $MOTD;
+	
+	/********************/
+	
     /**
      * @Route("/", name="home", options={"expose"=true})
      */
@@ -20,7 +27,9 @@ class DefaultController extends Controller
 		$top  = $rep->findTop5PopularBooks();
 		$last = $rep->findLast5BooksAdded();
 		$pop  = $rep->find5MostPopularBooks();
-		$motd = $em->getParameter('motd');
+		$motd = DefaultController::$MOTD;
+		
+		var_dump(DefaultController::$MOTD);
 
         return $this->render('default/index.html.twig', [
 			"motd" => $motd,

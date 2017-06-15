@@ -10,7 +10,6 @@ parameters:
     avatar_directory: '%kernel.root_dir%/../web/uploads/avatars'
     nonce: 'saltForPassword'
     max_per_page: 16
-    motd: "Welcome to the NPIC's online library"
 framework:
     #esi:             ~
     translator:      { fallbacks: ["%locale%"] }
