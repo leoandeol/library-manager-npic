@@ -822,7 +822,7 @@ class AdminController extends Controller
 				$trans = $trans_rep->getAll($current,$trans_per_page,$t_id,$m_code,$i_title,$borrow_date,$state);			
 				$serializer = $this->get('serializer');
 				$transJson = $serializer->serialize($trans,'json');
-			
+				
 				if($request->isXmlHttpRequest()){
 					$data = array(
 						'page_max' => $nb_max_pages,

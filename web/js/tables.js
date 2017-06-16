@@ -4,13 +4,11 @@ $(document).ready(function(){
 	});
 	
 	$('.table').on('mouseenter','.toSelect',function(e){
-		e.stopPropagation()
 		e.preventDefault();
 		$(this).css("backgroundColor","#5D95AC");
 	});
 	
 	$('.table').on('mouseleave','.toSelect',function(e){
-		e.stopPropagation()
 		e.preventDefault();
 		$(this).css("backgroundColor","");
 	});
@@ -37,25 +35,32 @@ $(document).ready(function(){
 	});
 	
 	$('.table').on('mouseenter','.checkBookingButton',function(e){
-		e.stopPropagation()
 		e.preventDefault();
 		$(this).css('backgroundColor','green');
 	});
 	
 	$('.table').on('mouseleave','.checkBookingButton',function(e){
-		e.stopPropagation()
 		e.preventDefault();
 		$(this).css('backgroundColor','');
 	});
+
 	
 	$('.table').on('mouseenter','.bookingButton',function(e){
-		e.stopPropagation()
 		e.preventDefault();
 		$(this).css('backgroundColor','green');
 	});
 	
 	$('.table').on('mouseleave','.bookingButton',function(e){
-		e.stopPropagation()
+		e.preventDefault();
+		$(this).css('backgroundColor','');
+	});
+	
+	$('.table').on('mouseenter','.checkMemberBookingButton',function(e){
+		e.preventDefault();
+		$(this).css('backgroundColor','green');
+	});
+	
+	$('.table').on('mouseleave','.checkMemberBookingButton',function(e){
 		e.preventDefault();
 		$(this).css('backgroundColor','');
 	});

@@ -60,8 +60,9 @@ $(document).ready(function(){
 	var tbody = $('tbody')[0];
 	var container = $('.container');
 	var ajaxButtons = $('.ajaxButtons');
+	var table = $('.table');
     
-    container.on('click','.bookingButton',function(e){
+    table.on('click','.bookingButton',function(e){
 	e.stopPropagation()
 	e.preventDefault();
 	$.ajax({
@@ -105,8 +106,8 @@ $(document).ready(function(){
     // SORTING ITEMS
     
     $('.sortingForm').submit(function(e){
-	var data = $(this).serialize();
-	sortItems(1,e,data);
+		var data = $(this).serialize();
+		sortItems(1,e,data);
     });
     
     ajaxButtons.on('click','.sortingButton',function(e){
@@ -588,6 +589,7 @@ $(document).ready(function(){
 					// row's divs
 					var mem_code = document.createElement("option");
 					mem_code.setAttribute("id","memberCodeTransaction");
+					mem_code.setAttribute("hidden","true");
 					mem_code.setAttribute("value",response['member_code']);
 					
 					var code = document.createElement("td");
@@ -631,7 +633,7 @@ $(document).ready(function(){
 				}
 				if(response['page']>1){
 					var prev = document.createElement("button");
-					prev.setAttribute("class","btn btn-primary center-block .checkMemberBookingsButton previous");
+					prev.setAttribute("class","btn btn-primary center-block checkMemberBookingsButton previous");
 					prev.setAttribute("value",response['page']-1);
 					prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
 					ajaxButtons.append(prev);
@@ -641,7 +643,7 @@ $(document).ready(function(){
 				}
 				if(response['page']<response['page_max']){
 					var next = document.createElement("button");
-					next.setAttribute("class","btn btn-primary center-block .checkMemberBookingsButton next");
+					next.setAttribute("class","btn btn-primary center-block checkMemberBookingsButton next");
 					next.setAttribute("value",parseInt(response['page'],10)+1);
 					next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
 					ajaxButtons.append(next);
