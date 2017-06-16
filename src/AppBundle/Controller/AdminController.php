@@ -424,7 +424,7 @@ class AdminController extends Controller
 				if($position == "student"){
 					$new_member->setStudent(true);
 					$new_member->setStaff(false);
-					$new_member->setMajor($em->getRepository('AppBundle:Major')->find($major));
+					$new_member->setMajor($em->getRepository('AppBundle:Major')->find($maj));
 					$new_member->setDegree($em->getRepository('AppBundle:Degree')->find($degree));
 					$new_member->setDegreeYear($em->getRepository('AppBundle:DegreeYear')->find($degyear));
 				}else{
