@@ -26,7 +26,8 @@ class TransactionRepository extends EntityRepository{
 	
 	public function findByMemberAndItem($member_code,$item_code){
 		$query = $this->getEntityManager()->createQuery("
-			Select t from AppBundle:Transaction t where t.member = :member_code and t.item= :item_code and t.state='booked' or t.state ='borrowed' "
+			Select t from AppBundle:Transaction t 
+			where t.member = :member_code and t.item= :item_code and (t.state='booked' or t.state ='borrowed') "
 		);
 		$query->setParameters(array(
 				'member_code' => $member_code,
@@ -62,7 +63,7 @@ class TransactionRepository extends EntityRepository{
 			't_id'   => "%$t_id%",
 			'i_title'=> "%$i_title%",
 			'state'  => "%$state%",
-			'borrow_date' => "$borrow_date"
+			'borrow_date' => $borrow_date
 		));
 		
 		return $query->getResult();
@@ -86,7 +87,7 @@ class TransactionRepository extends EntityRepository{
 			't_id'   => "%$t_id%",
 			'i_title'=> "%$i_title%",
 			'state'  => "%$state%",
-			'borrow_date' => "$borrow_date"
+			'borrow_date' => $borrow_date
 		));
 		$query->setFirstResult($current);
 		$query->setMaxResults($trans_per_page);

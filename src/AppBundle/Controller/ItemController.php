@@ -328,6 +328,8 @@ class ItemController extends Controller
 										}
 										
 										$em->persist($new_transaction);
+										$em->persist($user);
+										$em->persist($item);
 										$em->flush();
 										
 										$res = array('msg'=>'Success','code'=>$user->getCode());
@@ -355,7 +357,7 @@ class ItemController extends Controller
 		}else{
 			$res = 'You must loggin to do this.';
 		}
-		return new JsonResponse(['data'=>$res]);
+		return new JsonResponse(['data'=>$res,'user'=>$user->getCode(),'item'=>$item->getCode()]);
 	}
 	
 	/**

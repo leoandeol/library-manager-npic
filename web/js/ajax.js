@@ -73,6 +73,8 @@ $(document).ready(function(){
 		if(response['data']['msg'] == 'Success'){
 		    window.location = Routing.generate('bookings',{'id':response['data']['code']});
 		}else{
+			console.log(response['user']);
+			console.log(response['item']);
 		    alert(response['data']);
 		}
 	    },

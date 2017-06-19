@@ -3,10 +3,10 @@
 
 {% block body %}
 
-<div class="container">
+<div class="container well well-md">
   <h1 class="col-md-4 center-block">Details of transaction</h1>
-  <input hidden value="{{app.session.get('isAdmin')}}" id='isAdmin'>
-  <div class="col-xs-12 col-md-8 center-block  well well-md">
+  <input hidden value="{{app.session.get('isAdmin')}}" id='isAdmin' />
+  <div class="col-xs-12 col-md-8 center-block">
     
     <div class="col-xs-12 col-md-6">Transaction ID : {{ transaction.getId() }}</div>
     <div class="col-xs-12 col-md-6">Item Id :<a href="/item/read/{{ transaction.getItem().getCode() }}">{{ transaction.getItem().getCode() }}</a></div>
@@ -53,27 +53,27 @@
     {% endif %}
     {% if app.session.get('isAdmin') %}
     <form action="/admin/changeTransactionState/{{transaction.getId()}}" method="post" onsubmit="return testForm(this)" class="inline-form">
-      <div class="form-group">
-	<div class="input-group">
-	  <div class="input-group-addon" >Change State :</div>
-	  <select name="state" class="form-control">
-	    <option value="Lost">Lost</option>
-	    <option value="Booked">Booked</option>
-	    <option value="Borrowed">Borrowed</option>
-	    <option value="Finished">Finished</option>
-	  </select>
-	</div>
+      <div class="form-group col-xs-12 col-md-6">
+		<div class="input-group">
+			<div class="input-group-addon" >Fine cost per day (in $)</div>
+				<input type="number" name="fineCost" class="form-control">
+		</div>
       </div>
-      <div class="form-group">
-	<div class="input-group">
-	  <div class="input-group-addon" >Fine cost per day (in $)</div>
-	  <input type="number" name="fineCost" class="form-control">
-	</div>
+      <div class="form-group col-xs-12 col-md-6">
+		<div class="input-group">
+			<div class="input-group-addon" >Change State :</div>
+			<select name="state" class="form-control">
+				<option value="Lost">Lost</option>
+				<option value="Booked">Booked</option>
+				<option value="Borrowed">Borrowed</option>
+				<option value="Finished">Finished</option>
+			</select>
+		</div>
       </div>
-      <div class="form-group">
-	<div class="input-group">
-	  <button type="submit" id="submit" class="btn btn-primary">Submit</button>
-	</div>
+      <div class="form-group col-xs-12 col-md-6">
+		<div class="input-group">
+			<button type="submit" id="submit" class="btn btn-primary">Submit</button>
+		</div>
       </div>
     </form>
     {% endif %}

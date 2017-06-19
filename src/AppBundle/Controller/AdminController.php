@@ -95,7 +95,7 @@ class AdminController extends Controller
 				if($motddisplayed->getMotdContent() == $motd->getMotdContent()){
 					$motds = $em->getRepository('AppBundle:MOTD')->findAll();
 					if($motds != null){
-						$motddisplayed->setMotdContent($motds->getMotdContent());
+						$motddisplayed->setMotdContent($motds[0]->getMotdContent());
 					}else{
 						$motddisplayed->setMotdContent("");
 					}
