@@ -63,7 +63,7 @@ class TransactionRepository extends EntityRepository{
 			't_id'   => "%$t_id%",
 			'i_title'=> "%$i_title%",
 			'state'  => "%$state%",
-			'borrow_date' => $borrow_date
+			'borrow_date' => "$borrow_date"
 		));
 		
 		return $query->getResult();
@@ -87,7 +87,7 @@ class TransactionRepository extends EntityRepository{
 			't_id'   => "%$t_id%",
 			'i_title'=> "%$i_title%",
 			'state'  => "%$state%",
-			'borrow_date' => $borrow_date
+			'borrow_date' => "$borrow_date"
 		));
 		$query->setFirstResult($current);
 		$query->setMaxResults($trans_per_page);
