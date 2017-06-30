@@ -68,7 +68,7 @@ class AdminController extends Controller
 					$new_motd_displayed = new MotdDisplayed();
 					$new_motd_displayed->setContent($this->getParameter('motd_default'));
 					$em->persist($new_motd_displayed);
-					$em->flush()
+					$em->flush();
 				}
 				$em->getRepository('AppBundle:MotdDisplayed')->findAll()[0]->setMotdContent($motd->getMotdContent());
 				$em->flush();
