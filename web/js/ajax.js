@@ -80,6 +80,27 @@ $(document).ready(function(){
 	    }
 	});
     });
+	
+	// SET MOTD
+	
+	container.on('click','.toSelectMotd',function(e){
+		e.preventDefault();
+		$.ajax({
+			type	: "POST",
+			url 	: Routing.generate('setMotd',{'id':this.id}),
+			dataType: "json",
+			success : function(response){	
+			if(response == 'Success'){
+				alert('New message of the day set');
+			}else{
+				alert(response['data']);
+			}
+			},
+			error	: function(jqXHR, textStatus, errorThrown){
+			alert(textStatus, errorThrown);
+			}
+		});	
+	});
     
     // SORTING ITEMS
     

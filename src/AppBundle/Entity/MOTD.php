@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\MOTDRepository")
  * @ORM\Table(name="motd")
  */
 class MOTD{
@@ -19,7 +19,7 @@ class MOTD{
 	/**
      * @ORM\Column(type="string",length=640)
      */
-	private $text;
+	private $motd_content;
 
 	public function __construct()
 	{
@@ -36,26 +36,26 @@ class MOTD{
         return $this->id;
     }
   /**
-     * Set text
+     * Set motd_content
      *
-     * @param string $text
+     * @param string $motd_content
      *
      * @return Logs
      */
-    public function setText($text)
+    public function setMotdContent($motd_content)
     {
-        $this->text = $text;
+        $this->motd_content = $motd_content;
 
         return $this;
     }
 
     /**
-     * Get text
+     * Get motd_content
      *
      * @return string
      */
-    public function getText()
+    public function getMotdContent()
     {
-        return $this->text;
+        return $this->motd_content;
     }
 }

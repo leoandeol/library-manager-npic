@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\DateTime; 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 class AdminController extends Controller
 {
@@ -52,7 +54,45 @@ class AdminController extends Controller
 	}
 	
 	/**
-     * @Route("/admin/addMotd", name="setMotd")
+     * @Route("/admin/setMotd/{id}", name="setMotd", options={"expose"=true})
+     */
+	public function setMotdAction(Request $request, $id = 1){
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				$motd = $em->getRepository('AppBundle:MOTD')->find($id);
+				DefaultController::$MOTD = $motd->getMotdContent();
+				
+		var_dump(DefaultController::$MOTD);
+				return new JsonResponse('Success');
+			}
+			return new JsonResponse('Only administrators can do this');
+		}
+		return new JsonResponse('You must login to do this');
+	}
+	
+	/**
+     * @Route("/admin/deleteMotd/{id}", name="deleteMotd")
+     */
+	public function deletetMotdAction(Request $request, $id = 1){
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				if($this->getParameter('motd') == $motd->getMotdContent()){
+					$this->setParameter('motd',$em->getRepository('AppBundle:MOTD')->findAll()[0]->getMotdContent());
+				}
+				$motd = $em->getRepository('AppBundle:MOTD')->deleteMotd($id);
+				return $this->redirect($this->generateUrl('showMotd'));
+			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
+	}
+	
+	/**
+     * @Route("/admin/addMotd", name="addMotd")
      */
 	public function addMotdAction(Request $request){
 		$session = $request->getSession();
@@ -61,10 +101,10 @@ class AdminController extends Controller
 			if($session->get('isAdmin')){
 				$motd = $request->request->get('text');
 				$new_motd = new MOTD();
-				$new_motd->setText($motd);
+				$new_motd->setMotdContent($motd);
 				$motdid = $new_motd->getId();
 				$new_log = new Logs();
-				$new_log->setLib($session->get('user'));
+				$new_log->setLib($em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername()));
 				$new_log->setLogDate(date('Y-m-d'));
 				$new_log->setAction("Added new motd $motdid");
 				
