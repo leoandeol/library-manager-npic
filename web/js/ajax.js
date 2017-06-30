@@ -15,22 +15,23 @@ $(document).ready(function(){
 
     // CONNEXION
     $("#loginForm").submit(function(e){
-	e.preventDefault();
-	$.ajax({
-	    type	: "POST",
-	    url		: Routing.generate('loggedin'),
-	    data	: $(this).serialize(),
-	    dataType: "json",
-	    success	: function(response) {
-		if(response['data'] == 'Success'){
-		    window.location = Routing.generate('home');
-		}else{
-		    alert(response['data']);
-		}
-	    },
-	    error	: function(jqXHR, textStatus, errorThrown){
-		alert(textStatus, errorThrown);
-	    }
+		e.preventDefault();
+		$.ajax({
+			type	: "POST",
+			url		: Routing.generate('loggedin'),
+			data	: $(this).serialize(),
+			dataType: "json",
+			success	: function(response) {
+			if(response['data'] == 'Success'){
+				window.location = Routing.generate('home');
+			}else{
+				alert(response['data']);
+			}
+			},
+			error	: function(jqXHR, textStatus, errorThrown){
+			alert(textStatus, errorThrown);
+			}
+		});
 	});
 	
 	// CHANGE PASS
@@ -44,7 +45,7 @@ $(document).ready(function(){
 		success	: function(response){
 		    if(response['data']['res'] == 'Success'){
 			alert("Password changed successfully");
-			window.location = Routing.generate('account',{'code':response['data']['id']});
+			window.location = Routing.generate('logout');
 		    }else{
 			alert(response['data']['res']);
 		    }
@@ -54,7 +55,6 @@ $(document).ready(function(){
 		}
 	    });
 	});
-    });
     
     // BOOK AN ITEM
 	var tbody = $('tbody')[0];
@@ -186,15 +186,22 @@ $(document).ready(function(){
     // MEMBER LIST
     
     ajaxButtons.on('click','.checkMemberButton',function(e){
-	checkAllMembers(this.value,e)
+		var data = $('.checkMemberForm').serialize();
+		checkAllMembers(this.value,e,data)
     });
+	
+	$('.checkMemberForm').submit(function(e){
+		var data = $(this).serialize();
+		checkAllMembers(1,e,data);
+	});
     
-    function checkAllMembers(page,e){
+    function checkAllMembers(page,e,datas){
 	e.preventDefault();
 	$.ajax({
 	    type	: "POST",
 		
 	    url		: Routing.generate('checkalluser',{'page':page}),
+		data	: datas,
 	    datatype: "json",
 	    success	: function(response){
 		while(tbody.firstChild){
@@ -217,9 +224,9 @@ $(document).ready(function(){
 		    
 		    var activity = document.createElement("td");
 		    if(member.disable == 0){
-			activity.innerHTML = "Active";
+			activity.innerHTML = "<span class='label label-success'>Active</span>";
 		    }else{
-			activity.innerHTML = "Inactive";
+			activity.innerHTML = "<span class='label label-warning'>Inactive</span>";
 		    }
 		    
 		    var button = document.createElement("td");
@@ -267,14 +274,21 @@ $(document).ready(function(){
     }
     
     ajaxButtons.on('click','.checkLibButton',function(e){
-		checkAllLibs(this.value,e)
+		var data = $(this).serialize();
+		checkAllLibs(this.value,e,data);
     });
+	
+	$('.checkLibForm').submit(function(e){
+		var data = $('.checkLibForm').serialize();
+		checkAllLibs(1,e,data);
+	});
     
-    function checkAllLibs(page,e){
+    function checkAllLibs(page,e,datas){
 	e.preventDefault();
 	$.ajax({
 	    type	: "POST",
 	    url		: Routing.generate('checkalllib',{'page':page}),
+		data 	: datas,
 	    datatype: "json",
 	    success	: function(response){
 			
@@ -299,10 +313,10 @@ $(document).ready(function(){
 		    
 		    var activity = document.createElement("td");
 		    if(lib.disable == 0){
-			activity.innerHTML = "Active";
+			activity.innerHTML = "<span class='label label-success'>Active</span>";
 		    }else{
-			activity.innerHTML = "Inactive";
-		    }
+			activity.innerHTML = "<span class='label label-warning'>Inactive</span>";
+			}
 		    
 		    row.appendChild(code);
 		    row.appendChild(fname);
@@ -436,88 +450,88 @@ $(document).ready(function(){
     });	
     
     function checkBookings(page,e,datas){
-	e.preventDefault();
-	$.ajax({
-	    type	: "POST",
-	    url		: Routing.generate('checkBookings',{'page':page}),
-	    data	: datas,
-	    datatype: "json",
-	    success	: function(response){
-		
-		while(tbody.firstChild){
-		    tbody.firstChild.remove();
-		}
-		
-		$.each(JSON.parse(response['trans']),function(i,tr){
-		    // row to add
-		    var row = document.createElement("tr");	
-		    row.setAttribute("class","toSelect toSelectTrans");
-		    row.setAttribute("id",tr.id);
-		    // row's divs
-		    var code = document.createElement("td");
-		    code.innerHTML = tr.id;
-		    
-		    var fname = document.createElement("td");
-		    fname.innerHTML = tr.member.code;
+		e.preventDefault();
+		$.ajax({
+			type	: "POST",
+			url		: Routing.generate('checkBookings',{'page':page}),
+			data	: datas,
+			datatype: "json",
+			success	: function(response){
+			
+				while(tbody.firstChild){
+					tbody.firstChild.remove();
+				}
+				
+				$.each(JSON.parse(response['trans']),function(i,tr){
+					// row to add
+					var row = document.createElement("tr");	
+					row.setAttribute("class","toSelect toSelectTrans");
+					row.setAttribute("id",tr.id);
+					// row's divs
+					var code = document.createElement("td");
+					code.innerHTML = tr.id;
+					
+					var fname = document.createElement("td");
+					fname.innerHTML = tr.member.code;
 
-		    var lname = document.createElement("td");
-		    lname.innerHTML = tr.item.title;
-		    
-		    var bdate = document.createElement("td");
-			sBDate = tr.bookedDate.split('T')[0];
-			ssBDate = sBDate.split('-');
-			okBDate = ssBDate[2]+'-'+ssBDate[1]+'-'+ssBDate[0];
-		    bdate.innerHTML = okBDate;
+					var lname = document.createElement("td");
+					lname.innerHTML = tr.item.title;
+					
+					var bdate = document.createElement("td");
+					sBDate = tr.bookedDate.split('T')[0];
+					ssBDate = sBDate.split('-');
+					okBDate = ssBDate[2]+'-'+ssBDate[1]+'-'+ssBDate[0];
+					bdate.innerHTML = okBDate;
 
-		    var rdate = document.createElement("td");
-			if(tr.borrowDate == null){
-				okRDate = 'Not borrowed yet';
-			}else{
-				sRDate = tr.borrowDate.split('T')[0];
-				ssRDate = sRDate.split('-');
-				okRDate = ssRDate[2]+'-'+ssRDate[1]+'-'+ssRDate[0];
+					var rdate = document.createElement("td");
+					if(tr.borrowDate == null){
+						okRDate = 'Not borrowed yet';
+					}else{
+						sRDate = tr.borrowDate.split('T')[0];
+						ssRDate = sRDate.split('-');
+						okRDate = ssRDate[2]+'-'+ssRDate[1]+'-'+ssRDate[0];
+					}
+					rdate.innerHTML = okRDate;
+					
+					var activity = document.createElement("td");
+					activity.innerHTML = tr.state;
+					
+					row.appendChild(code);
+					row.appendChild(fname);
+					row.appendChild(lname);
+					row.appendChild(bdate);
+					row.appendChild(rdate);
+					row.appendChild(activity);
+					tbody.appendChild(row);
+				});
+				var prev = $('.previous');
+				var next = $('.next');
+				
+				if(prev != null){
+					ajaxButtons.find('.previous').remove();
+				}
+				if(response['page']>1){
+					var prev = document.createElement("button");
+					prev.setAttribute("class","btn btn-primary center-block checkLibButton previous");
+					prev.setAttribute("value",response['page']-1);
+					prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
+					ajaxButtons.append(prev);
+				}
+				if(next != null){
+					ajaxButtons.find('.next').remove();
+				}
+				if(response['page']<response['page_max']){
+					var next = document.createElement("button");
+					next.setAttribute("class","btn btn-primary center-block checkLibButton next");
+					next.setAttribute("value",parseInt(response['page'],10)+1);
+					next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
+					ajaxButtons.append(next);
+				}
+			},
+			error	: function(jqXHR, textStatus, errorThrown){
+			alert('error');
 			}
-		    rdate.innerHTML = okRDate;
-		    
-		    var activity = document.createElement("td");
-		    activity.innerHTML = tr.state;
-		    
-		    row.appendChild(code);
-		    row.appendChild(fname);
-		    row.appendChild(lname);
-		    row.appendChild(bdate);
-		    row.appendChild(rdate);
-		    row.appendChild(activity);
-		    tbody.appendChild(row);
 		});
-		var prev = $('.previous');
-		var next = $('.next');
-		
-		if(prev != null){
-		    ajaxButtons.find('.previous').remove();
-		}
-		if(response['page']>1){
-		    var prev = document.createElement("button");
-			prev.setAttribute("class","btn btn-primary center-block checkLibButton previous");
-		    prev.setAttribute("value",response['page']-1);
-		    prev.innerHTML = "<span class='glyphicon glyphicon-backward'></span> Previous";
-			ajaxButtons.append(prev);
-		}
-		if(next != null){
-		    ajaxButtons.find('.next').remove();
-		}
-		if(response['page']<response['page_max']){
-		    var next = document.createElement("button");
-		    next.setAttribute("class","btn btn-primary center-block checkLibButton next");
-		    next.setAttribute("value",parseInt(response['page'],10)+1);
-		    next.innerHTML = "<span class='glyphicon glyphicon-forward'></span> Next";
-			ajaxButtons.append(next);
-		}
-	    },
-	    error	: function(jqXHR, textStatus, errorThrown){
-		alert('error');
-	    }
-	});
     }
 	
 	// PERSONNAL MEMBER'S BOOKINGS

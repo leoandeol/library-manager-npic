@@ -16,12 +16,21 @@ class LibrarianRepository extends EntityRepository{
 		}
 	}
 	
-	public function getNumberOfLibrarians(){
-			return $this->getEntityManager()->createQuery(
-				'SELECT COUNT(lib.username)
+	public function getNumberOfLibrarians($username,$fname,$lname){
+			$query = $this->getEntityManager()->createQuery(
+				"SELECT COUNT(lib.username)
 				FROM AppBundle:Librarian lib
-				'
-			)->getResult();
+				WHERE lib.username LIKE :username AND lib.first_name LIKE :fname AND lib.last_name LIKE :lname
+				"
+			);
+			$query->setParameters(
+				array(
+					'username' => "%$username%",
+					'fname'	   => "%$fname%",
+					'lname'    => "%$lname%"
+				)
+			);
+			return $query->getResult();
 	}
 	
 	public function getDisabledNumber(){
@@ -30,27 +39,37 @@ class LibrarianRepository extends EntityRepository{
 		)->getResult();
 	}
 	
-	public function getAllLibrarians($current,$lib_per_page){
+	public function getAllLibrarians($current,$lib_per_page,$username,$fname,$lname){
 		$query = $this->getEntityManager()->createQuery(
-			'SELECT lib.username, lib.first_name, lib.last_name, lib.disable
+			"SELECT lib.username, lib.first_name, lib.last_name, lib.disable
 			FROM AppBundle:Librarian lib
-			'
+			WHERE lib.username LIKE :username AND lib.first_name LIKE :fname AND lib.last_name LIKE :lname
+			"
 		);
+		$query->setParameters(
+				array(
+					'username' => "%$username%",
+					'fname'	   => "%$fname%",
+					'lname'    => "%$lname%"
+				)
+			);
 		$query->setFirstResult($current);
 		$query->setMaxResults($lib_per_page);
 		return $query->getResult();
 	}
 	
 	public function getGeneralInfos($username){
-		return $this->getEntityManager()->createQuery(
+		$query = $this->getEntityManager()->createQuery(
 			"SELECT li.username,li.first_name,li.last_name,li.gender,li.email,
 			li.tel,li.hire_date,li.resign_date,li.disable,ad.city,ad.postal_code,
 			ad.street
 			FROM AppBundle:Librarian li 
 			JOIN AppBundle:Address ad WITH li.address = ad.id
-			WHERE li.username = '$username'
+			WHERE li.username = :username
 			"
-		)->getResult();
+		);
+		$query->setParameter('username',"$username");
+		return $query->getResult();
 	}
 }
 

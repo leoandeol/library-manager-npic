@@ -12,7 +12,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">List of Documents</a>
+      <a class="navbar-brand" href="/item/list">List of Documents</a>
     </div>
     <div id="navbar2" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-left">
@@ -64,31 +64,31 @@
     <p><strong>Author :</strong> {{ item.getAuthor() }}</p>
     <p><strong>Publisher :</strong> {{ item.getPublisher() }}</p>
     <p><strong>Category :</strong> {{ item.getCategory().getSubject() }}</p>
-    <p><strong>Disponibility :</strong> <span class={% if item.getBookable() == 0 %}"label label-success">Available{% else %}"label label-warning">Not Available{% endif %}</span></p>
+    <p><strong>Disponibility :</strong> <span class={% if item.getBookable() == 'Available' %}"label label-success">Available{% else %}"label label-warning">Not Available{% endif %}</span></p>
     {% if app.session.get('isAdmin') == false %}
-    {% if app.session.get('connected') %}
-    <div class="item-info" onmouseout="GestionHover('{{item.getCode()}}',-1,5)">Note this item :
-      <ul class="listeEtoile" style="list-style-type : none;">
-	{% for i in range(1,5) %}
-	<li>
-	  <a onclick="note('{{item.getCode()}}',{{i}},event)" onmouseover="GestionHover('{{item.getCode()}}',{{i}},5)">
-	    <img id="staroff-{{i}}" src="{{ asset('img/staroff.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: block;">
-	    <img id="staron-{{i}}" src="{{ asset('img/staron.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: none;">
-	  </a>
-	</li>
-	{% endfor %}
-      </ul>
-    </div>
-    {% endif %}
-    {% endif %}
-    <button value={{item.getCode()}} class="btn btn-primary">Book</button>
+		{% if app.session.get('connected') %}
+			<div class="item-info" onmouseout="GestionHover('{{item.getCode()}}',-1,5)">Note this item :
+			  <ul class="listeEtoile" style="list-style-type : none;">
+			{% for i in range(1,5) %}
+			<li>
+			  <a onclick="note('{{item.getCode()}}',{{i}},event)" onmouseover="GestionHover('{{item.getCode()}}',{{i}},5)">
+				<img id="staroff-{{i}}" src="{{ asset('img/staroff.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: block;">
+				<img id="staron-{{i}}" src="{{ asset('img/staron.png') }}" border="0" title="{{i}}" style="height: 50px; width:50px; border-width: 0px; display: none;">
+			  </a>
+			</li>
+			{% endfor %}
+			  </ul>
+			</div>
+		{% endif %}
+		 <button value={{item.getCode()}} class="btn btn-primary bookingButton">Book</button>
+    {% endif %}   
   </div>
 
 
 
   {% if app.session.get('isAdmin') %}
   <div class="col-md-6 col-xs-12">
-    <h1>Admin control</h1>
+    <h1>Administrator actions</h1>
     <div class="col-md-6 col-xs-12">
       <p><strong>Total units :</strong> {{ item.getTotalUnit() }} </p>
       <p><strong>Borrowed units :</strong> {{ item.getBorrowedUnit() }} </p>
@@ -99,10 +99,10 @@
       <p><strong>Cost :</strong> {{ item.getCost() }} $ </p>
       {% if item.getDisable()==0 %}
       <a href="/admin/disable_item/{{item.getCode()}}
-	"><button class="InputAddOn-item">Disable</button></a>
+	"><button class="btn btn-primary">Disable</button></a>
       {% else %}
       <a href="/admin/reactivate_item/{{item.getCode()}}
-	 "><button class="InputAddOn-item">Reactivate</button></a>
+	 "><button class="btn btn-primary">Reactivate</button></a>
       {% endif %}
     </div>
     
@@ -137,10 +137,20 @@
   <ul class="media-list col-md-12 col-xs-12 commentContainer">
 	{% for com in comments %}
 		<li class="media thumbnail">
-		  <a class="pull-left" href="/user/account/{{com.getMember().getCode()}}">
-			<img style="height:80px; width:80px;" class="media-object" src={{ asset('uploads/avatars/' ~ com.getMember().getAvatarPath() ) }}>
+			{% if com.getLibrarian() == null %}
+				<a class="pull-left" href="/user/account/{{com.getMember().getCode()}}">
+				<img style="height:80px; width:80px;" class="media-object" src={{ asset('uploads/avatars/' ~ com.getMember().getAvatarPath() ) }}>
+			{% else %}
+				<a class="pull-left" href="/user/account/{{com.getLibrarian().getUsername()}}">
+				<img style="height:80px; width:80px;" class="media-object" src={{ asset('uploads/avatars/' ~ com.getLibrarian().getAvatarPath() ) }}>
+			{% endif %}
 		  </a>
-		  <div class="media-body">
+		  <div class="media-body">			
+			{% if com.getLibrarian() == null %}
+				<label class="label label-default"> member {{com.getMember().getCode()}}</label>
+			{% else %}				
+				<label class="label label-default"> administrator {{com.getLibrarian().getUsername()}} </label>
+			{% endif %}
 			<p>{{ com.getComment() }}</p>
 		  </div>
 		</li>

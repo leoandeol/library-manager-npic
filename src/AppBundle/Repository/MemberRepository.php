@@ -7,13 +7,16 @@ use Doctrine\ORM\EntityRepository;
 class MemberRepository extends EntityRepository{
 	
 	public function getBookings($code){
-		return $this->getEntityManager()->createQuery(
+		$query = $this->getEntityManager()->createQuery(
 			'SELECT tr.id,it.code,it.title,tr.borrow_date
 			FROM AppBundle:Member me
 			JOIN AppBundle:Transaction tr WITH me.code = tr.member
 			JOIN AppBundle:Item it WITH it.code = tr.item
+			WHERE me.code = :code
 			'
-		)->getResult();
+		);
+		$query->setParameter('code',$code);		
+		return $query->getResult();
 	}
 	
 	public function changePassword($newPassword,$code){
@@ -26,27 +29,44 @@ class MemberRepository extends EntityRepository{
 		}
 	}
 	
-	public function getNumberOfMembers(){
-		return $this->getEntityManager()->createQuery(
-			'SELECT COUNT(me.code)
+	public function getNumberOfMembers($code,$fname,$lname){
+		$query = $this->getEntityManager()->createQuery(
+			"SELECT COUNT(me.code)
 			FROM AppBundle:Member me
-			'
-		)->getResult();
+			WHERE me.code LIKE :code AND me.first_name LIKE :fname AND me.last_name LIKE :lname
+			"
+		);
+		$query->setParameters(
+			array(
+				'code' => "%$code%",
+				'fname'=> "%$fname%",
+				'lname'=> "%$lname%"
+			)
+		);		
+		return $query->getResult();
 	}
 	
-	public function getAllMembers($current,$mem_per_page){
+	public function getAllMembers($current,$mem_per_page,$code,$fname,$lname){
 		$query = $this->getEntityManager()->createQuery(
-			'SELECT me.code,me.first_name,me.last_name,me.disable
+			"SELECT me.code,me.first_name,me.last_name,me.disable
 			FROM AppBundle:Member me
-			'
+			WHERE me.code LIKE :code AND me.first_name LIKE :fname AND me.last_name LIKE :lname
+			"
 		);
+		$query->setParameters(
+			array(
+				'code' => "%$code%",
+				'fname'=> "%$fname%",
+				'lname'=> "%$lname%"
+			)
+		);	
 		$query->setFirstResult($current);
 		$query->setMaxResults($mem_per_page);
 		return $query->getResult();
 	}
 	
 	public function getGeneralInfos($code){
-		return $this->getEntityManager()->createQuery(
+		$query = $this->getEntityManager()->createQuery(
 			"SELECT me.code,me.first_name,me.last_name,me.national_id,me.civil_situation,
 			me.gender,me.dob,me.tel_mobile,me.tel_home,me.tel_ref,me.email,me.entry_date,
 			st.id,st.major,st.degree,st.year,ad.city,ad.postal_code,ad.street,fc.name,
@@ -57,7 +77,9 @@ class MemberRepository extends EntityRepository{
 			JOIN AppBundle:Faculty fc WITH me.faculty = fc.id
 			WHERE me.code = '$code'
 			"
-		)->getResult();
+		);
+		$query->setParameter('code',$code);	
+		return $query->getResult();
 	}
 	
 	public function getDisabledNumber(){

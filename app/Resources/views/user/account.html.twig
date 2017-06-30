@@ -6,7 +6,11 @@
   <div class="col-xs-12 col-md-8 center-block">
     <div class="row">
       <div class="col-md-6 col-xs-12">
-	<img src="{{ asset('uploads/avatars/' ~  data['avatar']) }}"  width="280px;" height="280px;" class="center-block img-responsive img-rounded"/>
+	{% if data['avatar'] == 'default_avatar.jpg' %}	
+		<img src="{{ asset('img/default_avatar.jpg') }}"  width="280px;" height="280px;" class="center-block img-responsive img-rounded"/>
+	{% else %}
+		<img src="{{ asset('uploads/avatars/' ~  data['avatar']) }}"  width="280px;" height="280px;" class="center-block img-responsive img-rounded"/>
+	{% endif %}
 	{% if attribute(data, "form") is defined %}
 	{{ form_start(data['form']) }}
 	{{ form_widget(data['form']) }}
@@ -167,16 +171,14 @@
 				{% if data['user'].getDisable()==0 %}
 					<div class="form-group col-md-12 col-xs-12">
 					  <div class="input-group">	
-						<a href="/admin/disable_user/
-							 {{data['user'].getUsername()}}
+						<a href="/admin/disable_user/{{data['user'].getUsername()}}
 							 "><button class="input-group-addon">Disable</button></a>
 					  </div>
 					</div>
 				{% else %}
 					<div class="form-group col-md-12 col-xs-12">
 					  <div class="input-group">	
-						<a href="/admin/reactivate_user/
-							 {{data['user'].getUsername()}}
+						<a href="/admin/reactivate_user/{{data['user'].getUsername()}}
 							 "><button class="input-group-addon">Reactivate</button></a>
 					  </div>
 					</div>
@@ -193,9 +195,7 @@
 				{% else %}
 					<div class="form-group col-md-12 col-xs-12">
 					  <div class="input-group">	
-						<a href="/admin/reactivate_user/
-							 {{data['user'].getCode()}}
-							 "><button class="input-group-addon">Reactivate</button></a>
+						<a href="/admin/reactivate_user/{{data['user'].getCode()}}"><button class="input-group-addon">Reactivate</button></a>
 					 </div>
 				</div>
 			{% endif %}

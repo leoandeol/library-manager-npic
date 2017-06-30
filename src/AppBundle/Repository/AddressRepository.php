@@ -15,7 +15,7 @@ class AddressRepository extends EntityRepository{
 		);
 		$query->setParameter('city',$city);
 		$query->setParameter('pcode',$postal_code);
-		$query->setParameter('street','%'.$street.'%');
+		$query->setParameter('street',"%$street%");
 		return $query->getResult();
 	}
 }

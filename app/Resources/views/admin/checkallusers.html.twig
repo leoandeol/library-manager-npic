@@ -3,6 +3,42 @@
 
 {% block body %}
 
+<div class="navbar navbar-inverse navbar-static-top" style="margin-top:-20px;">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar2" aria-expanded="false" aria-controls="navbar2">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/admin/checkAllUser">List of members</a>
+    </div>
+    <div id="navbar2" class="collapse navbar-collapse">
+      <ul class="nav navbar-nav navbar-left">
+	
+      </ul>
+      <form class="checkMemberForm navbar-form navbar-right inline-form " action="/admin/checkAllUser" method="post">
+        <div class="form-group">
+	  <div class="input-group">
+	    <label class="input-group-addon" for="category">Member code :</label>
+	    <input type="text" name="code" class="input-sm form-control" placeholder="Member code">
+	  </div>
+	  <div class="input-group">
+	    <label class="input-group-addon" for="type">First name :</label>
+	    <input type="text" name="fname" class="input-sm form-control" placeholder="First name">	    
+	  </div>
+	  <div class="input-group">
+	    <label class="input-group-addon" for="language">Last name:</label>
+	    <input type="text" name="lname" class="input-sm form-control" placeholder="Last name">	    
+	  </div>
+          <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-eye-open"></span> Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <div class="panel panel-default table-responsive">
     <div class="panel-heading">
@@ -45,7 +81,7 @@
 	    {% endif %}
 	  </td>
 	  <td>
-	    <a href="/user/bookings/{{member.code}}"><button class="InputAddOn-item" >Check bookings</button></a>
+	    <a href="/user/bookings/{{member.code}}"><button class="btn btn-primary checkBookingButton" >Check bookings</button></a>
 	  </td>
 	</tr>
 	{% endfor %}

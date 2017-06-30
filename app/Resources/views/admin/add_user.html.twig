@@ -39,14 +39,14 @@
 	  <div class="form-control">
 	    {% if mode != 'add' %}
 	    {% if user.getGender() == 'M' %}
-	    <label class="radio-inline"><input type="radio" selected id="gender" name="gender" value="M"/>Male</label>
+	    <label class="radio-inline"><input type="radio" checked="checked" id="gender" name="gender" value="M"/>Male</label>
 	    <label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label>
 	    {% else %}
 	    <label class="radio-inline"><input type="radio" id="gender" name="gender" value="M"/>Male</label>
-	    <label class="radio-inline"><input type="radio" selected id="gender" name="gender" value="F" />Female</label>
+	    <label class="radio-inline"><input type="radio" checked="checked" id="gender" name="gender" value="F" />Female</label>
 	    {% endif %}
 	    {% else %}
-	    <label class="radio-inline"><input type="radio" selected id="gender" name="gender" value="M"/>Male</label>
+	    <label class="radio-inline"><input type="radio" checked="checked" id="gender" name="gender" value="M"/>Male</label>
 	    <label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label>
 	    {% endif %}
 	  </div>
@@ -200,6 +200,7 @@
 	</div>
       </div>
     </div>
+	{% if mode == 'add' %}
     <div class="row">
       <fieldset id="student_form" class="col-md-6 col-xs-12">
 	<div class="row">
@@ -251,13 +252,139 @@
 	</div>
       </fieldset>
     </div>
-    <div class="row">
+   
+      </div>
+    </div>
+	{% else %}
+		{% if user.getStudent == 1 %}
+			<div class="row">
+			  <fieldset id="student_form" class="col-md-6 col-xs-12">
+			<div class="row">
+			  <div class="form-group col-md-12 col-xs-12">
+				<div class="input-group">
+				  <div class="input-group-addon">Major :</div>
+				  <select id="major" name="major" class="form-control">
+				  <option value='{{user.getMajor().getId()}}'>{{user.getMajor().getName()}}</option>
+				{% for m in majors %}					
+					{% if user.getMajor().getId() != m.getId() %}
+						<option value='{{m.getId()}}'>{{m.getName()}}</option>
+					{% endif %}
+				{% endfor %}
+				  </select>
+				</div>
+			  </div>
+			  <div class="form-group col-md-12 col-xs-12">
+				<div class="input-group">
+				  <div class="input-group-addon">Degree :</div>
+				  <select id="degree" name="degree" class="form-control">
+				<option value='{{user.getDegree().getId()}}'>{{user.getDegree().getName()}}</option>
+				{% for d in degrees %}					
+					{% if user.getDegree().getId() != d.getId() %}
+						<option value='{{d.getId()}}'>{{d.getName()}}</option>
+					{% endif %}
+				{% endfor %}
+				  </select>
+				</div>
+			  </div>
+			</div>
+			<div class="row">
+			  <div class="form-group col-md-12 col-xs-12">
+				<div class="input-group">
+				  <div class="input-group-addon">Year :</div>
+				  <select id="dyear" name="degree_year" class="form-control">
+				  <option value='{{user.getDegreeYear().getId()}}'>{{user.getDegreeYear().getYear()}}</option>
+				{% for d in degYears %}					
+					{% if user.getDegreeYear().getId() != d.getId() %}
+						<option value='{{d.getId()}}'>{{d.getYear()}}</option>
+					{% endif %}
+				{% endfor %}
+				  </select>
+				</div>
+			  </div>
+			</div>
+			  </fieldset>
+
+			  <fieldset id="staff_form" disabled  class="col-md-6 col-xs-12">
+			<div class="form-group">
+			  <div class="input-group">
+				<div class="input-group-addon">Function :</div>
+				<select id="function" name="function" class="form-control">
+				  {% for f in functions %}
+				  <option value='{{f.getId()}}'>{{f.getName()}}</option>
+				  {% endfor %}
+				</select>
+			  </div>
+			</div>
+			  </fieldset>
+			</div>
+		   
+			  </div>
+			</div>
+		{% else %}
+			<div class="row">
+			  <fieldset id="student_form"  disabled class="col-md-6 col-xs-12">
+			<div class="row">
+			  <div class="form-group col-md-12 col-xs-12">
+				<div class="input-group">
+				  <div class="input-group-addon">Major :</div>
+				  <select id="major" name="major" class="form-control">
+					{% for m in majors %}					
+						<option value='{{m.getId()}}'>{{m.getName()}}</option>
+					{% endfor %}
+				  </select>
+				</div>
+			  </div>
+			  <div class="form-group col-md-12 col-xs-12">
+				<div class="input-group">
+				  <div class="input-group-addon">Degree :</div>
+				  <select id="degree" name="degree" class="form-control">
+				{% for d in degrees %}					
+					<option value='{{d.getId()}}'>{{d.getName()}}</option>
+				{% endfor %}
+				  </select>
+				</div>
+			  </div>
+			</div>
+			<div class="row">
+			  <div class="form-group col-md-12 col-xs-12">
+				<div class="input-group">
+				  <div class="input-group-addon">Year :</div>
+				  <select id="dyear" name="degree_year" class="form-control">
+				{% for d in degYears %}					
+					<option value='{{d.getId()}}'>{{d.getYear()}}</option>
+				{% endfor %}
+				  </select>
+				</div>
+			  </div>
+			</div>
+			  </fieldset>
+
+			  <fieldset id="staff_form" class="col-md-6 col-xs-12">
+			<div class="form-group">
+			  <div class="input-group">
+				<div class="input-group-addon">Function :</div>
+				<select id="function" name="function" class="form-control">
+				<option value='{{user.getFunction().getId()}}'>{{user.getFunction().getName()}}</option>
+				  {% for f in functions %}
+					  {% if user.getFunction().getId() != f.getId() %}
+						<option value='{{f.getId()}}'>{{f.getName()}}</option>
+					  {% endif %}
+				  {% endfor %}
+				</select>
+			  </div>
+			</div>
+			  </fieldset>
+			</div>
+		   
+			  </div>
+			</div>
+		{% endif %}
+	{% endif %}
+	 <div class="row">
       <div class="form-group col-md-1 col-xs-4 center-block">
 	<div class="input-group">
 	  <button type="submit" class="btn btn-primary">Submit</button>
 	</div>
-      </div>
-    </div>
   </form>
 </div>
 {% endblock %}

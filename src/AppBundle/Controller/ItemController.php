@@ -181,11 +181,16 @@ class ItemController extends Controller
 		$typ = $request->request->get('type');
 		$lang = $request->request->get('language');
 		
-		$item_per_page = 5;
-		$total = $em->getRepository('AppBundle:Item')->findTotalByCategTypeLanguageSearch($cat,$typ,$lang,$search);
+		$item_per_page = $this->getParameter('max_per_page');
+		if($session->get('isAdmin')){
+			$state = "";
+		}else{
+			$state = "0";
+		}
+		$total = $em->getRepository('AppBundle:Item')->findTotalByCategTypeLanguageSearch($cat,$typ,$lang,$search,$state);
 		$nb_max_pages = ceil($total[0][1] / $item_per_page);
 		$current = ($page * $item_per_page) - $item_per_page;
-		$items = $em->getRepository('AppBundle:Item')->findByCategTypeLanguageSearch($current,$item_per_page,$cat,$typ,$lang,$search);
+		$items = $em->getRepository('AppBundle:Item')->findByCategTypeLanguageSearch($current,$item_per_page,$cat,$typ,$lang,$search,$state);
 		
 		$data = array(
 				'page_max' => $nb_max_pages,
@@ -427,15 +432,18 @@ class ItemController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		$session = $request->getSession();
 		if($session->get('connected')){
-			$comment = $request->request->get('comment');
+			$comment = $request->request->get('comment');			
+			$new_comment = new Comments();
 			if(($user = $em->getRepository('AppBundle:Librarian')->find($user_code)) == NULL){
 				$user = $em->getRepository('AppBundle:Member')->find($user_code);
+				$new_comment->setMember($user);
+				$new_comment->setLibrarian(null);				
 			}else{
 				$user = $em->getRepository('AppBundle:Librarian')->find($user_code);
+				$new_comment->setLibrarian($user);
+				$new_comment->setMember(null);
 			}
-			$avatar_path = $user->getAvatarPath();
-			$new_comment = new Comments();
-			$new_comment->setMember($user);
+			$avatar_path = $user->getAvatarPath();			
 			$new_comment->setItem($em->getRepository('AppBundle:Item')->find($item_code));
 			$new_comment->setComment($comment);
 			

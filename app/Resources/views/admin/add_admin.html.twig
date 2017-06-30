@@ -14,7 +14,7 @@
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <span class="input-group-addon" for="fname">First Name :</span>
-	  <input required type="text" id="fname" name="fname" onchange="testName(this)" class="form-control" />
+	  <input required type="text" id="fname" name="fname" onchange="testName(this)" class="form-control" {% if mode != 'add' %} value="{{ user.getFirstName() }}" {% endif %}/>
 	</div>
       </div>
       {% if mode == 'add' %}
@@ -30,13 +30,26 @@
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <span class="input-group-addon" for="lname">Last name :</span>
-	  <input required type="text" id="lname" name="lname" onchange="testName(this)" class="form-control" />
+	  <input required type="text" id="lname" name="lname" onchange="testName(this)" class="form-control" {% if mode != 'add' %} value="{{ user.getLastName() }}" {% endif %}/>
 	</div>
       </div>
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="gender">Gender :</div>
-	  <div class="form-control"><label class="radio-inline"><input type="radio" id="gender" name="gender" value="M" />Male</label><label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label></div>
+	  <div class="form-control">
+	  {% if mode != 'add' %}
+	    {% if user.getGender() == 'M' %}
+	    <label class="radio-inline"><input type="radio" checked="checked" id="gender" name="gender" value="M"/>Male</label>
+	    <label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label>
+	    {% else %}
+	    <label class="radio-inline"><input type="radio" id="gender" name="gender" value="M"/>Male</label>
+	    <label class="radio-inline"><input type="radio" checked="checked" id="gender" name="gender" value="F" />Female</label>
+	    {% endif %}
+	  {% else %}
+	    <label class="radio-inline"><input type="radio" checked="checked" id="gender" name="gender" value="M"/>Male</label>
+	    <label class="radio-inline"><input type="radio" id="gender" name="gender" value="F" />Female</label>
+	  {% endif %}
+		</div>
 	</div>
       </div>
     </div>
@@ -44,13 +57,13 @@
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="city">City :</div>
-	  <input required type="text" id="city" name="city" onchange="testCity(this)" class="form-control" />
+	  <input required type="text" id="city" name="city" onchange="testCity(this)" class="form-control" {% if mode != 'add' %} value="{{ user.getAddress().getCity() }}" {% endif %}/>
 	</div>
       </div>
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="phone">Phone :</div>
-	  <input required type="text" id="phone" name="phone" class="form-control" />
+	  <input required type="text" id="phone" name="phone" class="form-control" {% if mode != 'add' %} value="{{ user.getTel() }}" {% endif %} />
 	</div>
       </div>
     </div>
@@ -58,13 +71,13 @@
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="street">Street :</div>
-	  <input required type="text" id="street" name="street" class="form-control" />
+	  <input required type="text" id="street" name="street" class="form-control" {% if mode != 'add' %} value="{{ user.getAddress().getStreet() }}" {% endif %}/>
 	</div>
       </div>
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="email">Email :</div>
-	  <input required type="text" id="email" onchange="testMail(this)" name="email" class="form-control" />
+	  <input required type="text" id="email" onchange="testMail(this)" name="email" class="form-control" {% if mode != 'add' %} value="{{ user.getEmail() }}" {% endif %}/>
 	</div>
       </div>
     </div>
@@ -72,7 +85,7 @@
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
 	  <div class="input-group-addon" for="pcode">Postal code :</div>
-	  <input required type="text" onchange="testPostCode(this)" id="pcode" name="pcode" class="form-control" />
+	  <input required type="text" onchange="testPostCode(this)" id="pcode" name="pcode" class="form-control" {% if mode != 'add' %} value="{{ user.getAddress().getPostalCode() }}" {% endif %} />
 	</div>
       </div>
       {% if mode == 'add' %}

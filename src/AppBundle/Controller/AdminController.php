@@ -41,13 +41,18 @@ class AdminController extends Controller
 			if($session->get('isAdmin')){
 				
 				$member_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Member');
-				$total = $member_rep->getNumberOfMembers();
 				
-				$mem_per_page = 16;
+				$code  = $request->request->get('code');
+				$fname = $request->request->get('fname');
+				$lname = $request->request->get('lname');
+				
+				$total = $member_rep->getNumberOfMembers($code,$fname,$lname);
+				
+				$mem_per_page = $this->getParameter('max_per_page');
 				$nb_max_pages = ceil($total[0][1] / $mem_per_page);
 				$current = ($page * $mem_per_page) - $mem_per_page;
 				
-				$members = $member_rep->getAllMembers($current,$mem_per_page);
+				$members = $member_rep->getAllMembers($current,$mem_per_page,$code,$fname,$lname);
 				
 				$data = array(
 					'page_max' => $nb_max_pages,
@@ -73,15 +78,19 @@ class AdminController extends Controller
 		$session = $request->getSession();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
+				
+				$username  = $request->request->get('username');
+				$fname 	   = $request->request->get('fname');
+				$lname 	   = $request->request->get('lname');
 			
 				$lib_rep = $this->getDoctrine()->getManager()->getRepository('AppBundle:Librarian');
-				$total = $lib_rep->getNumberOfLibrarians();
+				$total = $lib_rep->getNumberOfLibrarians($username,$fname,$lname);
 				
-				$lib_per_page = 16;
+				$lib_per_page = $this->getParameter('max_per_page');
 				$nb_max_pages = ceil($total[0][1] / $lib_per_page);
 				$current = ($page * $lib_per_page) - $lib_per_page;
 				
-				$librarians = $lib_rep->getAllLibrarians($current,$lib_per_page);
+				$librarians = $lib_rep->getAllLibrarians($current,$lib_per_page,$username,$fname,$lname);
 				
 				$data = array(
 					'page_max' => $nb_max_pages,
@@ -116,6 +125,7 @@ class AdminController extends Controller
 				$cateRep = $em->getRepository('AppBundle:Category');
 				$typeRep = $em->getRepository('AppBundle:Type');
 				$logsRep = $em->getRepository('AppBundle:Logs');
+				$tranRep = $em->getRepository('AppBundle:Transaction');
 				
 				$itemNumber   = $itemRep->getItemNumber();
 				$itemUnits    = $itemRep->getItemUnits();
@@ -138,7 +148,17 @@ class AdminController extends Controller
 				$coMonth	  = $logsRep->getCo($thisMonth);
 				$coYear		  = $logsRep->getCo($thisYear);
 				
+				$today = date('Y-m-d');
+				$tomorrow = date('Y-m-d', strtotime(' + 1 days'));
+				$toReturnToday= $tranRep->getToReturnNb($today);
+				$toRetTomorrow= $tranRep->getToReturnNb($tomorrow);
+				
+				$numberItemPerCateg = $itemRep->getNumberPerCateg();
+				
 				return $this->render('admin/general_infos.html.twig', [
+				'nbPerCateg'  => $numberItemPerCateg,
+				'toRetToday'  => $toReturnToday,
+				'toRetTomor'  => $toRetTomorrow,
 				'itemNumber'  => $itemNumber,
 				'itemUnits'   => $itemUnits,
 				'bItemNumber' => $bItemNumber,     
@@ -172,7 +192,13 @@ class AdminController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
+				if($mode != 'add'){
+					$user = $em->getRepository('AppBundle:Librarian')->find($code);
+				}else{
+					$user = null;
+				}
 				return $this->render('admin/add_admin.html.twig',[
+					'user' => $user,
 					'mode' => $mode,
 				    'code' => $code,
 				]);
@@ -267,7 +293,7 @@ class AdminController extends Controller
 						
 						$new_member->setCode($code);
 						$new_member->setPassword($passwordHashed);
-						$new_member->setAvatarPath('default_avatar.png');
+						$new_member->setAvatarPath('default_avatar.jpg');
 						$new_member->setEntryDate(date("Y-m-d"));
 						$new_member->setCurrentBorrowedBooksNb(0);
 						$new_member->setDisable(0);
@@ -368,7 +394,7 @@ class AdminController extends Controller
 						$passwordHashed = hash('sha256', $password.$this->getParameter('nonce'));
 						
 						$new_librarian = new Librarian();
-						$new_librarian->setAvatarPath('default_avatar.png');
+						$new_librarian->setAvatarPath('default_avatar.jpg');
 						$new_librarian->setHireDate(date("Y-m-d"));
 						$new_librarian->setPassword($passwordHashed);
 						$new_librarian->setDisable(0);
@@ -415,7 +441,7 @@ class AdminController extends Controller
 				}else{
 					return $this->redirect($this->generateUrl('account',['code' => $username]));
 				}
-			}
+			}	
 			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
 		return $this->redirect($this->generateUrl('errorNotLogged'));
@@ -451,7 +477,7 @@ class AdminController extends Controller
 						$new_log->setAction("Disabled member $code");
 						$em->persist($new_log);
 						$em->flush();
-						return $this->redirect($this->generateUrl('checkalluser'));
+						return $this->redirect($this->generateUrl('account',['code'=>$code]));
 					}
 				}else if(($user = $em->getRepository('AppBundle:Librarian')->find($code)) != NULL){
 					$user->setDisable(1);
@@ -462,7 +488,7 @@ class AdminController extends Controller
 					$new_log->setAction("Disabled librarian $code");
 					$em->persist($new_log);
 					$em->flush();
-					return $this->redirect($this->generateUrl('checkalllib'));
+					return $this->redirect($this->generateUrl('account',['code'=>$code]));
 				}else{
 					return $this->redirect($this->generateUrl('errorNotExistingUser'));
 				}
@@ -489,7 +515,7 @@ class AdminController extends Controller
 					$new_log->setAction("Reactivated member $code");
 					$em->persist($new_log);
 					$em->flush();
-					return $this->redirect($this->generateUrl('checkalluser'));
+					return $this->redirect($this->generateUrl('account',['code'=>$code]));
 				}else if(($user = $em->getRepository('AppBundle:Librarian')->find($code)) != NULL){
 					$user->setDisable(0);
 					$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
@@ -499,7 +525,7 @@ class AdminController extends Controller
 					$new_log->setAction("Reactivated librarian $code");
 					$em->persist($new_log);
 					$em->flush();
-					return $this->redirect($this->generateUrl('checkalllib'));
+					return $this->redirect($this->generateUrl('account',['code'=>$code]));
 				}else{
 					return $this->redirect($this->generateUrl('errorNotExistingUser'));
 				}
@@ -526,7 +552,7 @@ class AdminController extends Controller
 					$new_log->setAction("Disabled item $code");
 					$em->persist($new_log);
 					$em->flush();
-					return $this->redirect($this->generateUrl('itemlist'));
+					return $this->redirect($this->generateUrl('readitem',['id'=>$code]));
 				}else{
 					return $this->redirect($this->generateUrl('errorNotExistingItem'));
 				}
@@ -553,7 +579,7 @@ class AdminController extends Controller
 					$new_log->setAction("Reactivated item $code");
 					$em->persist($new_log);
 					$em->flush();
-					return $this->redirect($this->generateUrl('itemlist'));
+					return $this->redirect($this->generateUrl('readitem',['id'=>$code]));
 				}else{
 					return $this->redirect($this->generateUrl('errorNotExistingItem'));
 				}
@@ -631,7 +657,7 @@ class AdminController extends Controller
 					$em->persist($item);
 					$em->persist($member);
 					$em->flush();
-					return $this->redirect($this->generateUrl('bookings',['id' => $trans->getMember()->getCode()]));
+					return $this->redirect($this->generateUrl('bookingDetail',['id' => $trans->getId(),'code' => $trans->getMember()->getCode()]));
 				}else{
 					return $this->redirect($this->generateUrl('errorNotExistingItem'));
 				}
@@ -685,7 +711,7 @@ class AdminController extends Controller
 				$days = array('day'=>$day,'month'=>$month,'year'=>$year);
 				
 				$total = $trans_rep->getNumber($t_id,$m_code,$i_title,$borrow_date,$state);
-				$trans_per_page = 16;
+				$trans_per_page = $this->getParameter('max_per_page');
 				$nb_max_pages = ceil($total[0][1] / $trans_per_page);
 				$current = ($page * $trans_per_page) - $trans_per_page;
 				
@@ -757,7 +783,7 @@ class AdminController extends Controller
 				}else{
 					$total = $totalToSum[0]['total'];
 				}				
-				$log_per_page = 16;
+				$log_per_page = $this->getParameter('max_per_page');
 				$nb_max_pages = ceil($total / $log_per_page);
 				$current = ($page * $log_per_page) - $log_per_page;
 				

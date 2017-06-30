@@ -46,7 +46,7 @@ class ItemRepository extends EntityRepository{
 			return $query->getResult();
 	}
 	
-	public function findByCategTypeLanguageSearch($current,$item_per_page,$cat,$type,$lang,$search){
+	public function findByCategTypeLanguageSearch($current,$item_per_page,$cat,$type,$lang,$search,$state){
 		$query = $this->getEntityManager()->createQuery(
 			"SELECT it.code,it.title,it.author,ca.subject,la.lang_name,it.publication_year,it.bookable,it.note,
 			it.total_unit
@@ -54,26 +54,45 @@ class ItemRepository extends EntityRepository{
 			JOIN AppBundle:Type ty WITH it.type = ty.id
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			JOIN AppBundle:Languages la WITH it.language = la.id
-			WHERE ca.id lIKE '%$cat%' AND ty.id LIKE '%$type%' AND la.id LIKE '%$lang%' AND it.title LIKE '%$search%'
-			AND it.disable=0
+			WHERE ca.id lIKE :cat AND ty.id LIKE :type AND la.id LIKE :lang AND it.title LIKE :search
+			AND it.disable LIKE :state
 			"
+		);
+		$query->setParameters(
+			array(
+				'cat' 	   => "%$cat%",
+				'type'	   => "%$type%",
+				'lang'     => "%$lang%",
+				'search'   => "%$search%",
+				'state'	   => "%$state%"
+			)
 		);
 		$query->setFirstResult($current);
 		$query->setMaxResults($item_per_page);
 		return $query->getResult();
 	}
 	
-	public function findTotalByCategTypeLanguageSearch($cat,$type,$lang,$search){
-		return $this->getEntityManager()->createQuery(
+	public function findTotalByCategTypeLanguageSearch($cat,$type,$lang,$search,$state){
+		$query = $this->getEntityManager()->createQuery(
 			"SELECT COUNT(it.code)
 			FROM AppBundle:Item it
 			JOIN AppBundle:Type ty WITH it.type = ty.id
 			JOIN AppBundle:Category ca WITH it.category = ca.id
 			JOIN AppBundle:Languages la WITH it.language = la.id
-			WHERE ca.id lIKE '%$cat%' AND ty.id LIKE '%$type%' AND la.id LIKE '%$lang%' AND it.title LIKE '%$search%'
-			AND it.disable=0
+			WHERE ca.id lIKE :cat AND ty.id LIKE :type AND la.id LIKE :lang AND it.title LIKE :search
+			AND it.disable LIKE :state
 			"
-		)->getResult();
+		);
+		$query->setParameters(
+			array(
+				'cat' 	   => "%$cat%",
+				'type'	   => "%$type%",
+				'lang'     => "%$lang%",
+				'search'   => "%$search%",
+				'state'	   => "%$state%"
+			)
+		);
+		return $query->getResult();
 	}
 	
 	public function updateNoteByCode($code){
@@ -81,10 +100,11 @@ class ItemRepository extends EntityRepository{
 		"UPDATE AppBundle:Item it SET it.note = 
 			(SELECT AVG(no.note)
 			FROM AppBundle:Note no
-			WHERE no.item = $code)
-		WHERE it.code = $code
+			WHERE no.item = :code)
+		WHERE it.code = :code
 		"
 		);
+		$query->setParameter('code',$code);
 		$query->execute();
 	}
 	
@@ -122,6 +142,19 @@ class ItemRepository extends EntityRepository{
 		return $this->getEntityManager()->createQuery(
 		"SELECT SUM(it.disable) FROM AppBundle:Item it"
 		)->getResult();
+	}
+	
+	public function getNumberPerCateg(){
+		$em = $this->getEntityManager();
+		$conn = $em->getConnection();
+		$query = $conn->prepare(" 
+			SELECT COUNT(i.code) as nbItem, c.subject as categName
+			FROM Item i
+			RIGHT JOIN Category c ON i.category_id = c.id
+			GROUP BY(c.subject)
+			");
+		$query->execute();
+		return $query->fetchAll();
 	}
 }
 

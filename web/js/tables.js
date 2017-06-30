@@ -29,6 +29,18 @@ $(document).ready(function(){
 		window.location = Routing.generate("bookings", {'id':this.value});
 	});
 	
+	$('.table').on('mouseenter','.checkBookingButton',function(e){
+		e.stopPropagation()
+		e.preventDefault();
+		$(this).css('backgroundColor','green');
+	});
+	
+	$('.table').on('mouseleave','.checkBookingButton',function(e){
+		e.stopPropagation()
+		e.preventDefault();
+		$(this).css('backgroundColor','');
+	});
+	
 	$('.table').on('mouseenter','.bookingButton',function(e){
 		e.stopPropagation()
 		e.preventDefault();

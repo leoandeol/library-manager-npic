@@ -20,9 +20,17 @@ class Comments{
      * @var Member
 	 *
 	 * @ORM\ManyToOne(targetEntity="Member")
-	 * @ORM\JoinColumn(name="member_code", referencedColumnName="code", onDelete="CASCADE")
+	 * @ORM\JoinColumn(name="member_code", referencedColumnName="code", nullable=true, onDelete="CASCADE")
      */
 	private $member;
+	
+	/**
+     * @var Librarian
+	 *
+	 * @ORM\ManyToOne(targetEntity="Librarian")
+	 * @ORM\JoinColumn(name="librarian_username", referencedColumnName="username", nullable=true, onDelete="CASCADE")
+     */
+	private $librarian;
 	
 	/**
      * @var Item
@@ -75,6 +83,30 @@ class Comments{
     public function getMember()
     {
         return $this->member;
+    }
+	
+	 /**
+     * Set librarian
+     *
+     * @param string $librarian
+     *
+     * @return Comments
+     */
+    public function setLibrarian($librarian)
+    {
+        $this->librarian = $librarian;
+
+        return $this;
+    }
+
+    /**
+     * Get librarian
+     *
+     * @return string
+     */
+    public function getLibrarian()
+    {
+        return $this->librarian;
     }
 
     /**

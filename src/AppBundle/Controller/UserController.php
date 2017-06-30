@@ -99,7 +99,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user/logout", name="logout")
+     * @Route("/user/logout", name="logout", options={"expose"=true})
      */
     public function logoffAction(Request $request)
     {
@@ -248,7 +248,7 @@ class UserController extends Controller
 				
 				$total = $trans_rep->getNumber("",$id,$title,$from,$state);
 				
-				$trans_per_page = 16;
+				$trans_per_page = $this->getParameter('max_per_page');
 				$nb_max_pages = ceil($total[0][1] / $trans_per_page);
 				$current = ($page * $trans_per_page) - $trans_per_page;
 				
