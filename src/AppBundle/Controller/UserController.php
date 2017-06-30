@@ -156,7 +156,6 @@ class UserController extends Controller
 						$canReadForm = true;									
 					}
 				}else{
-                    echo 'test3';
 					$isMember = true;
 					$user = $memb_rep->find($code);
 				}

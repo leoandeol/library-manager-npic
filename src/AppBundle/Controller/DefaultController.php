@@ -97,21 +97,23 @@ class DefaultController extends Controller
 					$toReturn = $transac->getToReturnDate();
 					$state	  = $transac->getState();
 					if($today < $toReturn && $state == 'Borrowed'){
+						var_dump('here');
 						$dif  = $toReturn->diff($today)->days;
+						var_dump($dif);
 						if($dif <= 3){
 							$mailer->sendTemplateMessage($memb_mail,"NPIC Library return reminder","email/reminderToReturn.html.twig",
 							array('trans_id' => $id, 'days' => $dif,'date' => $toReturn));	
 						}
 					}else if($today > $toReturn && $state == 'Borrowed'){
 						$dif  = $today->diff($toReturn)->days;
-						$fcdp = $transac->getFineCostPerDay();
-						$toPay= $dif * $fcdp;
+						$fcpd = $transac->getFineCostPerDay();
+						$toPay= $dif * $fcpd;
 						$transac->setFineToPay($toPay);
 						$mailer->sendTemplateMessage($memb_mail,"NPIC Library return reminder","email/reminderToReturnAndPay.html.twig",
-						array('trans_id' => $id, 'days' => $dif,'fcpd' => $toReturn,'toPay' => $toPay));
+						array('trans_id' => $id, 'days' => $dif,'fcpd' => $fcpd,'toPay' => $toPay));
 						foreach($librarians as $librarian){
 							$mailer->sendTemplateMessage($librarian->getEmail(),"NPIC Library transaction ended","email/reminderTransactionEnded.html.twig",
-							array('trans_id' => $id,'memb_id' => $member->getCode(), 'days' => $dif,'toPay' => $toPay));
+							array('trans_id' => $id,'member_id' => $member->getCode(), 'days' => $dif,'toPay' => $toPay));
 						}
 					}
 				}

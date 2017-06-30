@@ -127,32 +127,32 @@
 	    <input disabled class="form-control" value="{{data['user'].getEntryDate()|date('Y-m-d')}}"/>
 	  </div>
 	</div>
-	{% if data['user'].getStudent() %}
-	<div class="form-group col-md-12 col-xs-12">
-	  <div class="input-group">
-	    <div class="input-group-addon" >Major:</div>
-	    <input disabled class="form-control" value="{{data['user'].getMajor().getName()}}"/>
-	  </div>
-	</div>
-	<div class="form-group col-md-12 col-xs-12">
-	  <div class="input-group">
-	    <div class="input-group-addon" >Degree:</div>
-	    <input disabled class="form-control" value="{{data['user'].getDegree().getName()}}"/>
-	  </div>
-	</div>
-	<div class="form-group col-md-12 col-xs-12">
-	  <div class="input-group">
-	    <div class="input-group-addon" >Degree year:</div>
-	    <input disabled class="form-control" value="{{data['user'].getDegreeYear().getYear()}}"/>
-	  </div>
-	</div>
-	{% else %}
-	<div class="form-group col-md-12 col-xs-12">
-	  <div class="input-group">
-	    <div class="input-group-addon" >Function:</div>
-	    <input disabled class="form-control" value="{{data['user'].getFunction().getName()}}"/>
-	  </div>
-	</div>
+		{% if data['user'].getStudent() %}
+		<div class="form-group col-md-12 col-xs-12">
+		  <div class="input-group">
+			<div class="input-group-addon" >Major:</div>
+			<input disabled class="form-control" value="{{data['user'].getMajor().getName()}}"/>
+		  </div>
+		</div>
+		<div class="form-group col-md-12 col-xs-12">
+		  <div class="input-group">
+			<div class="input-group-addon" >Degree:</div>
+			<input disabled class="form-control" value="{{data['user'].getDegree().getName()}}"/>
+		  </div>
+		</div>
+		<div class="form-group col-md-12 col-xs-12">
+		  <div class="input-group">
+			<div class="input-group-addon" >Degree year:</div>
+			<input disabled class="form-control" value="{{data['user'].getDegreeYear().getYear()}}"/>
+		  </div>
+		</div>
+		{% else %}
+		<div class="form-group col-md-12 col-xs-12">
+		  <div class="input-group">
+			<div class="input-group-addon" >Function:</div>
+			<input disabled class="form-control" value="{{data['user'].getFunction().getName()}}"/>
+		  </div>
+		</div>
 	{% endif %}
 	<div class="form-group col-md-12 col-xs-12">
 	  <div class="input-group">
@@ -162,61 +162,59 @@
 	</div>
 	{% endif %}
 	{% if data['isAdmin'] %}
-	{% if data['isMember'] == false %}
-	{% if data['user'].getUsername() != app.session.get('user').getUsername() %}
-	{% if data['user'].getDisable()==0 %}
-	<div class="form-group col-md-12 col-xs-12">
-	  <div class="input-group">	
-	    <a href="/admin/disable_user/
-		     {{data['user'].getUsername()}}
-		     "><button class="input-group-addon">Disable</button></a>
-	  </div>
-	</div>
-	{% else %}
-	<div class="form-group col-md-12 col-xs-12">
-	  <div class="input-group">	
-	    <a href="/admin/reactivate_user/
-		     {{data['user'].getUsername()}}
-		     "><button class="input-group-addon">Reactivate</button></a>
-	  </div>
-	</div>
+		{% if data['isMember'] == false %}
+			{% if data['user'].getUsername() != app.session.get('user').getUsername() %}
+				{% if data['user'].getDisable()==0 %}
+					<div class="form-group col-md-12 col-xs-12">
+					  <div class="input-group">	
+						<a href="/admin/disable_user/
+							 {{data['user'].getUsername()}}
+							 "><button class="input-group-addon">Disable</button></a>
+					  </div>
+					</div>
+				{% else %}
+					<div class="form-group col-md-12 col-xs-12">
+					  <div class="input-group">	
+						<a href="/admin/reactivate_user/
+							 {{data['user'].getUsername()}}
+							 "><button class="input-group-addon">Reactivate</button></a>
+					  </div>
+					</div>
+				{% endif %}
+			{% endif %}
+			{% else %}
+				{% if data['user'].getDisable()==0 %}
+					<div class="form-group col-md-12 col-xs-12">
+					  <div class="input-group">	
+						<a href="/admin/disable_user/{{data['user'].getCode()}}
+							 "><button class="input-group-addon">Disable</button></a>
+					  </div>
+					</div>
+				{% else %}
+					<div class="form-group col-md-12 col-xs-12">
+					  <div class="input-group">	
+						<a href="/admin/reactivate_user/
+							 {{data['user'].getCode()}}
+							 "><button class="input-group-addon">Reactivate</button></a>
+					 </div>
+				</div>
+			{% endif %}
+		{% endif %}
 	{% endif %}
-	{% endif %}
-	{% else %}
-	{% if data['user'].getDisable()==0 %}
-	<div class="form-group col-md-12 col-xs-12">
-	  <div class="input-group">	
-	    <a href="/admin/disable_user/
-		     {{data['user'].getCode()}}
-		     "><button class="input-group-addon">Disable</button></a>
-	  </div>
-	</div>
-	{% else %}
-	<div class="form-group col-md-12 col-xs-12">
-	  <div class="input-group">	
-	    <a href="/admin/reactivate_user/
-		     {{data['user'].getCode()}}
-		     "><button class="input-group-addon">Reactivate</button></a>
-	  </div>
-	</div>
-	{% endif %}
-	{% endif %}
-	{% endif %}
-      </div>
+    </div>
     </div>
     <div class="row">
       {% if app.session.get('isAdmin') == false %}
       <div class="col-md-3 col-xs-12 col-md-offset-1">
-	<a href="/user/bookings/{{data['user'].getCode()}}"><button class="btn btn-primary">Check my bookings</button></a>
+		<a href="/user/bookings/{{data['user'].getCode()}}"><button class="btn btn-primary">Check my bookings</button></a>
       </div>
       {% else %}
       <div class="col-md-3 col-xs-12 col-md-offset-1">
-	<a href="/admin/{% if data['isMember'] %}add_user
-		 {% else %}add_admin{% endif %}/update/
-		 {% if data['isMember'] %}{{ data['user'].getCode() }}
-		 {% else %}{{ data['user'].getUsername() }}
-		 {% endif %}"><button class="btn btn-primary">Update informations</button></a>
-      </div>
+		{% if data['isMember'] %}
+			<a href="/admin/add_user/update/{{data['user'].getCode()}}"><button class="btn btn-primary">Update informations</button></a></div>
+		{% else %}
+			<a href="/admin/add_admin/update/{{data['user'].getUsername()}}"><button class="btn btn-primary">Update informations</button></a></div>
+		{% endif %}
       {% endif %}
       <div class="col-md-3 col-xs-12 col-md-offset-1">
 	<a href="/user/changepass"><button class="btn btn-primary">Change my password</button></a>

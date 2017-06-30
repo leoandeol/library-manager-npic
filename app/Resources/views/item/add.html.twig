@@ -18,42 +18,70 @@
 	{% endif %}
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Title</div>
-      <input required type="text" onchange="testCity(this)" name="title" class="InputAddOn-field">
+      <input required type="text" onchange="testCity(this)" name="title" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getTitle() }}" {% endif %}>
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Author</div>
-      <input required type="text" onchange="testName(this)" name="author" class="InputAddOn-field">
+      <input required type="text" onchange="testName(this)" name="author" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getAuthor() }}" {% endif %}>
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Publication year</div>
-      <input required type="number" onchange="testPubYear(this)" name="publication_year" class="InputAddOn-field">
+      <input required type="number" onchange="testPubYear(this)" name="publication_year" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getPublicationYear() }}" {% endif %}>
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Publisher</div>
-      <input required type="text" onchange="testName(this)" name="publisher" class="InputAddOn-field">
+      <input required type="text" onchange="testName(this)" name="publisher" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getPublisher() }}" {% endif %}>
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Category</div>
       <select name="category" class="InputAddOn-field">
-	{% for c in categories  %}
-	<option value='{{ c.id }}' >{{ c.subject }}</option>
-	{% endfor %}
+		{% if mode != 'add' %} 
+			<option selected value='{{ item.getCategory().getId() }}' >{{ item.getCategory().getSubject() }}</option>
+			{% for c in categories  %}
+				{% if c.id != item.getCategory().getId() %}
+					<option value='{{ c.id }}' >{{ c.subject }}</option>
+				{% endif %}
+			{% endfor %}
+		{% else %}
+			{% for c in categories  %}
+				<option value='{{ c.id }}' >{{ c.subject }}</option>
+			{% endfor %}
+		{% endif %}
       </select>
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Language</div>
       <select name="language" class="InputAddOn-field">
-		{% for l in languages %}
-		<option value="{{l.id}}">{{l.getLangName()}}</option>
-		{%endfor%}
+		{% if mode != 'add' %} 
+			<option selected value='{{ item.getLanguage().getId() }}' >{{ item.getLanguage().getLangName() }}</option>
+			{% for l in languages %}
+				{% if l.id != item.getLanguage().getId() %}
+					<option value='{{ l.id }}' >{{ l.langName }}</option>
+				{% endif %}
+			{%endfor%}
+		{% else %}
+			{% for l in languages %}
+				<option value="{{l.id}}">{{l.langName}}</option>
+			{%endfor%}
+		{% endif %}
+		
 		</select>
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Type</div>
       <select name="type" class="InputAddOn-field">
-	{% for t in types %}
-	<option value='{{ t.id }}' >{{ t.name }}</option>
-	{% endfor %}
+		{% if mode != 'add' %} 
+			<option selected value='{{ item.getTyppe().getId() }}' >{{ item.getTyppe().getName() }}</option>
+			{% for t in types %}
+				{% if t.id != item.getTyppe().getId() %}
+					<option value='{{ t.id }}' >{{ t.name }}</option>
+				{% endif %}
+			{%endfor%}
+		{% else %}
+			{% for t in types %}
+				<option value='{{ t.id }}' >{{ t.name }}</option>
+			{%endfor%}
+		{% endif %}
       </select>
     </div>
     <div class="InputAddOn">
@@ -62,16 +90,16 @@
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Cost (USD $)</div>
-      <input required type="number" step="0.01" onchange="testPrice(this)" min="0" name="cost" class="InputAddOn-field">
+      <input required type="number" step="0.01" onchange="testPrice(this)" min="0" name="cost" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getCost() }}" {% endif %}>
     </div>
     <div class="InputAddOn">
       <div class="InputAddOn-item" >ISBN (optional)</div>
-      <input type="number" name="isbn" class="InputAddOn-field">
+      <input type="number" name="isbn" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getIsbn() }}" {% endif %}>
     </div>
 	{% if mode == 'add' %}
     <div class="InputAddOn">
       <div class="InputAddOn-item" >Units</div>
-      <input type="number" name="units" class="InputAddOn-field" value=1>
+      <input type="number" name="units" class="InputAddOn-field" value=1 {% if mode != 'add' %} value="{{ item.getTotalUnit() }}" {% endif %}>
     </div>
 	{% endif %}
     <div class="InputAddOn submit-login">

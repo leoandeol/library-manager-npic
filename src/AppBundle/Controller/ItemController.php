@@ -1,5 +1,4 @@
 <?php
-
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -30,9 +29,16 @@ class ItemController extends Controller
 		$type = $em->getRepository('AppBundle:Type')->findAll();
 		$category = $em->getRepository('AppBundle:Category')->findAllCategories();
 		$language = $em->getRepository('AppBundle:Languages')->findAll();
+		
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
+				if($mode != 'add'){
+					$item = $em->getRepository('AppBundle:Item')->find($code);
+				}else{
+					$item = null;
+				}
 				return $this->render('item/add.html.twig',[
+					'item' => $item,
 					'mode' => $mode,
 					'code' => $code,
 					'languages' => $language,
@@ -76,6 +82,8 @@ class ItemController extends Controller
 				$language = $request->request->get('language');
 				$cost = $request->request->get('cost');
 				
+				$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
+				
 				if($mode == 'add'){
 					$code = $request->request->get('code');
 					$units = $request->request->get('units');
@@ -83,17 +91,46 @@ class ItemController extends Controller
 					if($em->getRepository('AppBundle:Item')->find($code) != null){
 						return $this->redirect($this->generateUrl('error',['error'=>'This code is already taken by another item']));
 					}
-					$new_item = new Item();	
-					$new_item->setCode($code);
-					$new_item->setDisable(0);		
-					$new_item->setTotalUnit($units);
-					$new_item->setNote(NULL);
-					$new_item->setLostUnit(0);
-					$new_item->setBorrowedUnit(0);
-					$new_item->setBookedUnit(0);
-					$new_item->setAddDate(date("Y-m-d"));
-					
-					$action = 'Added item $code';
+					if(($item_existing = $em->getRepository('AppBundle:Item')->findBy(array(
+						'title' 	=> $title,
+						'category'  => $category,
+						'author'	=> $author,
+						'type'		=> $type,
+						'publisher' => $publisher,
+						'publication_year' => $pub_year,
+						'language'  => $language
+					))) != null){	
+						$item_existing[0]->setTotalUnit($item_existing[0]->getTotalUnit() + 1);
+						$new_units = new ItemUnits();
+						$new_units->setAmount(1);
+						$new_units->setItem($item_existing[0]);
+						$new_units->setAddDate(new \DateTime(date('Y-m-d')));
+						
+						$new_log = new Logs();
+						$new_log->setLib($lib);
+						$new_log->setLogDate(date('Y-m-d'));
+						$code = $new_units->getItem()->getCode();
+						$amount = $new_units->getAmount();
+						$new_log->setAction("Added $amount units to the item $code");
+						
+						$em->persist($new_log);
+						$em->persist($new_units);
+						$em->persist($item_existing[0]);
+						$em->flush();
+						return $this->redirect($this->generateUrl('readitem',['id' => $code]));
+					}else{
+						$new_item = new Item();	
+						$new_item->setCode($code);
+						$new_item->setDisable(0);		
+						$new_item->setTotalUnit($units);
+						$new_item->setNote(NULL);
+						$new_item->setLostUnit(0);
+						$new_item->setBorrowedUnit(0);
+						$new_item->setBookedUnit(0);
+						$new_item->setAddDate(date("Y-m-d"));
+						
+						$action = 'Added item $code';
+					}
 				}else{
 					$new_item = $em->getRepository('AppBundle:Item')->find($id);
 					$action = "Updated item $id";
@@ -112,7 +149,6 @@ class ItemController extends Controller
 				$new_item->setTyppe($type);
 				$new_item->setBookable($bookable);
 				
-				$lib = $em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername());
 				$new_log = new Logs();
 				$new_log->setLib($lib);
 				$new_log->setLogDate(date('Y-m-d'));
@@ -176,7 +212,7 @@ class ItemController extends Controller
 			$type = $em->getRepository('AppBundle:Type')->findAll();
 			$category = $em->getRepository('AppBundle:Category')->findAllCategories();
 			$language = $em->getRepository('AppBundle:Languages')->findAll();
-			$comments = $em->getRepository('AppBundle:Comments')->findAll();
+			$comments = $em->getRepository('AppBundle:Comments')->findBy(array('item' => $item));
 			return $this->render('item/read.html.twig',[
 				   'item' => $item,
 				   'types' => $type,

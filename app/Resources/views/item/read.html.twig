@@ -3,7 +3,7 @@
 
 {% block body %}
 
-<div class="navbar navbar-inverse navbar-static-top">
+<div class="navbar navbar-inverse navbar-static-top" style="margin-top:-20px;">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar2" aria-expanded="false" aria-controls="navbar2">
@@ -98,12 +98,10 @@
       <p><strong>Lost units :</strong> {{ item.getLostUnit() }} </p>
       <p><strong>Cost :</strong> {{ item.getCost() }} $ </p>
       {% if item.getDisable()==0 %}
-      <a href="/admin/disable_item/
-	 {{item.getCode()}}
+      <a href="/admin/disable_item/{{item.getCode()}}
 	"><button class="InputAddOn-item">Disable</button></a>
       {% else %}
-      <a href="/admin/reactivate_item/
-	 {{item.getCode()}}
+      <a href="/admin/reactivate_item/{{item.getCode()}}
 	 "><button class="InputAddOn-item">Reactivate</button></a>
       {% endif %}
     </div>

@@ -41,7 +41,7 @@
 	    {% if member.disable == 0 %}
 	    <span class="label label-success">Active</span>
 	    {% else %}
-	    <span class="label label-warning">Inactive</span>>
+	    <span class="label label-warning">Inactive</span>
 	    {% endif %}
 	  </td>
 	  <td>
@@ -54,10 +54,10 @@
     <div class="panel-footer clearfix">
       <div class="ajaxButtons">
 	{% if page>1 %}
-	<button value="{{page-1}}" class="btn btn-primary center-block sortingButton previous"><span class="glyphicon glyphicon-backward"></span> Previous</button>
+	<button value="{{page-1}}" class="btn btn-primary center-block checkMemberButton previous"><span class="glyphicon glyphicon-backward"></span> Previous</button>
 	{% endif %}
 	{% if page<page_max %}
-			    <button value="{{page+1}}" class="btn btn-primary center-block sortingButton next"><span class="glyphicon glyphicon-forward"></span> Next</button>{% endif %}
+			    <button value="{{page+1}}" class="btn btn-primary center-block checkMemberButton next"><span class="glyphicon glyphicon-forward"></span> Next</button>{% endif %}
       </div>
     </div>
   </div>

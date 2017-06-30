@@ -197,7 +197,13 @@ class AdminController extends Controller
 		
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
+				if($mode != 'add'){
+					$user = $em->getRepository('AppBundle:Member')->find($code);
+				}else{
+					$suer = null;
+				}
 				return $this->render('admin/add_user.html.twig',[
+					'user' => $user,
 					'code' => $code,
 					'mode' => $mode,
 				    'functions' => $func,
