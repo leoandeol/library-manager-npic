@@ -165,7 +165,7 @@ class ItemController extends Controller
     }
 
     /**
-     * @Route("/item/list/{page}", name="itemlist", requirements={"page": "\d+"}, options={"expose"=true})
+     * @Route("/item/list/{page}", name="itemlist", options={"expose"=true})
      */
     public function readAllAction(Request $request, $page = 1)
     {
@@ -231,7 +231,7 @@ class ItemController extends Controller
 	 }
 	 
 	 /**
-	 * @Route("/item/add_units/{id}", name="add_units", requirements={"id":"\d+"})
+	 * @Route("/item/add_units/{id}", name="add_units")
 	 */
 	 public function addUnitsAction(Request $request, $id){
 		$em = $this->getDoctrine()->getManager();
@@ -266,7 +266,7 @@ class ItemController extends Controller
 	 }
 	 
 	 /**
-	 * @Route("/item/add_lost_units/{id}", name="add_lost_units", requirements={"id":"\d+"})
+	 * @Route("/item/add_lost_units/{id}", name="add_lost_units")
 	 */
 	 public function addLostUnitsAction(Request $request, $id){
 		$em = $this->getDoctrine()->getManager();
@@ -292,7 +292,7 @@ class ItemController extends Controller
 	 }
 
 	 /**
-	 * @Route("/item/book/{id}", name="bookitem", requirements={"id":"\d+"}, options={"expose"=true})
+	 * @Route("/item/book/{id}", name="bookitem", options={"expose"=true})
 	 */
 	public function bookAction(Request $request, $id){
 		$em = $this->getDoctrine()->getManager();

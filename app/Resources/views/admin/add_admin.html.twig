@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="container" >
-  <h1 class="col-xs-12 col-md-6 center-block text-center">
+<div class="container">
+  <h1 class="col-xs-12 col-md-8 center-block text-center">
     {% if mode == 'add' %}
     Add new administrator
     {% else %}
     Update administrator {{code}}
     {% endif %}
   </h1>
-  <form action="/admin/added_admin/{{mode}}/{{code}}" method="post" class="col-xs-12 col-md-9 center-block" onsubmit="return checkForm(this)">
+  <form action="/admin/added_admin/{{mode}}/{{code}}" method="post" class="col-xs-12 col-md-10 center-block" onsubmit="return checkForm(this)">
     <div class="row">
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">
