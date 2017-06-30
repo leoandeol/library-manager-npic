@@ -2,14 +2,14 @@
 
 {% block body %}
 <div class="container" >
-  <h1>
+  <h1 class="col-xs-12 col-md-6 center-block text-center">
     {% if mode == 'add' %}
     Add new administrator
     {% else %}
     Update administrator {{code}}
     {% endif %}
   </h1>
-  <form action="/admin/added_admin/{{mode}}/{{code}}" method="post" class="center-block" onsubmit="return checkForm(this)">
+  <form action="/admin/added_admin/{{mode}}/{{code}}" method="post" class="col-xs-12 col-md-9 center-block" onsubmit="return checkForm(this)">
     <div class="row">
       <div class="form-group col-md-6 col-xs-12">
 	<div class="input-group">

@@ -1,40 +1,42 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<article class="article-text-block">
-  <h1>
+<div class="container">
+  <h1 class="col-xs-12 col-md-6 center-block text-center">
   {% if mode == 'add' %}
 	Add new (unique) item
   {% else %}
 	Update item {{code}}
   {% endif %}
   </h1>
-  <form action="/item/created/{{mode}}/{{code}}" method="post" onsubmit="return checkFormItem(this)" class="big-form" autocomplete="on">
-	{% if mode == 'add' %}
-		<div class="InputAddOn">
-		  <div class="InputAddOn-item" >Code</div>
-		  <input required type="text" name="code" onchange="testCodeItem(this)" class="InputAddOn-field">
-		</div>
-	{% endif %}
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >Title</div>
-      <input required type="text" onchange="testCity(this)" name="title" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getTitle() }}" {% endif %}>
+  <form action="/item/created/{{mode}}/{{code}}" method="post" onsubmit="return checkFormItem(this)" class="col-xs-12 col-md-8 center-block" autocomplete="on">
+    {% if mode == 'add' %}
+    <div class="form-group col-xs-12 col-md-6">
+      <div class="input-group">
+	<div class="input-group-addon" >Code</div>
+	<input required type="text" name="code" onchange="testCodeItem(this)" class="form-control">
+      </div>
     </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >Author</div>
-      <input required type="text" onchange="testName(this)" name="author" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getAuthor() }}" {% endif %}>
-    </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >Publication year</div>
-      <input required type="number" onchange="testPubYear(this)" name="publication_year" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getPublicationYear() }}" {% endif %}>
-    </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >Publisher</div>
-      <input required type="text" onchange="testName(this)" name="publisher" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getPublisher() }}" {% endif %}>
-    </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >Category</div>
-      <select name="category" class="InputAddOn-field">
+    {% endif %}
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+	<div class="input-group-addon" >Title</div>
+	<input required type="text" onchange="testCity(this)" name="title" class="form-control" {% if mode != 'add' %} value="{{ item.getTitle() }}" {% endif %}>
+    </div></div>
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+      <div class="input-group-addon" >Author</div>
+      <input required type="text" onchange="testName(this)" name="author" class="form-control" {% if mode != 'add' %} value="{{ item.getAuthor() }}" {% endif %}>
+    </div></div>
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+      <div class="input-group-addon" >Publication year</div>
+      <input required type="number" onchange="testPubYear(this)" name="publication_year" class="form-control" {% if mode != 'add' %} value="{{ item.getPublicationYear() }}" {% endif %}>
+    </div></div>
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+      <div class="input-group-addon" >Publisher</div>
+      <input required type="text" onchange="testName(this)" name="publisher" class="form-control" {% if mode != 'add' %} value="{{ item.getPublisher() }}" {% endif %}>
+    </div></div>
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+      <div class="input-group-addon" >Category</div>
+      <select name="category" class="form-control">
 		{% if mode != 'add' %} 
 			<option selected value='{{ item.getCategory().getId() }}' >{{ item.getCategory().getSubject() }}</option>
 			{% for c in categories  %}
@@ -48,10 +50,10 @@
 			{% endfor %}
 		{% endif %}
       </select>
-    </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >Language</div>
-      <select name="language" class="InputAddOn-field">
+    </div></div>
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+      <div class="input-group-addon" >Language</div>
+      <select name="language" class="form-control">
 		{% if mode != 'add' %} 
 			<option selected value='{{ item.getLanguage().getId() }}' >{{ item.getLanguage().getLangName() }}</option>
 			{% for l in languages %}
@@ -66,10 +68,10 @@
 		{% endif %}
 		
 		</select>
-    </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >Type</div>
-      <select name="type" class="InputAddOn-field">
+    </div></div>
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+      <div class="input-group-addon" >Type</div>
+      <select name="type" class="form-control">
 		{% if mode != 'add' %} 
 			<option selected value='{{ item.getTyppe().getId() }}' >{{ item.getTyppe().getName() }}</option>
 			{% for t in types %}
@@ -83,30 +85,30 @@
 			{%endfor%}
 		{% endif %}
       </select>
-    </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >Bookable</div>
-      <div class="InputAddOn-field"><input type="checkbox" name="bookable" checked></div>
-    </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >Cost (USD $)</div>
-      <input required type="number" step="0.01" onchange="testPrice(this)" min="0" name="cost" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getCost() }}" {% endif %}>
-    </div>
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >ISBN (optional)</div>
-      <input type="number" name="isbn" class="InputAddOn-field" {% if mode != 'add' %} value="{{ item.getIsbn() }}" {% endif %}>
-    </div>
+    </div></div>
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+      <div class="input-group-addon" >Bookable</div>
+      <div class="form-control"><input type="checkbox" name="bookable" checked></div>
+    </div></div>
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+      <div class="input-group-addon" >Cost (USD $)</div>
+      <input required type="number" step="0.01" onchange="testPrice(this)" min="0" name="cost" class="form-control" {% if mode != 'add' %} value="{{ item.getCost() }}" {% endif %}>
+    </div></div>
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+      <div class="input-group-addon" >ISBN (optional)</div>
+      <input type="number" name="isbn" class="form-control" {% if mode != 'add' %} value="{{ item.getIsbn() }}" {% endif %}>
+    </div></div>
 	{% if mode == 'add' %}
-    <div class="InputAddOn">
-      <div class="InputAddOn-item" >Units</div>
-      <input type="number" name="units" class="InputAddOn-field" value=1 {% if mode != 'add' %} value="{{ item.getTotalUnit() }}" {% endif %}>
-    </div>
+    <div class="form-group col-xs-12 col-md-6"><div class="input-group">
+      <div class="input-group-addon" >Units</div>
+      <input type="number" name="units" class="form-control" value=1 {% if mode != 'add' %} value="{{ item.getTotalUnit() }}" {% endif %}>
+    </div></div>
 	{% endif %}
-    <div class="InputAddOn submit-login">
-      <button type="submit" class="InputAddOn-item">Submit</button>
-    </div>
+    <div class="form-group col-xs-4 col-md-2 center-block"><div class="input-group">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div></div>
   </form>
-</article>
+</div>
 {% endblock %}
 {% block javascripts %}
 <script src="{{ asset('js/testForms.js') }}"></script>

@@ -108,9 +108,7 @@ class DefaultController extends Controller
 					$toReturn = $transac->getToReturnDate();
 					$state	  = $transac->getState();
 					if($today < $toReturn && $state == 'Borrowed'){
-						var_dump('here');
 						$dif  = $toReturn->diff($today)->days;
-						var_dump($dif);
 						if($dif <= 3){
 							$mailer->sendTemplateMessage($memb_mail,"NPIC Library return reminder","email/reminderToReturn.html.twig",
 							array('trans_id' => $id,'member_id' => $member->getCode(), 'days' => $dif,'date' => $toReturn));	
