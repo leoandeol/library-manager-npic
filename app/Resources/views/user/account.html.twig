@@ -10,12 +10,14 @@
 		<img src="{{ asset('img/default_avatar.jpg') }}"  width="280px;" height="280px;" class="center-block img-responsive img-rounded"/>
 	{% else %}
 		<img src="{{ asset('uploads/avatars/' ~  data['avatar']) }}"  width="280px;" height="280px;" class="center-block img-responsive img-rounded"/>
-	{% endif %}
+		{% endif %}
+		<div class="row">
 	{% if attribute(data, "form") is defined %}
 	{{ form_start(data['form']) }}
 	{{ form_widget(data['form']) }}
 	{{ form_end(data['form']) }}
 	{% endif %}
+	</div>
       </div>
       <div class="col-md-6 col-xs-12">
 	{% if data['isMember']==false %}
