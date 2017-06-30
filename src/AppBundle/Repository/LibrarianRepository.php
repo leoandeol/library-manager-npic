@@ -16,6 +16,14 @@ class LibrarianRepository extends EntityRepository{
 		}
 	}
 	
+	public function getNumberOfLibrariansWithoutParam(){
+			return $this->getEntityManager()->createQuery(
+				"SELECT COUNT(lib.username)
+				FROM AppBundle:Librarian lib
+				"
+			)->getResult();
+	}
+	
 	public function getNumberOfLibrarians($username,$fname,$lname){
 			$query = $this->getEntityManager()->createQuery(
 				"SELECT COUNT(lib.username)

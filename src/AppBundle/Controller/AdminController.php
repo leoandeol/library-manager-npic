@@ -5,6 +5,7 @@ use AppBundle\Entity\Member;
 use AppBundle\Entity\Student;
 use AppBundle\Entity\Staff;
 use AppBundle\Entity\Librarian;
+use AppBundle\Entity\MOTD;
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Logs;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -26,6 +27,52 @@ class AdminController extends Controller
 				return $this->render('admin/controlpanel.html.twig', [
 					'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
 				]);
+			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
+	}
+	
+	/**
+     * @Route("/admin/showMotd", name="showMotd")
+     */
+	public function showMotdAction(Request $request){
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				$motds = $em->getRepository('AppBundle:MOTD')->findAll();
+				return $this->render('admin/showMotd.html.twig', [
+					'motds' => $motds,
+				]);
+			}
+			return $this->redirect($this->generateUrl('errorNotAdmin'));
+		}
+		return $this->redirect($this->generateUrl('errorNotLogged'));
+	}
+	
+	/**
+     * @Route("/admin/addMotd", name="setMotd")
+     */
+	public function addMotdAction(Request $request){
+		$session = $request->getSession();
+		$em = $this->getDoctrine()->getManager();
+		if($session->get('connected')){
+			if($session->get('isAdmin')){
+				$motd = $request->request->get('text');
+				$new_motd = new MOTD();
+				$new_motd->setText($motd);
+				$motdid = $new_motd->getId();
+				$new_log = new Logs();
+				$new_log->setLib($session->get('user'));
+				$new_log->setLogDate(date('Y-m-d'));
+				$new_log->setAction("Added new motd $motdid");
+				
+				$em->persist($new_motd);
+				$em->persist($new_log);
+				$em->flush();
+				
+				return $this->redirect($this->generateUrl('showMotd'));
 			}
 			return $this->redirect($this->generateUrl('errorNotAdmin'));
 		}
@@ -133,9 +180,9 @@ class AdminController extends Controller
 				$bookItemNumb = $itemRep->getBookedUnits();
 				$lItemNumber  = $itemRep->getLostUnits();
 				$dItemNumber  = $itemRep->getDisabledUnits();
-				$membNumber   = $membRep->getNumberOfMembers();
+				$membNumber   = $membRep->getNumberOfMembersWithoutParam();
 				$dMembNumber  = $membRep->getDisabledNumber();
-				$libNumber    = $librRep->getNumberOfLibrarians();
+				$libNumber    = $librRep->getNumberOfLibrariansWithoutParam();
 				$dLibNumb     = $librRep->getDisabledNumber();
 				$categNumb    = $cateRep->getCategNumber();
 				$dCategNumb   = $cateRep->getDisabledNumber();

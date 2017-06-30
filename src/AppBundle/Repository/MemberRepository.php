@@ -29,6 +29,14 @@ class MemberRepository extends EntityRepository{
 		}
 	}
 	
+	public function getNumberOfMembersWithoutParam(){
+		return $this->getEntityManager()->createQuery(
+			"SELECT COUNT(me.code)
+			FROM AppBundle:Member me
+			"
+		)->getResult();
+	}
+	
 	public function getNumberOfMembers($code,$fname,$lname){
 		$query = $this->getEntityManager()->createQuery(
 			"SELECT COUNT(me.code)
