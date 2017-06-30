@@ -149,8 +149,8 @@ class ItemRepository extends EntityRepository{
 		$conn = $em->getConnection();
 		$query = $conn->prepare(" 
 			SELECT COUNT(i.code) as nbItem, c.subject as categName
-			FROM Item i
-			RIGHT JOIN Category c ON i.category_id = c.id
+			FROM item i
+			RIGHT JOIN category c ON i.category_id = c.id
 			GROUP BY(c.subject)
 			");
 		$query->execute();
