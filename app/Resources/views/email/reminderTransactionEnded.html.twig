@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<p style="margin:auto;font-size:24px;">
+
+  The transaction number {{ trans_id }} of the member {{ member_id }} ended since {{ days|date('d') }} days.<br/>
+  Currently he has to pay {{ toPay }} USD. Please contact him.<br/>
+  <br/>
+  Link to the transaction : <a href="{{ app.request.schemeAndHttpHost }}/user/booking/{{trans_id}}-{{member_id}}">click here</a><br/>
+  <br/>
+  The NPIC Library.
+</p>
+
+{% endblock %}

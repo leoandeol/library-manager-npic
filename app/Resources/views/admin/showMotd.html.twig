@@ -1,0 +1,61 @@
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="container">
+  <div class="panel panel-default table-responsive">
+    <div class="panel-heading">
+      <h3 class="panel-title">Messages of the day List</h3>
+    </div>
+    <table class="table table-striped table-condensed panel-body">
+      <thead>
+	<tr>
+	  <td>
+            Id
+	  </td>
+	  <td>
+            content
+	  </td>
+	</tr>
+      </thead>
+      <tbody>
+	{% for motd in motds %}
+	<tr class="toSelect toSelectMotd" id="{{motd.getId()}}">
+	  <td>
+	    {{motd.getId()}}
+	  </td>
+	  <td>
+	    {{motd.getMotdContent()}}
+	  </td>
+	  <td>
+	    <a href="/admin/deleteMotd/{{motd.getId()}}"><span class="input-group-btn"><button type="submit" id="submit" class="btn btn-warning deleteMotdButton">Delete</button></span><a/>
+	  </td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <div>
+    <h2>Set a new Message of the day</h2>
+    
+    <form action="/admin/addMotd" method="post">
+      <div class="form-group">
+		<div class="input-group">
+			<input type="text" name="text" class="form-control">
+			<span class="input-group-btn"><button type="submit" id="submit" class="btn btn-success">Add motd</button></span>
+		</div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block javascripts %}
+<script src="{{ asset('js/ajax.js') }}"></script>
+<script src="{{ asset('js/tables.js') }}"></script>
+{% endblock %}
