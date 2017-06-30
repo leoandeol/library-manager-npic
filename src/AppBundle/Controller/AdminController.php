@@ -62,9 +62,8 @@ class AdminController extends Controller
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				$motd = $em->getRepository('AppBundle:MOTD')->find($id);
-				DefaultController::$MOTD = $motd->getMotdContent();
-				
-		var_dump(DefaultController::$MOTD);
+				$em->getRepository('AppBundle:MotdDisplayed')->findAll()[0]->setMotdContent($motd->getMotdContent());
+				$em->flush();
 				return new JsonResponse('Success');
 			}
 			return new JsonResponse('Only administrators can do this');
@@ -80,10 +79,20 @@ class AdminController extends Controller
 		$em = $this->getDoctrine()->getManager();
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
-				if($this->getParameter('motd') == $motd->getMotdContent()){
-					$this->setParameter('motd',$em->getRepository('AppBundle:MOTD')->findAll()[0]->getMotdContent());
+				
+				$motddisplayed = $em->getRepository('AppBundle:MotdDisplayed')->findAll()[0];
+				$motd = $em->getRepository('AppBundle:MOTD')->find($id);
+				$em->getRepository('AppBundle:MOTD')->deleteMotd($id);
+				$em->flush();
+				if($motddisplayed->getMotdContent() == $motd->getMotdContent()){
+					$motds = $em->getRepository('AppBundle:MOTD')->findAll();
+					if($motds != null){
+						$motddisplayed->setMotdContent($motds->getMotdContent());
+					}else{
+						$motddisplayed->setMotdContent("");
+					}
 				}
-				$motd = $em->getRepository('AppBundle:MOTD')->deleteMotd($id);
+				$em->flush();
 				return $this->redirect($this->generateUrl('showMotd'));
 			}
 			return $this->redirect($this->generateUrl('errorNotAdmin'));

@@ -10,26 +10,19 @@ use Symfony\Component\HttpFoundation\Response;
 class DefaultController extends Controller
 {
 	
-	/********MOTD********/
-	
-	public static $MOTD;
-	
-	/********************/
-	
     /**
      * @Route("/", name="home", options={"expose"=true})
      */
     public function homeAction(Request $request)
     {
+		
         $locale = $this->get('translator')->getLocale();
 
 		$rep  = $this->getDoctrine()->getManager()->getRepository('AppBundle:Item');
 		$top  = $rep->findTop5PopularBooks();
 		$last = $rep->findLast5BooksAdded();
 		$pop  = $rep->find5MostPopularBooks();
-		$motd = DefaultController::$MOTD;
-		
-		var_dump(DefaultController::$MOTD);
+		$motd = $this->getDoctrine()->getManager()->getRepository('AppBundle:MotdDisplayed')->findAll()[0]->getMotdContent();
 
         return $this->render('default/index.html.twig', [
 			"motd" => $motd,
