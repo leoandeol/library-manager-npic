@@ -6,6 +6,7 @@ use AppBundle\Entity\Student;
 use AppBundle\Entity\Staff;
 use AppBundle\Entity\Librarian;
 use AppBundle\Entity\MOTD;
+use AppBundle\Entity\MotdDisplayed;
 use AppBundle\Entity\Address;
 use AppBundle\Entity\Logs;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -62,6 +63,13 @@ class AdminController extends Controller
 		if($session->get('connected')){
 			if($session->get('isAdmin')){
 				$motd = $em->getRepository('AppBundle:MOTD')->find($id);
+				$motddisplayed = $em->getRepository('AppBundle:MotdDisplayed')->findAll();
+				if($motddisplayed == null){
+					$new_motd_displayed = new MotdDisplayed();
+					$new_motd_displayed->setContent($this->getParameter('motd_default'));
+					$em->persist($new_motd_displayed);
+					$em->flush()
+				}
 				$em->getRepository('AppBundle:MotdDisplayed')->findAll()[0]->setMotdContent($motd->getMotdContent());
 				$em->flush();
 				return new JsonResponse('Success');
