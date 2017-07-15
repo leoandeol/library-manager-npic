@@ -17,7 +17,7 @@
     <div id="navbar2" class="collapse navbar-collapse">
       <form class="navbar-form navbar-right inline-form logsForm" action="/admin/checkLogs" method="post">
 	<div class="form-group">
-	  <div class="input-group">
+	  <div class="input-group col-md-1">
 	    <input class="form-control" placeholder="User ID" type="text" name="ID">
 	  </div>
 	  <div class="input-group">
@@ -122,10 +122,10 @@
       <div class="panel-footer clearfix">
 	<div class="ajaxButtons">
 	  {% if page>1 %}
-	  <button value="{{page-1}}" class="btn btn-primary center-block sortingButton previous"><span class="glyphicon glyphicon-backward"></span> Previous</button>
+	  <button value="{{page-1}}" class="btn btn-primary center-block checkLogsButton previous"><span class="glyphicon glyphicon-backward"></span> Previous</button>
 	  {% endif %}	
 	  {% if page<page_max %}
-			      <button value="{{page+1}}" class="btn btn-primary center-block sortingButton next"><span class="glyphicon glyphicon-forward"></span> Next</button>{% endif %}
+			      <button value="{{page+1}}" class="btn btn-primary center-block checkLogsButton next"><span class="glyphicon glyphicon-forward"></span> Next</button>{% endif %}
 	</div>
       </div>
     </div>
