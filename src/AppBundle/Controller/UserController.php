@@ -168,9 +168,9 @@ class UserController extends Controller
 					if($code == $session->get('user')->getCode()){
 						$id = 'Member-'.$user->getCode();
 						$form = $this->createFormBuilder($user)
-                              ->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null))
+                              ->add('avatar_path', FileType::class,array('label' => ' ','data_class' => null, 'attr'=>array('class'=>'center-block col-xs-12 col-md-8')))
                               ->add('save', SubmitType::class,array('label' => 'Save',
-                                                                    'attr'=> array('class'=>'InputAddOn-item'),
+                                                                    'attr'=> array('class'=>'btn btn-primary center-block', 'style'=>'margin-top:10px;'),
                               ));
 						$canReadForm = true;
 					}
