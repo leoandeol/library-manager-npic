@@ -424,7 +424,7 @@ class AdminController extends Controller
 				if($position == "student"){
 					$new_member->setStudent(true);
 					$new_member->setStaff(false);
-					$new_member->setMajor($em->getRepository('AppBundle:Major')->find($major));
+					$new_member->setMajor($em->getRepository('AppBundle:Major')->find($maj));
 					$new_member->setDegree($em->getRepository('AppBundle:Degree')->find($degree));
 					$new_member->setDegreeYear($em->getRepository('AppBundle:DegreeYear')->find($degyear));
 				}else{
@@ -822,7 +822,7 @@ class AdminController extends Controller
 				$trans = $trans_rep->getAll($current,$trans_per_page,$t_id,$m_code,$i_title,$borrow_date,$state);			
 				$serializer = $this->get('serializer');
 				$transJson = $serializer->serialize($trans,'json');
-			
+				
 				if($request->isXmlHttpRequest()){
 					$data = array(
 						'page_max' => $nb_max_pages,

@@ -15,7 +15,7 @@
       <a class="navbar-brand" href="/admin/checkBookings">List of Transactions</a>
     </div>
     <div id="navbar2" class="collapse navbar-collapse">
-      <form class="navbar-form navbar-right inline-form MemberBookingsForm" action="/admin/checkBookings" method="post">
+      <form class="navbar-form navbar-right inline-form bookingsForm" action="/admin/checkBookings" method="post">
 	<div class="form-group">
 	  <div class="input-group col-md-1">
 	    <input class="form-control" placeholder="Transaction ID" type="text" name="t_id">
@@ -135,7 +135,7 @@
 	  <button value="{{page-1}}" class="btn btn-primary center-block checkBookingsButton previous"><span class="glyphicon glyphicon-backward"></span> Previous</button>
 	  {% endif %}	
 	  {% if page<page_max %}
-			      <button value="{{page+1}}" class="btn btn-primary center-block checkBookingsButton next"><span class="glyphicon glyphicon-forward"></span> Next</button>{% endif %}
+	  <button value="{{page+1}}" class="btn btn-primary center-block checkBookingsButton next"><span class="glyphicon glyphicon-forward"></span> Next</button>{% endif %}
 	</div>
       </div>
     </div>

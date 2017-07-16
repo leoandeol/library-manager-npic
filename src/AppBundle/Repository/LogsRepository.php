@@ -53,7 +53,7 @@ class LogsRepository extends EntityRepository{
 			array(
 				'id'   =>"%$id%",
 				'what' =>"%$what%",
-				'from' =>"$from"				
+				'from' => $from			
 			)
 		);
 		return $query->fetchAll();
@@ -96,7 +96,7 @@ class LogsRepository extends EntityRepository{
 			array(
 				'id'   =>"%$id%",
 				'what' =>"%$what%",
-				'from' =>"$from"				
+				'from' => $from				
 			)
 		);
 		return $query->fetchAll();

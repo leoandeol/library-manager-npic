@@ -276,7 +276,7 @@ class ItemController extends Controller
 				if(($item = $em->getRepository('AppBundle:Item')->find($id)) != NULL){
 					$item->setLostUnit($item->getLostUnit()+$request->request->get('amount'));
 					$new_log = new Logs();
-					$new_log->setLib($lib);
+					$new_log->setLib($em->getRepository('AppBundle:Librarian')->find($session->get('user')->getUsername()));
 					$new_log->setLogDate(date('Y-m-d'));
 					$amount = $request->request->get('amount');
 					$new_log->setAction("Added $amount lost units to the item $id");
